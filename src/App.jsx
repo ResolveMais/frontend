@@ -1,10 +1,11 @@
 import { GlobalStyles } from "./styles/global-styles"
+import AppRoutes from "./routes"
 
-function App() {
+const App = () => {
   return (
     <>
       <GlobalStyles />
-      <h1>Resolve Mais</h1>
+      <AppRoutes />
     </>
   )
 }
