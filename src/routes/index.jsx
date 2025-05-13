@@ -1,14 +1,7 @@
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Layout from "../layout/Layout";
 import Home from "../pages/Home";
-
-const Login = () => {
-    return (
-        <div>
-            <h1>Login</h1>
-        </div>
-    );
-}
+import Login from "../pages/Login";
 
 const Register = () => {
     return (
