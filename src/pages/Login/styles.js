@@ -18,10 +18,13 @@ export const Container = styled.div`
 
 export const Left = styled.div`
     flex: 7;
+    padding: 16px 20px;
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
     border: 1px solid red;
+    gap: 22px;
 `;
 
 export const Right = styled.div`
@@ -30,9 +33,21 @@ export const Right = styled.div`
     align-items: center;
     justify-content: center;
     border: 1px solid blue;
+
+    @media (max-width: 698px) {
+        display: none;
+    }
 `;
 
 export const FormTitle = styled.h1`
     font-size: 24px;
-    color: #333;
+    color: ${({ theme }) => theme.text.success};
+`;
+
+export const Form = styled.form`
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    width: 100%;
+    max-width: 400px;
 `;
