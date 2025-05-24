@@ -47,6 +47,16 @@ export default {
                 text: "#00C853",
                 border: "#00C853",
             }
+        },
+        link: {
+            background: "transparent",
+            text: "#00C853",
+            border: "none",
+            hover: {
+                background: "transparent",
+                text: "#00C853",
+                border: "none",
+            }
         }
     },
 }
