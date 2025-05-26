@@ -16,6 +16,22 @@ export const Container = styled.div`
     background-color: #f5f5f5;
 `;
 
+export const LogoContainer = styled.a`
+    width: 40px;
+    height: auto;
+    position: absolute;
+    top: 35px;
+    left: 35px;
+    z-index: 10;
+    cursor: pointer;
+`;
+
+export const Logo = styled.img`
+    width: 100%;
+    height: auto;
+    max-width: 180px;
+`;
+
 export const Left = styled.div`
     flex: 7;
     padding: 16px 20px;
@@ -23,20 +39,7 @@ export const Left = styled.div`
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    border: 1px solid red;
     gap: 22px;
-`;
-
-export const Right = styled.div`
-    flex: 6;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border: 1px solid blue;
-
-    @media (max-width: 698px) {
-        display: none;
-    }
 `;
 
 export const FormTitle = styled.h1`
@@ -51,3 +54,31 @@ export const Form = styled.form`
     width: 100%;
     max-width: 400px;
 `;
+
+export const Right = styled.div`
+    flex: 6;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    @media (max-width: 836px) {
+        display: none;
+    }
+`;
+
+export const Image = styled.img`
+    width: 100%;
+    max-width: 400px;
+`;
+
+export const Text = styled.h1`
+    font-size: 24px;
+    color: ${({ theme }) => theme.text.success};
+`;
+
+export const SubText = styled.p`
+    font-size: 16px;
+    color: ${({ theme }) => theme.text.success};
+`;
+
