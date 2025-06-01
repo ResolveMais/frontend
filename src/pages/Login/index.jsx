@@ -5,10 +5,11 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { useState } from "react";
+import { api } from "../../services/api";
 
 const schema = yup.object().shape({
     email: yup.string().email("E-mail inválido").required("E-mail é obrigatório"),
-    password: yup.string().min(6, "Senha deve ter pelo menos 6 caracteres").required("Senha é obrigatória"),
+    password: yup.string().required("Senha é obrigatória"),
 });
 
 const Login = () => {
@@ -21,10 +22,26 @@ const Login = () => {
         resolver: yupResolver(schema),
     });
 
-    const onSubmit = (data) => {
+    const onSubmit = async (data) => {
         console.log(data);
         setLoading(true);
-        // Aqui você pode adicionar a lógica para autenticação do usuário
+        try {
+            const response = await api.post("/auth/login", {
+                email: data.email,
+                password: data.password,
+            });
+
+            if (response.status === 200) {
+                window.location.href = "/";
+            } else {
+                alert("Erro ao fazer login. Tente novamente.");
+            }
+        } catch (error) {
+            console.error("Erro ao fazer login:", error);
+            alert("Erro ao fazer login. Verifique suas credenciais e tente novamente.");
+        } finally {
+            setLoading(false);
+        }
     }
 
     return (
