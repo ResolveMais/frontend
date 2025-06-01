@@ -89,7 +89,7 @@ const getVariant = (theme, variant) => {
 };
 
 export const Button = styled.button` 
-    cursor: pointer;
+    cursor: ${({ disabled }) => (disabled ? "not-allowed" : "pointer")};
     padding: 8px 16px;
     border-radius: 8px;
     border: none;
@@ -101,7 +101,7 @@ export const Button = styled.button`
 `;
 
 export const LinkButton = styled(Link)`
-	cursor: pointer;
+	cursor: ${({ disabled }) => (disabled ? "not-allowed" : "pointer")};
     padding: 8px 16px;
     border-radius: 8px;
     border: none;

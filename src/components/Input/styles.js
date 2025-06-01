@@ -27,3 +27,9 @@ export const Input = styled.input`
         color: ${({ theme }) => theme.text.placeholder};
     }
 `
+
+export const ErrorMessage = styled.span`
+    color: ${({ theme }) => theme.text.error};
+    font-size: 12px;
+    margin-top: 4px;
+`;
