@@ -2,14 +2,7 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Layout from "../layout/Layout";
 import Home from "../pages/Home";
 import Login from "../pages/Login";
-
-const Register = () => {
-    return (
-        <div>
-            <h1>Register</h1>
-        </div>
-    );
-}
+import Register from "../pages/Register";
 
 const AppRoutes = () => (
     <Router>
