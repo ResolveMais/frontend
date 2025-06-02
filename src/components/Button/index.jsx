@@ -16,11 +16,11 @@ import PropTypes from 'prop-types'
  */
 const Button = ({ type, variant, children, onClick, redirect, full, disabled }) => {
   return redirect ? (
-    <S.LinkButton to={redirect} variant={variant} onClick={onClick} full={full} disabled={disabled}>
+    <S.LinkButton to={redirect} $variant={variant} onClick={onClick} $full={full} disabled={disabled}>
       {children}
     </S.LinkButton>
   ) : (
-    <S.Button type={type} variant={disabled ? "disabled" : variant} onClick={onClick} full={full} disabled={disabled}>{children}</S.Button>
+    <S.Button type={type} $variant={disabled ? "disabled" : variant} onClick={onClick} $full={full} disabled={disabled}>{children}</S.Button>
   )
 }
 

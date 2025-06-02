@@ -96,8 +96,8 @@ export const Button = styled.button`
     transition: all 0.3s;
     font-size: 14px;
     text-align: center;
-    width: ${({ full }) => (full ? "100%" : "auto")};
-    ${({ variant, theme }) => getVariant(theme, variant || "primary")}
+    width: ${({ $full }) => ($full ? "100%" : "auto")};
+    ${({ $variant, theme }) => getVariant(theme, $variant || "primary")}
 `;
 
 export const LinkButton = styled(Link)`
@@ -109,6 +109,6 @@ export const LinkButton = styled(Link)`
     text-decoration: none;
     font-size: 14px;
     text-align: center;
-    width: ${({ full }) => (full ? "100%" : "auto")};
-    ${({ variant, theme }) => getVariant(theme, variant || "primary")}
+    width: ${({ $full }) => ($full ? "100%" : "auto")};
+    ${({ $variant, theme }) => getVariant(theme, $variant || "primary")}
 `;
