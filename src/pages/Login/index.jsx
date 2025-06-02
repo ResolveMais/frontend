@@ -1,11 +1,13 @@
+import { useState, useEffect } from "react";
 import Button from "../../components/Button";
 import Input from "../../components/Input";
 import * as S from "./styles";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
-import { useState } from "react";
 import { api } from "../../services/api";
+import { useAuth } from "../../contexts/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 const schema = yup.object().shape({
     email: yup.string().email("E-mail inválido").required("E-mail é obrigatório"),
@@ -13,6 +15,8 @@ const schema = yup.object().shape({
 });
 
 const Login = () => {
+    const navigate = useNavigate();
+    const { userData, isLoggedIn, logout, login } = useAuth();
     const [loading, setLoading] = useState(false);
     const {
         register,
@@ -23,7 +27,6 @@ const Login = () => {
     });
 
     const onSubmit = async (data) => {
-        console.log(data);
         setLoading(true);
         try {
             const response = await api.post("/auth/login", {
@@ -31,7 +34,9 @@ const Login = () => {
                 password: data.password,
             });
 
-            if (response.status === 200) {
+            if (response.status === 200 && response.data?.token) {
+                const { user, token } = response.data;
+                login({ user, token });
                 window.location.href = "/";
             } else {
                 alert("Erro ao fazer login. Tente novamente.");
@@ -43,6 +48,11 @@ const Login = () => {
             setLoading(false);
         }
     }
+
+    useEffect(() => {
+        if (!userData?.id && !isLoggedIn) logout();
+        else navigate("/");
+    }, [userData, isLoggedIn, logout, navigate]);
 
     return (
         <S.Container>
