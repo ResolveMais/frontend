@@ -61,7 +61,7 @@ export const AuthProvider = ({ children }) => {
       localStorage.removeItem('token');
       dispatch({ type: 'logout' });
     }
-  }, []);
+  }, [state]);
 
   const validateToken = useCallback(async (token) => {
     try {

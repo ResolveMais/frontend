@@ -3,7 +3,7 @@ import Button from "../Button"
 import * as S from "./styles"
 
 const Header = () => {
-  const { isLoggedIn, userData } = useAuth();
+  const { isLoggedIn, userData, logout } = useAuth();
 
   return (
     <S.HeaderContainer>
@@ -16,7 +16,7 @@ const Header = () => {
         </S.ButtonsContainer>
       ) : (
         <S.ButtonsContainer>
-          <Button variant="link" redirect="/dashboard">{userData?.name}</Button>
+          <Button variant="link" onClick={() => logout()}>{userData?.name}</Button>
         </S.ButtonsContainer>
       )}
     </S.HeaderContainer>
