@@ -28,7 +28,7 @@ export default Button
 
 Button.propTypes = {
   type: PropTypes.oneOf(['button', 'submit', 'reset']),
-  variant: PropTypes.oneOf(['primary', 'secondary', 'transparent', 'link', 'disabled']),
+  variant: PropTypes.oneOf(['primary', 'secondary', 'transparent', 'link', 'disabled', 'green-border']),
   children: PropTypes.node.isRequired,
   onClick: PropTypes.func,
   redirect: PropTypes.string,

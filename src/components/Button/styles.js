@@ -85,6 +85,25 @@ const getVariant = (theme, variant) => {
                     }
                 }
             `;
+        case "green-border":
+             return css`
+                background-color: transparent;
+                color: #00C853;
+                border: 2px solid #00C853;
+                font-weight: 600;
+
+                &:hover {
+                    background-color: #00C853;
+                    color: #ffffff;
+                    border: 2px solid #00C853;
+                    transform: translateY(-2px);
+                    box-shadow: 0 4px 12px rgba(0, 200, 83, 0.3);
+                    }
+
+                &:active {
+                    transform: translateY(0);
+                    }
+    `;
     }
 };
 
