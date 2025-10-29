@@ -10,13 +10,13 @@ import Empresa from "../pages/Empresa";
 const AppRoutes = () => (
     <Router>
         <Routes>
-            
-            <Route path="/empresa" Component={Empresa}/>
+
+            <Route path="/empresa" Component={Empresa} />
             <Route path="/team" Component={TeamPage} />
             <Route path="/login" Component={Login} />
             <Route path="/register" Component={Register} />
             <Route path="/home" Component={Home} />
-            <Route path="/landing" Component={Landing}/>
+            <Route path="/landing" Component={Landing} />
             <Route element={<SimpleLayout />}>
                 <Route path="/" Component={Landing} />
             </Route>
