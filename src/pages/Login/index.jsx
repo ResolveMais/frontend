@@ -51,7 +51,7 @@ const Login = () => {
 
     useEffect(() => {
         if (!userData?.id && !isLoggedIn) logout();
-        else navigate("/");
+        else navigate("/home");
     }, [userData, isLoggedIn, logout, navigate]);
 
     return (

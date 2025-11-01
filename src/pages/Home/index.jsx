@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import * as S from "./styles";
+import { Link } from "react-router-dom";
 
 /* Icons as React Components */
 const IconPlus = () => (
@@ -101,7 +102,8 @@ export default function Home() {
             <S.WelcomeSubtitle>Como podemos ajudar você hoje?</S.WelcomeSubtitle>
 
             <S.ActionsGrid>
-              <S.ActionCard aria-label="Abrir novo ticket">
+              <S.ActionCard aria-label="Abrir novo ticket"
+                as={Link} to="/OpenTicket">
                 <S.ActionIcon>
                   <IconPlus />
                 </S.ActionIcon>

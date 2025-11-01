@@ -7,6 +7,7 @@ import Register from "../pages/Register";
 import SimpleLayout from "../layout/SimpleLayout";
 import TeamPage from "../pages/Team";
 import Empresa from "../pages/Empresa";
+import OpenTicket from "../pages/NewTicketForm.jsx";
 const AppRoutes = () => (
     <Router>
         <Routes>
@@ -16,6 +17,7 @@ const AppRoutes = () => (
             <Route path="/login" Component={Login} />
             <Route path="/register" Component={Register} />
             <Route path="/home" Component={Home} />
+            <Route path="/OpenTicket" Component={OpenTicket} />
             <Route path="/landing" Component={Landing} />
             <Route element={<SimpleLayout />}>
                 <Route path="/" Component={Landing} />
