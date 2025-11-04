@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import * as S from "./styles";
 import { Link } from "react-router-dom";
+import { useAuth } from "../../contexts/AuthContext";
 
 /* Icons as React Components */
 const IconPlus = () => (
@@ -55,6 +56,7 @@ const LogoSvg = () => (
 /* Componente da Landing Page */
 export default function Home() {
   // Estado para a aba ativa
+  const { userData } = useAuth();
   const [activeTab, setActiveTab] = useState("home");
 
   return (
@@ -90,8 +92,10 @@ export default function Home() {
         </S.NavMenu>
 
         <S.UserSection>
-          <S.UserName>Nome Cliente</S.UserName>
-          <S.AvatarImg src="https://placehold.co/40x40/ffdca8/6b4226?text=J" />
+          <S.UserName>{userData?.name || 'Nome Cliente'}</S.UserName>
+          <S.AvatarImg>
+            <S.AvatarInitial>{userData?.name?.charAt(0) || 'A'}</S.AvatarInitial>
+          </S.AvatarImg>
         </S.UserSection>
       </S.Header>
 

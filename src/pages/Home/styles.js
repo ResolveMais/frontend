@@ -73,12 +73,22 @@ export const UserName = styled.span`
   white-space: nowrap;
 `;
 
-export const AvatarImg = styled.img`
+export const AvatarImg = styled.div`
   width: 40px;
   height: 40px;
   border-radius: 9999px;
-  object-fit: cover;
+  background-color: #f5f5dc;
   border: 2px solid #10b981;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+`;
+
+export const AvatarInitial = styled.p`
+  margin: auto;
+  font-weight: 700;
+  font-size: 18px;
+  color: #10b981;
 `;
 
 export const Main = styled.main`

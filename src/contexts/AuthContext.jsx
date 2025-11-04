@@ -87,7 +87,7 @@ export const AuthProvider = ({ children }) => {
 
     api.defaults.headers.Authorization = `Bearer ${token}`;
     validateToken(token);
-  }, [logout, validateToken]);
+  }, []);
 
   const authContextValue = useMemo(() => ({
     ...state,
