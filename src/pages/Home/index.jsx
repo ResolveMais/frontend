@@ -3,6 +3,7 @@ import * as S from "./styles";
 import { Link } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
 import LoggedHeader from "../../components/LoggedHeader";
+import { ticketService } from '../../services/ticketService'; // CORRIGIDO
 
 /* Icons as React Components */
 const IconPlus = () => (
@@ -66,7 +67,7 @@ export default function Home() {
             Abrir Novo Ticket
           </S.ActionCard>
 
-          <S.ActionCard aria-label="Tickets pendentes">
+          <S.ActionCard aria-label="Tickets pendentes" as={Link} to="/PendingTickets">
             <S.ActionIcon>
               <IconList />
             </S.ActionIcon>

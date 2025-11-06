@@ -8,6 +8,7 @@ import SimpleLayout from "../layout/SimpleLayout";
 import TeamPage from "../pages/Team";
 import Empresa from "../pages/Empresa";
 import OpenTicket from "../pages/NewTicketForm.jsx";
+import TicketList from "../components/TicketList/index.jsx";
 const AppRoutes = () => (
     <Router>
         <Routes>
@@ -19,6 +20,7 @@ const AppRoutes = () => (
             <Route path="/home" Component={Home} />
             <Route path="/OpenTicket" Component={OpenTicket} />
             <Route path="/landing" Component={Landing} />
+            <Route path="/PendingTickets" Component={TicketList} />
             <Route element={<SimpleLayout />}>
                 <Route path="/" Component={Landing} />
             </Route>
