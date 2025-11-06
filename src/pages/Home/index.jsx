@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React from "react";
 import * as S from "./styles";
 import { Link } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
+import LoggedHeader from "../../components/LoggedHeader";
 
 /* Icons as React Components */
 const IconPlus = () => (
@@ -46,129 +47,70 @@ const IconCheck = () => (
   </svg>
 );
 
-const LogoSvg = () => (
-  <img
-    src="https://placehold.co/48x48/10b981/white?text=R+%2B"
-    alt="Logo Resolve Plus mostrando as letras R e um símbolo de mais em verde"
-  />
-);
-
-/* Componente da Landing Page */
 export default function Home() {
-  // Estado para a aba ativa
   const { userData } = useAuth();
-  const [activeTab, setActiveTab] = useState("home");
 
   return (
-    <S.Container>
-      <S.Header>
-        <S.LogoGroup>
-          <LogoSvg />
-          <S.LogoText>Resolve +</S.LogoText>
-        </S.LogoGroup>
+    <div style={{ margin: 0, padding: 0 }}>
+      <LoggedHeader />
+      
+      <S.Main style={{ marginTop: '70px', padding: '2rem' }}>
+        <S.WelcomeTitle>Bem-vindo, João!</S.WelcomeTitle>
+        <S.WelcomeSubtitle>Como podemos ajudar você hoje?</S.WelcomeSubtitle>
 
-        <S.NavMenu>
-          <S.NavItem
-            active={activeTab === "config"}
-            onClick={() => setActiveTab("config")}
-            aria-label="Configurações"
-          >
-            Configurações
-          </S.NavItem>
-          <S.NavItem
-            active={activeTab === "home"}
-            onClick={() => setActiveTab("home")}
-            aria-label="Home"
-          >
-            Home
-          </S.NavItem>
-          <S.NavItem
-            active={activeTab === "atend"}
-            onClick={() => setActiveTab("atend")}
-            aria-label="Atendimentos"
-          >
-            Atendimentos
-          </S.NavItem>
-        </S.NavMenu>
+        <S.ActionsGrid>
+          <S.ActionCard aria-label="Abrir novo ticket" as={Link} to="/OpenTicket">
+            <S.ActionIcon>
+              <IconPlus />
+            </S.ActionIcon>
+            Abrir Novo Ticket
+          </S.ActionCard>
 
-        <S.UserSection>
-          <S.UserName>{userData?.name || 'Nome Cliente'}</S.UserName>
-          <S.AvatarImg>
-            <S.AvatarInitial>{userData?.name?.charAt(0) || 'A'}</S.AvatarInitial>
-          </S.AvatarImg>
-        </S.UserSection>
-      </S.Header>
+          <S.ActionCard aria-label="Tickets pendentes">
+            <S.ActionIcon>
+              <IconList />
+            </S.ActionIcon>
+            Tickets Pendentes
+          </S.ActionCard>
 
-      <S.Main>
-        {activeTab === "home" && (
-          <>
-            <S.WelcomeTitle>Bem-vindo, João!</S.WelcomeTitle>
-            <S.WelcomeSubtitle>Como podemos ajudar você hoje?</S.WelcomeSubtitle>
+          <S.ActionCard aria-label="Tickets resolvidos">
+            <S.ActionIcon>
+              <IconCheck />
+            </S.ActionIcon>
+            Tickets Resolvidos
+          </S.ActionCard>
+        </S.ActionsGrid>
 
-            <S.ActionsGrid>
-              <S.ActionCard aria-label="Abrir novo ticket"
-                as={Link} to="/OpenTicket">
-                <S.ActionIcon>
-                  <IconPlus />
-                </S.ActionIcon>
-                Abrir Novo Ticket
-              </S.ActionCard>
+        <S.UpdatesTitle>Últimas atualizações</S.UpdatesTitle>
+        <S.UpdatesGrid>
+          <S.UpdateCard>
+            <S.UpdateTitle>
+              <S.UpdateDot />
+              Sua solicitação foi atualizada!
+            </S.UpdateTitle>
+            <S.UpdateDescription>Uma resposta foi enviada</S.UpdateDescription>
+            <S.UpdateTime>há 2 horas</S.UpdateTime>
+          </S.UpdateCard>
 
-              <S.ActionCard aria-label="Tickets pendentes">
-                <S.ActionIcon>
-                  <IconList />
-                </S.ActionIcon>
-                Tickets Pendentes
-              </S.ActionCard>
+          <S.UpdateCard>
+            <S.UpdateTitle>
+              <S.UpdateDot />
+              Novo ticket criado
+            </S.UpdateTitle>
+            <S.UpdateDescription>Problemas com pagamento</S.UpdateDescription>
+            <S.UpdateTime>há 5 horas</S.UpdateTime>
+          </S.UpdateCard>
 
-              <S.ActionCard aria-label="Tickets resolvidos">
-                <S.ActionIcon>
-                  <IconCheck />
-                </S.ActionIcon>
-                Tickets Resolvidos
-              </S.ActionCard>
-            </S.ActionsGrid>
-
-            <S.UpdatesTitle>Últimas atualizações</S.UpdatesTitle>
-            <S.UpdatesGrid>
-              <S.UpdateCard>
-                <S.UpdateTitle>
-                  <S.UpdateDot />
-                  Sua solicitação foi atualizada!
-                </S.UpdateTitle>
-                <S.UpdateDescription>Uma resposta foi enviada</S.UpdateDescription>
-                <S.UpdateTime>há 2 horas</S.UpdateTime>
-              </S.UpdateCard>
-
-              <S.UpdateCard>
-                <S.UpdateTitle>
-                  <S.UpdateDot />
-                  Novo ticket criado
-                </S.UpdateTitle>
-                <S.UpdateDescription>Problemas com pagamento</S.UpdateDescription>
-                <S.UpdateTime>há 5 horas</S.UpdateTime>
-              </S.UpdateCard>
-
-              <S.UpdateCard>
-                <S.UpdateTitle>
-                  <S.UpdateDot />
-                  Ticket finalizado
-                </S.UpdateTitle>
-                <S.UpdateDescription>Seu ticket foi finalizado!</S.UpdateDescription>
-                <S.UpdateTime>há 2 meses</S.UpdateTime>
-              </S.UpdateCard>
-            </S.UpdatesGrid>
-          </>
-        )}
-
-        {activeTab === "config" && (
-          <p>Configurações (conteúdo a ser implementado conforme necessidade)</p>
-        )}
-
-        {activeTab === "atend" && (
-          <p>Atendimentos (conteúdo a ser implementado conforme necessidade)</p>
-        )}
+          <S.UpdateCard>
+            <S.UpdateTitle>
+              <S.UpdateDot />
+              Ticket finalizado
+            </S.UpdateTitle>
+            <S.UpdateDescription>Seu ticket foi finalizado!</S.UpdateDescription>
+            <S.UpdateTime>há 2 meses</S.UpdateTime>
+          </S.UpdateCard>
+        </S.UpdatesGrid>
       </S.Main>
-    </S.Container>
+    </div>
   );
 }
