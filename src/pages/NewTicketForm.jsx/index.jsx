@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Button from '../../components/Button';
+import LoggedHeader from '../../components/LoggedHeader';
 import styles from './styles';
 
 const NewTicketForm = () => {
@@ -15,24 +16,20 @@ const NewTicketForm = () => {
     const [loading, setLoading] = useState(false);
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedCompany, setSelectedCompany] = useState(null);
+    const [showSuccess, setShowSuccess] = useState(false);
     const navigate = useNavigate();
 
-    // URL base da API - porta 3001
     const API_BASE = 'http://localhost:3001';
 
-    // Verificar autenticação ANTES de tudo
     useEffect(() => {
         const token = localStorage.getItem('token');
-        console.log('🔐 FRONTEND: Token no localStorage:', token);
         
         if (!token) {
-            console.log('❌ FRONTEND: Usuário não autenticado - redirecionando para login');
             alert('Você precisa fazer login para criar um ticket');
             navigate('/login');
             return;
         }
         
-        console.log('✅ FRONTEND: Usuário autenticado - buscando empresas');
         fetchCompanies();
     }, [navigate]);
 
@@ -40,17 +37,13 @@ const NewTicketForm = () => {
         const token = localStorage.getItem('token');
         
         if (!token) {
-            console.log('❌ FRONTEND: Token não encontrado');
             return;
         }
 
         try {
             setLoading(true);
-            console.log('🌐 FRONTEND: Fazendo requisição para empresas...');
             
             const url = `${API_BASE}/api/tickets/companies`;
-            
-            console.log('📡 FRONTEND: URL:', url);
             
             const response = await fetch(url, {
                 method: 'GET',
@@ -60,32 +53,21 @@ const NewTicketForm = () => {
                 }
             });
 
-            console.log('📊 FRONTEND: Status da resposta:', response.status);
-            console.log('📋 FRONTEND: Content-Type:', response.headers.get('content-type'));
-
             const responseText = await response.text();
-            console.log('📄 FRONTEND: Resposta bruta:', responseText.substring(0, 500));
 
             try {
                 const data = JSON.parse(responseText);
-                console.log('✅ FRONTEND: JSON parseado com sucesso:', data);
                 
                 if (data.companies) {
                     setCompanies(data.companies);
-                    console.log(`🏢 FRONTEND: ${data.companies.length} empresas carregadas`);
                 } else if (data.result) {
                     setCompanies(data.result);
-                    console.log(`🏢 FRONTEND: ${data.result.length} empresas carregadas`);
                 } else if (Array.isArray(data)) {
                     setCompanies(data);
-                    console.log(`🏢 FRONTEND: ${data.length} empresas carregadas`);
                 } else {
-                    console.log('❌ FRONTEND: Estrutura de dados inesperada:', data);
                     setCompanies([]);
                 }
             } catch (jsonError) {
-                console.error('❌ FRONTEND: Erro ao parsear JSON:', jsonError);
-                
                 if (responseText.includes('<!doctype html>')) {
                     alert('Erro: O servidor está retornando HTML em vez de JSON. Verifique a URL da API.');
                 } else {
@@ -94,7 +76,6 @@ const NewTicketForm = () => {
             }
 
         } catch (error) {
-            console.error('❌ FRONTEND: Erro na requisição:', error);
             alert('Erro de conexão com o servidor: ' + error.message);
         } finally {
             setLoading(false);
@@ -111,10 +92,7 @@ const NewTicketForm = () => {
         }
 
         try {
-            console.log('🌐 FRONTEND: Buscando assuntos para empresa:', companyId);
-            
             const url = `${API_BASE}/api/tickets/complaint-titles/${companyId}`;
-            console.log('📡 FRONTEND: URL:', url);
             
             const response = await fetch(url, {
                 method: 'GET',
@@ -125,11 +103,9 @@ const NewTicketForm = () => {
             });
 
             const responseText = await response.text();
-            console.log('📄 FRONTEND: Resposta assuntos:', responseText);
 
             try {
                 const data = JSON.parse(responseText);
-                console.log('✅ FRONTEND: Assuntos parseados:', data);
                 
                 if (data.complaintTitles) {
                     setComplaintTitles(data.complaintTitles);
@@ -139,12 +115,10 @@ const NewTicketForm = () => {
                     setComplaintTitles([]);
                 }
             } catch (jsonError) {
-                console.error('❌ FRONTEND: Erro ao parsear assuntos:', jsonError);
                 alert('Erro ao carregar assuntos');
             }
 
         } catch (error) {
-            console.error('❌ FRONTEND: Erro ao buscar assuntos:', error);
             alert('Erro ao carregar assuntos');
         }
     };
@@ -152,9 +126,6 @@ const NewTicketForm = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         
-        console.log('🚀 FRONTEND: Iniciando envio do ticket...');
-        console.log('📦 FRONTEND: Dados do formulário:', formData);
-
         if (!formData.description.trim()) {
             alert('Por favor, preencha a descrição do ticket');
             return;
@@ -171,11 +142,6 @@ const NewTicketForm = () => {
             const token = localStorage.getItem('token');
             const url = `${API_BASE}/api/tickets/create`;
             
-            console.log('🌐 FRONTEND: Criando ticket...');
-            console.log('📡 FRONTEND: URL:', url);
-            console.log('🔑 FRONTEND: Token presente:', !!token);
-            console.log('📤 FRONTEND: Enviando dados:', formData);
-            
             const response = await fetch(url, {
                 method: 'POST',
                 headers: {
@@ -186,28 +152,23 @@ const NewTicketForm = () => {
             });
 
             const responseText = await response.text();
-            console.log('📄 FRONTEND: Resposta criação ticket:', responseText);
-            console.log('📊 FRONTEND: Status:', response.status);
-            console.log('🔍 FRONTEND: Headers:', Object.fromEntries(response.headers.entries()));
 
             try {
                 const data = JSON.parse(responseText);
                 
                 if (response.ok) {
-                    console.log('✅ FRONTEND: Ticket criado com sucesso!');
-                    alert('Ticket criado com sucesso!');
-                    navigate('/home');
+                    setShowSuccess(true);
+                    setTimeout(() => {
+                        navigate('/home');
+                    }, 2000);
                 } else {
-                    console.error('❌ FRONTEND: Erro na resposta:', data);
                     alert(data.message || `Erro ${response.status} ao criar ticket`);
                 }
             } catch (jsonError) {
-                console.error('❌ FRONTEND: Erro ao parsear resposta:', jsonError);
-                alert('Erro inesperado ao criar ticket. Verifique o console.');
+                alert('Erro inesperado ao criar ticket.');
             }
 
         } catch (error) {
-            console.error('❌ FRONTEND: Erro ao criar ticket:', error);
             alert('Erro de conexão ao criar ticket: ' + error.message);
         } finally {
             setLoading(false);
@@ -215,7 +176,6 @@ const NewTicketForm = () => {
     };
 
     const handleCompanySelect = (company) => {
-        console.log('🏢 FRONTEND: Empresa selecionada:', company);
         setFormData({ ...formData, companyId: company.id });
         setSelectedCompany(company);
         fetchComplaintTitles(company.id);
@@ -224,7 +184,6 @@ const NewTicketForm = () => {
     };
 
     const handleComplaintTitleSelect = (complaintTitle) => {
-        console.log('📋 FRONTEND: Assunto selecionado:', complaintTitle);
         setFormData({ ...formData, complaintTitleId: complaintTitle.id });
         setStep(3);
     };
@@ -233,7 +192,6 @@ const NewTicketForm = () => {
         company.name.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
-    // Se não está autenticado, não renderiza o form
     if (!localStorage.getItem('token')) {
         return (
             <div style={styles.page}>
@@ -253,21 +211,20 @@ const NewTicketForm = () => {
     return (
         <div style={styles.page}>
             {/* Header */}
-            <div style={styles.header}>
-                <Button 
-                    variant="transparent"
-                    onClick={() => navigate('/home')}
-                    style={styles.backButton}
-                >
-                    ← Voltar
-                </Button>
-                <div style={styles.headerContent}>
-                    <h1 style={styles.title}>Novo Ticket</h1>
-                    <p style={styles.subtitle}>
-                        {loading ? 'Carregando...' : `${companies.length} empresas disponíveis`}
-                    </p>
-                </div>
+            <div style={styles.headerFixed}>
+                <LoggedHeader />
             </div>
+
+            {/* Pop-up de Sucesso - SÓ APARECE QUANDO showSuccess for true */}
+            {showSuccess && (
+                <div style={styles.successPopup}>
+                    <div style={styles.successContent}>
+                        <div style={styles.successIcon}>✓</div>
+                        <h3 style={styles.successTitle}>Ticket Aberto!</h3>
+                        <p style={styles.successMessage}>Seu ticket foi criado com sucesso e será atendido em breve.</p>
+                    </div>
+                </div>
+            )}
 
             {/* Progress Steps */}
             <div style={styles.progressSteps}>
@@ -382,15 +339,15 @@ const NewTicketForm = () => {
                             )}
                         </div>
 
-                <div>
-                    <Button 
-                            variant="transparent"
-                            onClick={() => setStep(1)}
-                            style={styles.stepBackButton}
-                        >
-                            ← Voltar para empresas
-                        </Button>
-                </div>
+                        <div style={styles.stepBackContainer}>
+                            <Button 
+                                variant="transparent"
+                                onClick={() => setStep(1)}
+                                style={styles.stepBackButton}
+                            >
+                                ← Voltar para empresas
+                            </Button>
+                        </div>
                     </div>
                 )}
 

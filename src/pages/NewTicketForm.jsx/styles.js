@@ -3,18 +3,21 @@ const styles = {
     page: {
         minHeight: '100vh',
         background: '#f8f9fa',
-        padding: 0
+        padding: 0,
+        position: 'relative'
     },
 
-    // Header
-    header: {
+    // ✅ CORREÇÃO: Header fixo com espaçamento
+    headerFixed: {
         background: 'white',
         borderBottom: '1px solid #e9ecef',
-        padding: '1.5rem 2rem',
-        display: 'flex',
-        alignItems: 'center',
-        gap: '1rem'
+        padding: '0',
+        position: 'sticky',
+        top: 0,
+        zIndex: 100,
+        width: '100%',
     },
+
     backButton: {
         minWidth: 'auto',
         padding: '0.75rem 1rem'
@@ -38,9 +41,10 @@ const styles = {
     progressSteps: {
         display: 'flex',
         justifyContent: 'center',
-        padding: '2rem 2rem 1rem',
+        padding: '1rem 2rem',
         background: 'white',
-        borderBottom: '1px solid #e9ecef'
+        borderBottom: '1px solid #e9ecef',
+        marginTop: '70px'
     },
     step: {
         display: 'flex',
@@ -75,17 +79,19 @@ const styles = {
         fontWeight: '500'
     },
 
-    // Content
+    // ✅ CORREÇÃO: Content com margin-top para não ficar atrás do header
     content: {
         maxWidth: '800px',
-        margin: '0 auto',
-        padding: '2rem'
+        margin: '2rem auto',
+        padding: '0 2rem'
     },
     formStep: {
         background: 'white',
         borderRadius: '12px',
         padding: '2rem',
-        boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
+        boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+        position: 'relative',
+        zIndex: 1
     },
 
     // Step Header
@@ -203,11 +209,15 @@ const styles = {
         fontSize: '0.85rem'
     },
 
-    // Step Back Button
+    // ✅ Container para o botão de voltar no step 2
+    stepBackContainer: {
+        marginTop: '2rem',
+        paddingTop: '1rem',
+        borderTop: '1px solid #e9ecef'
+    },
     stepBackButton: {
-        marginBottom: '2rem',
         minWidth: 'auto',
-        marginTop: '1.5rem'
+        marginTop: '0'
     },
 
     // Selected Info
@@ -232,6 +242,8 @@ const styles = {
         color: '#333',
         fontWeight: '500'
     },
+
+    // ✅ CORREÇÃO CRÍTICA: Textarea funcionando
     textarea: {
         width: '100%',
         padding: '1rem',
@@ -242,7 +254,9 @@ const styles = {
         resize: 'vertical',
         lineHeight: '1.5',
         transition: 'border-color 0.2s ease',
-        outline: 'none'
+        outline: 'none',
+        position: 'relative',
+        zIndex: 2
     },
     textareaFooter: {
         display: 'flex',
@@ -265,6 +279,54 @@ const styles = {
         gap: '1rem',
         justifyContent: 'flex-end',
         marginTop: '2rem'
+    },
+
+    // ✅ Pop-up de sucesso
+    successPopup: {
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        zIndex: 1000
+    },
+    successContent: {
+        background: 'white',
+        padding: '2rem',
+        borderRadius: '12px',
+        textAlign: 'center',
+        boxShadow: '0 4px 20px rgba(0, 0, 0, 0.15)',
+        maxWidth: '400px',
+        width: '90%'
+    },
+    successIcon: {
+        width: '60px',
+        height: '60px',
+        borderRadius: '50%',
+        background: '#00C853',
+        color: 'white',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        fontSize: '1.5rem',
+        fontWeight: 'bold',
+        margin: '0 auto 1rem'
+    },
+    successTitle: {
+        margin: '0 0 0.5rem 0',
+        color: '#00C853',
+        fontSize: '1.5rem',
+        fontWeight: '600'
+    },
+    successMessage: {
+        margin: 0,
+        color: '#666',
+        fontSize: '1rem',
+        lineHeight: '1.5'
     }
 };
 
