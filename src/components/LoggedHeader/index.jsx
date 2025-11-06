@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useAuth } from "../../contexts/AuthContext";
 import { useNavigate, useLocation } from "react-router-dom";
 import styles from "./styles";
@@ -7,6 +7,7 @@ const LoggedHeader = () => {
   const { userData, logout } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
+  const [showLogout, setShowLogout] = useState(false);
 
   const handleLogout = () => {
     logout();
@@ -15,6 +16,10 @@ const LoggedHeader = () => {
 
   const handleNavigation = (page) => {
     navigate(`/${page.toLowerCase()}`);
+  }
+
+  const toggleLogout = () => {
+    setShowLogout(!showLogout);
   }
 
   // Função para verificar se a página está ativa
@@ -68,15 +73,24 @@ const LoggedHeader = () => {
       <div style={styles.rightSection}>
         <div style={styles.userInfo}>
           <span style={styles.userName}>{userData?.name || "Gabriel Soares"}</span>
-          <button 
-            style={styles.logoutButton} 
-            onClick={handleLogout}
-          >
-            Sair
-          </button>
         </div>
-        <div style={styles.userAvatar}>
-          {getUserInitials()}
+        
+        <div style={styles.userMenuContainer}>
+          <div 
+            style={styles.userAvatar}
+            onClick={toggleLogout}
+          >
+            {getUserInitials()}
+          </div>
+          
+          {showLogout && (
+            <button 
+              style={styles.logoutButton} 
+              onClick={handleLogout}
+            >
+              Sair
+            </button>
+          )}
         </div>
       </div>
     </header>

@@ -73,7 +73,8 @@ const styles = {
     alignItems: 'center',
     gap: '1rem',
     flex: 1,
-    justifyContent: 'flex-end'
+    justifyContent: 'flex-end',
+    position: 'relative'
   },
   
   userAvatar: {
@@ -88,7 +89,13 @@ const styles = {
     fontWeight: 'bold',
     fontSize: '1.1rem',
     boxShadow: '0 2px 8px rgba(16, 185, 129, 0.3)',
-    border: '2px solid #e0e0e0'
+    border: '2px solid #e0e0e0',
+    cursor: 'pointer',
+    transition: 'all 0.3s ease',
+    '&:hover': {
+      transform: 'scale(1.05)',
+      boxShadow: '0 4px 12px rgba(16, 185, 129, 0.4)'
+    }
   },
   
   userInfo: {
@@ -105,13 +112,45 @@ const styles = {
   },
   
   logoutButton: {
-    background: 'none',
-    border: 'none',
-    color: '#666',
-    fontSize: '0.8rem',
+    background: '#fff',
+    border: '1px solid #e74c3c',
+    color: '#e74c3c',
+    fontSize: '0.9rem',
     cursor: 'pointer',
-    textDecoration: 'underline',
-    padding: 0
+    padding: '0.7rem 1.2rem',
+    borderRadius: '8px',
+    boxShadow: '0 4px 12px rgba(231, 76, 60, 0.15)',
+    position: 'absolute',
+    top: '100%',
+    right: 0,
+    marginTop: '0.8rem',
+    zIndex: 1001,
+    transition: 'all 0.3s ease',
+    width: '120px',
+    fontWeight: '600',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: '0.5rem',
+    '&:hover': {
+      background: '#e74c3c',
+      color: 'white',
+      transform: 'translateY(-2px)',
+      boxShadow: '0 6px 16px rgba(231, 76, 60, 0.25)'
+    },
+    '&:active': {
+      transform: 'translateY(0)'
+    }
+  },
+  
+  userMenuContainer: {
+    position: 'relative',
+    display: 'flex',
+    alignItems: 'center'
+  },
+  
+  logoutIcon: {
+    fontSize: '1rem'
   }
 };
 

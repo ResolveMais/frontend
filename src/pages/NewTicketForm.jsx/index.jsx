@@ -249,7 +249,7 @@ const NewTicketForm = () => {
                 {step === 1 && (
                     <div style={styles.formStep}>
                         <div style={styles.stepHeader}>
-                            <h2 style={styles.stepTitle}>Para qual empresa?</h2>
+                            <h2 style={styles.stepTitle}>Para qual empresa deseja abrir o Ticket?</h2>
                             <p style={styles.stepDescription}>Selecione a empresa que deseja contactar</p>
                         </div>
                         
