@@ -1,29 +1,99 @@
 import { api } from './api';
 
 export const ticketService = {
-  // Buscar todos os tickets do usuário
-  getUserTickets: () => api.get('/tickets/my-tickets'),
+  create: async (ticketData) => {
+    try {
+      const token = localStorage.getItem('token');
+      const response = await api.post('/tickets/create', ticketData, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+      return response.data;
+    } catch (error) {
+      console.error('Erro ao criar ticket:', error);
+      throw error;
+    }
+  },
 
-  // Buscar apenas tickets pendentes
-  getUserPendingTickets: () => api.get('/tickets/user-pending-tickets'),
+  getCompanies: async () => {
+    try {
+      const token = localStorage.getItem('token');
+      const response = await api.get('/tickets/companies', {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+      return response.data;
+    } catch (error) {
+      console.error('Erro ao buscar empresas:', error);
+      throw error;
+    }
+  },
 
-  // Criar novo ticket
-  createTicket: (data) => api.post('/tickets/create', data),
+  getComplaintTitles: async (companyId) => {
+    try {
+      const token = localStorage.getItem('token');
+      const response = await api.get(`/tickets/complaint-titles/${companyId}`, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+      return response.data;
+    } catch (error) {
+      console.error('Erro ao buscar assuntos:', error);
+      throw error;
+    }
+  },
 
-  // Buscar empresas
-  getCompanies: () => api.get('/tickets/companies'),
+  getUserTickets: async () => {
+    try {
+      const token = localStorage.getItem('token');
+      const response = await api.get('/tickets/my-tickets', {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+      return response.data;
+    } catch (error) {
+      console.error('Erro ao buscar tickets:', error);
+      throw error;
+    }
+  },
 
-  // Buscar títulos de reclamação de uma empresa
-  getComplaintTitles: (companyId) =>
-    api.get(`/tickets/complaint-titles/${companyId}`),
+  getUserPendingTickets: async () => {
+    try {
+      const token = localStorage.getItem('token');
+      const response = await api.get('/tickets/user-pending-tickets', {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+      return response.data;
+    } catch (error) {
+      console.error('Erro ao buscar tickets pendentes:', error);
+      throw error;
+    }
+  },
 
   getRecentUpdates: async () => {
     try {
-      const response = await api.get('/tickets/recent-updates');
+      const token = localStorage.getItem('token');
+      
+      if (!token) {
+        throw new Error('Token não encontrado');
+      }
+
+      const response = await api.get('/tickets/recent-updates', {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+      
       return response.data;
     } catch (error) {
       console.error('Erro ao buscar atualizações:', error);
-      throw error;
+      throw new Error('Não foi possível carregar as atualizações');
     }
   }
 };

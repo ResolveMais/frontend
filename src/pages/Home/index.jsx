@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import * as S from "./styles";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
 import LoggedHeader from "../../components/LoggedHeader";
 import { ticketService } from '../../services/ticketService';
@@ -50,6 +50,8 @@ const IconCheck = () => (
 
 // ✅ FUNÇÃO AUXILIAR: Formatar tempo relativo
 const formatTimeAgo = (dateString) => {
+  if (!dateString) return 'Data não disponível';
+  
   const date = new Date(dateString);
   const now = new Date();
   const diffInSeconds = Math.floor((now - date) / 1000);
@@ -78,7 +80,7 @@ const UpdateCard = ({ update }) => {
     if (update.type === 'creation') {
       return update.ticket?.description || 'Novo ticket';
     }
-    return update.message;
+    return update.message || 'Atualização do ticket';
   };
 
   return (
@@ -99,15 +101,22 @@ const UpdateCard = ({ update }) => {
 
 export default function Home() {
   const { userData } = useAuth();
+  const navigate = useNavigate();
   const [updates, setUpdates] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const isFetching = useRef(false);
 
-  // ✅ BUSCAR ATUALIZAÇÕES AO CARREGAR COMPONENTE
+  // ✅ BUSCAR ATUALIZAÇÕES - UMA ÚNICA VEZ
   useEffect(() => {
     const fetchRecentUpdates = async () => {
+      if (isFetching.current) return;
+
       try {
+        isFetching.current = true;
         setLoading(true);
+        setError(null);
+        
         const response = await ticketService.getRecentUpdates();
         
         if (response.status === 200) {
@@ -116,15 +125,27 @@ export default function Home() {
           setError('Erro ao carregar atualizações');
         }
       } catch (err) {
-        console.error('Erro ao buscar atualizações:', err);
-        setError('Não foi possível carregar as atualizações');
+        if (!updates.length) {
+          setError(err.message || 'Não foi possível carregar as atualizações');
+        }
       } finally {
         setLoading(false);
+        isFetching.current = false;
       }
     };
 
-    fetchRecentUpdates();
+    const token = localStorage.getItem('token');
+    if (token && !isFetching.current) {
+      fetchRecentUpdates();
+    } else if (!token) {
+      setLoading(false);
+      setError('Faça login para ver as atualizações');
+    }
   }, []);
+
+  const handleRetry = () => {
+    window.location.reload();
+  };
 
   return (
     <div style={{ margin: 0, padding: 0 }}>
@@ -160,10 +181,29 @@ export default function Home() {
         <S.UpdatesTitle>Últimas atualizações</S.UpdatesTitle>
         
         {loading && <p>Carregando atualizações...</p>}
-        {error && <p style={{ color: 'red' }}>{error}</p>}
+        
+        {error && updates.length === 0 && (
+          <div style={{ color: '#ef4444', marginBottom: '1rem' }}>
+            {error}
+            <button 
+              onClick={handleRetry}
+              style={{
+                marginLeft: '1rem',
+                backgroundColor: '#10b981',
+                color: 'white',
+                border: 'none',
+                padding: '0.5rem 1rem',
+                borderRadius: '4px',
+                cursor: 'pointer'
+              }}
+            >
+              Tentar Novamente
+            </button>
+          </div>
+        )}
         
         <S.UpdatesGrid>
-          {!loading && !error && updates.length === 0 && (
+          {updates.length === 0 && !loading && !error && (
             <p>Nenhuma atualização recente</p>
           )}
           

@@ -16,15 +16,18 @@ const TicketList = () => {
 
   const loadTickets = async () => {
     try {
-      // Busca apenas tickets pendentes
+      // ✅ CORREÇÃO: Remove .data do response
       const response = await ticketService.getUserPendingTickets();
 
-      if (response.data.status === 200) {
-        setTickets(response.data.tickets || []);
+      // ✅ CORREÇÃO: Acessa response diretamente, não response.data
+      if (response.status === 200) {
+        setTickets(response.tickets || []);
       }
     } catch (err) {
       console.error('Erro ao carregar tickets:', err);
-      if (err.response?.status === 401) {
+      
+      // ✅ CORREÇÃO: Verificação mais robusta do erro
+      if (err.response?.status === 401 || err.message?.includes('Não autorizado')) {
         navigate('/login');
       }
     } finally {
