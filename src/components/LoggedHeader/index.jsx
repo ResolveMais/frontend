@@ -72,7 +72,7 @@ const LoggedHeader = () => {
 
       <div style={styles.rightSection}>
         <div style={styles.userInfo}>
-          <span style={styles.userName}>{userData?.name || "Gabriel Soares"}</span>
+          <span style={styles.userName}>{userData?.name || ""}</span>
         </div>
         
         <div style={styles.userMenuContainer}>

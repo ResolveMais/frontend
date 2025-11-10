@@ -1,9 +1,9 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import * as S from "./styles";
 import { Link } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
 import LoggedHeader from "../../components/LoggedHeader";
-import { ticketService } from '../../services/ticketService'; // CORRIGIDO
+import { ticketService } from '../../services/ticketService';
 
 /* Icons as React Components */
 const IconPlus = () => (
@@ -48,15 +48,90 @@ const IconCheck = () => (
   </svg>
 );
 
+// ✅ FUNÇÃO AUXILIAR: Formatar tempo relativo
+const formatTimeAgo = (dateString) => {
+  const date = new Date(dateString);
+  const now = new Date();
+  const diffInSeconds = Math.floor((now - date) / 1000);
+  
+  if (diffInSeconds < 60) return 'há poucos segundos';
+  if (diffInSeconds < 3600) return `há ${Math.floor(diffInSeconds / 60)} minutos`;
+  if (diffInSeconds < 86400) return `há ${Math.floor(diffInSeconds / 3600)} horas`;
+  if (diffInSeconds < 2592000) return `há ${Math.floor(diffInSeconds / 86400)} dias`;
+  if (diffInSeconds < 31536000) return `há ${Math.floor(diffInSeconds / 2592000)} meses`;
+  return `há ${Math.floor(diffInSeconds / 31536000)} anos`;
+};
+
+// ✅ COMPONENTE: Card de atualização
+const UpdateCard = ({ update }) => {
+  const getUpdateTitle = (type) => {
+    switch (type) {
+      case 'response': return 'Sua solicitação foi atualizada!';
+      case 'creation': return 'Novo ticket criado';
+      case 'closure': return 'Ticket finalizado';
+      case 'status_change': return 'Status alterado';
+      default: return 'Atualização';
+    }
+  };
+
+  const getUpdateDescription = (update) => {
+    if (update.type === 'creation') {
+      return update.ticket?.description || 'Novo ticket';
+    }
+    return update.message;
+  };
+
+  return (
+    <S.UpdateCard>
+      <S.UpdateTitle>
+        <S.UpdateDot />
+        {getUpdateTitle(update.type)}
+      </S.UpdateTitle>
+      <S.UpdateDescription>
+        {getUpdateDescription(update)}
+      </S.UpdateDescription>
+      <S.UpdateTime>
+        {formatTimeAgo(update.createdAt)}
+      </S.UpdateTime>
+    </S.UpdateCard>
+  );
+};
+
 export default function Home() {
   const { userData } = useAuth();
+  const [updates, setUpdates] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  // ✅ BUSCAR ATUALIZAÇÕES AO CARREGAR COMPONENTE
+  useEffect(() => {
+    const fetchRecentUpdates = async () => {
+      try {
+        setLoading(true);
+        const response = await ticketService.getRecentUpdates();
+        
+        if (response.status === 200) {
+          setUpdates(response.updates || []);
+        } else {
+          setError('Erro ao carregar atualizações');
+        }
+      } catch (err) {
+        console.error('Erro ao buscar atualizações:', err);
+        setError('Não foi possível carregar as atualizações');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchRecentUpdates();
+  }, []);
 
   return (
     <div style={{ margin: 0, padding: 0 }}>
       <LoggedHeader />
       
       <S.Main style={{ marginTop: '70px', padding: '2rem' }}>
-        <S.WelcomeTitle>Bem-vindo, João!</S.WelcomeTitle>
+        <S.WelcomeTitle>Bem-vindo, <span>{userData?.name || ""}</span> </S.WelcomeTitle>
         <S.WelcomeSubtitle>Como podemos ajudar você hoje?</S.WelcomeSubtitle>
 
         <S.ActionsGrid>
@@ -83,33 +158,18 @@ export default function Home() {
         </S.ActionsGrid>
 
         <S.UpdatesTitle>Últimas atualizações</S.UpdatesTitle>
+        
+        {loading && <p>Carregando atualizações...</p>}
+        {error && <p style={{ color: 'red' }}>{error}</p>}
+        
         <S.UpdatesGrid>
-          <S.UpdateCard>
-            <S.UpdateTitle>
-              <S.UpdateDot />
-              Sua solicitação foi atualizada!
-            </S.UpdateTitle>
-            <S.UpdateDescription>Uma resposta foi enviada</S.UpdateDescription>
-            <S.UpdateTime>há 2 horas</S.UpdateTime>
-          </S.UpdateCard>
-
-          <S.UpdateCard>
-            <S.UpdateTitle>
-              <S.UpdateDot />
-              Novo ticket criado
-            </S.UpdateTitle>
-            <S.UpdateDescription>Problemas com pagamento</S.UpdateDescription>
-            <S.UpdateTime>há 5 horas</S.UpdateTime>
-          </S.UpdateCard>
-
-          <S.UpdateCard>
-            <S.UpdateTitle>
-              <S.UpdateDot />
-              Ticket finalizado
-            </S.UpdateTitle>
-            <S.UpdateDescription>Seu ticket foi finalizado!</S.UpdateDescription>
-            <S.UpdateTime>há 2 meses</S.UpdateTime>
-          </S.UpdateCard>
+          {!loading && !error && updates.length === 0 && (
+            <p>Nenhuma atualização recente</p>
+          )}
+          
+          {updates.map(update => (
+            <UpdateCard key={update.id} update={update} />
+          ))}
         </S.UpdatesGrid>
       </S.Main>
     </div>

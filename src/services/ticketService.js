@@ -16,6 +16,16 @@ export const ticketService = {
   // Buscar títulos de reclamação de uma empresa
   getComplaintTitles: (companyId) =>
     api.get(`/tickets/complaint-titles/${companyId}`),
+
+  getRecentUpdates: async () => {
+    try {
+      const response = await api.get('/tickets/recent-updates');
+      return response.data;
+    } catch (error) {
+      console.error('Erro ao buscar atualizações:', error);
+      throw error;
+    }
+  }
 };
 
 export default ticketService;
