@@ -16,17 +16,13 @@ const TicketList = () => {
 
   const loadTickets = async () => {
     try {
-      // ✅ CORREÇÃO: Remove .data do response
-      const response = await ticketService.getUserPendingTickets();
+      const response = await ticketService.getUserOpenAndPendingTickets();
 
-      // ✅ CORREÇÃO: Acessa response diretamente, não response.data
       if (response.status === 200) {
         setTickets(response.tickets || []);
       }
     } catch (err) {
       console.error('Erro ao carregar tickets:', err);
-      
-      // ✅ CORREÇÃO: Verificação mais robusta do erro
       if (err.response?.status === 401 || err.message?.includes('Não autorizado')) {
         navigate('/login');
       }
@@ -50,12 +46,18 @@ const TicketList = () => {
     });
   };
 
+  const getStatusText = (status) => {
+    switch (status) {
+      case 'aberto': return 'Aberto';
+      case 'pendente': return 'Pendente';
+      case 'fechado': return 'Finalizado';
+      case 'resolvido': return 'Resolvido';
+      default: return status;
+    }
+  };
+
   if (loading) {
-    return (
-      <S.Container>
-        <S.Loading>Carregando tickets...</S.Loading>
-      </S.Container>
-    );
+    return <S.Loading>Carregando tickets...</S.Loading>;
   }
 
   return (
@@ -63,26 +65,24 @@ const TicketList = () => {
       <LoggedHeader />
 
       <S.Header>
-        <S.BackButton onClick={() => navigate(-1)}>←</S.BackButton>
-        <S.PageTitle>Tickets Pendentes</S.PageTitle>
+        <div>
+          <S.PageTitle>Tickets em Andamento</S.PageTitle>
+        </div>
       </S.Header>
 
       {tickets.length === 0 ? (
-        <S.EmptyState>Nenhum ticket pendente encontrado.</S.EmptyState>
+        <S.EmptyState>Nenhum ticket em andamento encontrado.</S.EmptyState>
       ) : (
         <S.TicketsList>
           {tickets.map((ticket) => (
             <S.TicketCard key={ticket.id}>
               <S.TicketHeader>
                 <S.TicketInfo>
-                  <S.TicketTitle>
-                    Chamado {ticket.empresa || 'Empresa X'}
-                  </S.TicketTitle>
+                  <S.TicketTitle>Chamado {ticket.empresa || 'Resolve +'}</S.TicketTitle>
                   <S.TicketStatus status={ticket.status}>
-                    – {ticket.status === 'aberto' ? 'Pendente' : 'Finalizado'}
+                    {getStatusText(ticket.status)}
                   </S.TicketStatus>
                 </S.TicketInfo>
-
                 <S.VerDetalhesButton onClick={() => openDetails(ticket)}>
                   Ver detalhes
                 </S.VerDetalhesButton>
@@ -91,6 +91,10 @@ const TicketList = () => {
               <S.TicketProtocol>
                 Protocolo: {`3330${ticket.id.toString().padStart(4, '0')}`}
               </S.TicketProtocol>
+              
+              <S.TicketDate>
+                Criado em: {formatDate(ticket.criadoEm || ticket.createdAt)}
+              </S.TicketDate>
             </S.TicketCard>
           ))}
         </S.TicketsList>
@@ -113,12 +117,14 @@ const TicketList = () => {
             )}
 
             <S.ModalInfo>
-              <strong>Status:</strong>{' '}
-              {selectedTicket.status === 'aberto' ? 'Pendente' : 'Finalizado'}
+              <strong>Status:</strong>
+              <S.ModalStatus status={selectedTicket.status}>
+                {getStatusText(selectedTicket.status)}
+              </S.ModalStatus>
             </S.ModalInfo>
 
             <S.ModalInfo>
-              <strong>Protocolo:</strong> {`2024${selectedTicket.id.toString().padStart(4, '0')}`}
+              <strong>Protocolo:</strong> {`3330${selectedTicket.id.toString().padStart(4, '0')}`}
             </S.ModalInfo>
 
             <S.ModalInfo>
@@ -127,11 +133,20 @@ const TicketList = () => {
 
             <S.ModalInfo>
               <strong>Descrição:</strong>
-              <br />
-              {selectedTicket.descricao || selectedTicket.description || 'Sem descrição disponível.'}
+              <div style={{ 
+                marginTop: '0.5rem',
+                padding: '1rem',
+                backgroundColor: '#f9fafb',
+                borderRadius: '6px',
+                border: '1px solid #e5e7eb'
+              }}>
+                {selectedTicket.descricao || selectedTicket.description || 'Sem descrição disponível.'}
+              </div>
             </S.ModalInfo>
 
-            <S.CloseButton onClick={closeModal}>Fechar</S.CloseButton>
+            <S.CloseButton onClick={closeModal}>
+              Fechar
+            </S.CloseButton>
           </S.ModalContent>
         </S.ModalOverlay>
       )}

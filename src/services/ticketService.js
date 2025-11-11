@@ -76,6 +76,22 @@ export const ticketService = {
     }
   },
 
+  // ✅ NOVO MÉTODO: Buscar tickets abertos e pendentes
+  getUserOpenAndPendingTickets: async () => {
+    try {
+      const token = localStorage.getItem('token');
+      const response = await api.get('/tickets/user-open-pending-tickets', {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+      return response.data;
+    } catch (error) {
+      console.error('Erro ao buscar tickets abertos/pendentes:', error);
+      throw error;
+    }
+  },
+
   getRecentUpdates: async () => {
     try {
       const token = localStorage.getItem('token');

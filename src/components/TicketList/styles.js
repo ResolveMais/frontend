@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 
 export const Container = styled.div`
+  margin-top: 60px;  
   width: 100%;
   min-height: 100vh;
   background-color: #f5f5f5;
@@ -17,18 +18,19 @@ export const Loading = styled.div`
 `;
 
 export const Header = styled.div`
-  width: 90%;
+  width: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
   margin-top: 30px;
   margin-bottom: 40px;
   position: relative;
+  padding: 0 20px;
 `;
 
 export const BackButton = styled.button`
   position: absolute;
-  left: 0;
+  left: 20px;
   background: none;
   border: none;
   font-size: 26px;
@@ -45,6 +47,14 @@ export const PageTitle = styled.h1`
   font-size: 22px;
   font-weight: 600;
   color: #222;
+  margin: 0;
+`;
+
+export const Subtitle = styled.p`
+  font-size: 14px;
+  color: #666;
+  margin: 4px 0 0 0;
+  text-align: center;
 `;
 
 export const EmptyState = styled.div`
@@ -54,39 +64,43 @@ export const EmptyState = styled.div`
   text-align: center;
 `;
 
-export const TicketsList = styled.div`
-  width: 90%;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  margin-bottom: 60px;
-`;
-
 export const TicketCard = styled.div`
   background: #fff;
-  border-radius: 14px;
-  padding: 18px 20px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  border-radius: 12px;
+  padding: 16px 14px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
   display: flex;
   flex-direction: column;
   transition: box-shadow 0.2s ease, transform 0.2s ease;
+  width: 100%;
 
   &:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 10px rgba(0,0,0,0.12);
+    transform: translateY(-1px);
+    box-shadow: 0 3px 8px rgba(0,0,0,0.12);
   }
+`;
+
+export const TicketsList = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 60px;
+  padding: 0 20px;
 `;
 
 export const TicketHeader = styled.div`
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-start;
+  margin-bottom: 12px;
 `;
 
 export const TicketInfo = styled.div`
   display: flex;
-  align-items: baseline;
+  align-items: center;
   flex-wrap: wrap;
+  gap: 8px;
 `;
 
 export const TicketTitle = styled.h2`
@@ -97,11 +111,37 @@ export const TicketTitle = styled.h2`
 `;
 
 export const TicketStatus = styled.span`
-  margin-left: 6px;
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 600;
-  color: ${({ status }) =>
-    status === 'aberto' ? '#e67e22' : '#27ae60'};
+  color: ${({ status }) => {
+    switch (status) {
+      case 'aberto': return '#f59e0b';
+      case 'pendente': return '#ef4444';
+      case 'fechado': return '#6b7280';
+      case 'resolvido': return '#10b981';
+      default: return '#6b7280';
+    }
+  }};
+  background-color: ${({ status }) => {
+    switch (status) {
+      case 'aberto': return '#fef3c7';
+      case 'pendente': return '#fee2e2';
+      case 'fechado': return '#f3f4f6';
+      case 'resolvido': return '#d1fae5';
+      default: return '#f3f4f6';
+    }
+  }};
+  padding: 4px 10px;
+  border-radius: 20px;
+  border: 1px solid ${({ status }) => {
+    switch (status) {
+      case 'aberto': return '#f59e0b';
+      case 'pendente': return '#ef4444';
+      case 'fechado': return '#6b7280';
+      case 'resolvido': return '#10b981';
+      default: return '#6b7280';
+    }
+  }};
 `;
 
 export const VerDetalhesButton = styled.button`
@@ -111,9 +151,10 @@ export const VerDetalhesButton = styled.button`
   background-color: #00C853;
   color: #fff;
   cursor: pointer;
-  font-size: 15px;
+  font-size: 14px;
   font-weight: 500;
   transition: background 0.2s ease, transform 0.1s ease;
+  white-space: nowrap;
 
   &:hover {
     background-color: #00b84d;
@@ -127,9 +168,16 @@ export const VerDetalhesButton = styled.button`
 `;
 
 export const TicketProtocol = styled.p`
-  margin-top: 10px;
+  margin: 8px 0 4px 0;
   font-size: 14px;
-  color: #444;
+  color: #666;
+  font-weight: 500;
+`;
+
+export const TicketDate = styled.p`
+  margin: 0;
+  font-size: 13px;
+  color: #888;
 `;
 
 /* ===== MODAL ===== */
@@ -166,7 +214,7 @@ export const ModalContent = styled.div`
 
 export const ModalTitle = styled.h2`
   font-size: 20px;
-  margin-bottom: 15px;
+  margin-bottom: 20px;
   color: #222;
   font-weight: 600;
   text-align: center;
@@ -174,12 +222,49 @@ export const ModalTitle = styled.h2`
 
 export const ModalInfo = styled.p`
   font-size: 15px;
-  margin: 8px 0;
+  margin: 12px 0;
   color: #444;
+  line-height: 1.5;
 
   strong {
     color: #222;
+    font-weight: 600;
   }
+`;
+
+export const ModalStatus = styled.span`
+  font-size: 14px;
+  font-weight: 600;
+  color: ${({ status }) => {
+    switch (status) {
+      case 'aberto': return '#f59e0b';
+      case 'pendente': return '#ef4444';
+      case 'fechado': return '#6b7280';
+      case 'resolvido': return '#10b981';
+      default: return '#6b7280';
+    }
+  }};
+  background-color: ${({ status }) => {
+    switch (status) {
+      case 'aberto': return '#fef3c7';
+      case 'pendente': return '#fee2e2';
+      case 'fechado': return '#f3f4f6';
+      case 'resolvido': return '#d1fae5';
+      default: return '#f3f4f6';
+    }
+  }};
+  padding: 4px 10px;
+  border-radius: 20px;
+  border: 1px solid ${({ status }) => {
+    switch (status) {
+      case 'aberto': return '#f59e0b';
+      case 'pendente': return '#ef4444';
+      case 'fechado': return '#6b7280';
+      case 'resolvido': return '#10b981';
+      default: return '#6b7280';
+    }
+  }};
+  margin-left: 8px;
 `;
 
 export const CloseButton = styled.button`
@@ -189,7 +274,7 @@ export const CloseButton = styled.button`
   color: white;
   border: none;
   border-radius: 8px;
-  padding: 10px;
+  padding: 12px;
   font-size: 16px;
   font-weight: 500;
   cursor: pointer;
