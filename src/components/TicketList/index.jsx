@@ -91,10 +91,6 @@ const TicketList = () => {
               <S.TicketProtocol>
                 Protocolo: {`3330${ticket.id.toString().padStart(4, '0')}`}
               </S.TicketProtocol>
-              
-              <S.TicketDate>
-                Criado em: {formatDate(ticket.criadoEm || ticket.createdAt)}
-              </S.TicketDate>
             </S.TicketCard>
           ))}
         </S.TicketsList>
