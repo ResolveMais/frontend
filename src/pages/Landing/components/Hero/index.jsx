@@ -21,7 +21,7 @@ const HeroSection = () => {
             PARA SUA EMPRESA - SAÍBA MAIS
           </Button>
           
-          <Button variant="green-border" redirect="/home" full>
+          <Button variant="green-border" redirect="/login" full>
             ABRIR UM TICKET
           </Button>
         </S.ButtonGroup>
