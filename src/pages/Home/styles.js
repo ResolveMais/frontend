@@ -33,7 +33,7 @@ export const LogoImg = styled.img`
 export const LogoText = styled.span`
   font-weight: 700;
   font-size: 24px;
-  color: #10b981; /* Verde (Tailwind emerald-500) */
+  color: #10b981;
 `;
 
 export const NavMenu = styled.nav`
@@ -50,7 +50,7 @@ export const NavItem = styled.button`
   font-weight: 500;
   color: ${(p) => (p.active ? "#10b981" : "#111827")};
   border-bottom: ${(p) =>
-        p.active ? "3px solid #10b981" : "3px solid transparent"};
+    p.active ? "3px solid #10b981" : "3px solid transparent"};
   padding-bottom: 6px;
   cursor: pointer;
   transition: color 0.2s, border-color 0.2s;
@@ -99,15 +99,15 @@ export const Main = styled.main`
 
 /* Welcome Section */
 export const WelcomeTitle = styled.h1`
-  font-size: 28px;
+  font-size: 32px; /* aumentado */
   font-weight: 700;
   margin-bottom: 4px;
 `;
 
 export const WelcomeSubtitle = styled.p`
   font-weight: 400;
-  font-size: 14px;
-  color: #6b7280; /* tailwind gray-500 */
+  font-size: 16px; /* aumentado */
+  color: #6b7280;
   margin-bottom: 24px;
 `;
 
@@ -126,13 +126,13 @@ export const ActionCard = styled.button`
   border: none;
   color: white;
   font-weight: 600;
-  font-size: 14px;
-  padding: 22px 28px;
-  min-width: 180px;
+  font-size: 16px; /* aumentado */
+  padding: 28px 32px; /* aumentado */
+  min-width: 220px; /* aumentado */
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 14px;
+  gap: 18px; /* aumentado */
   cursor: pointer;
   box-shadow: 0 4px 15px rgba(16, 185, 129, 0.35);
   transition: background-color 0.2s ease-in-out;
@@ -145,7 +145,9 @@ export const ActionCard = styled.button`
 export const ActionIcon = styled.div`
   width: 34px;
   height: 34px;
-  svg, img {
+
+  svg,
+  img {
     width: 100%;
     height: 100%;
     fill: white;
@@ -154,27 +156,27 @@ export const ActionIcon = styled.div`
 
 /* Updates Section */
 export const UpdatesTitle = styled.h2`
-  font-size: 18px;
+  font-size: 20px; /* maior */
   font-weight: 700;
   margin-bottom: 16px;
 `;
 
 export const UpdatesGrid = styled.div`
   display: flex;
-  gap: 16px;
-  flex-wrap: wrap;
-  justify-content: flex-start;
+  gap: 24px; /* aumentado */
+  flex-wrap: nowrap; /* impede quebrar linha */
+  justify-content: space-between;
+  width: 100%;
 `;
 
 export const UpdateCard = styled.div`
   background: white;
   border-radius: 14px;
-  border: 1px solid #d1d5db; /* gray-300 */
-  padding: 16px 20px;
-  min-width: 220px;
-  max-width: 280px;
+  border: 1px solid #d1d5db;
+  padding: 22px 26px; /* aumentado */
+  min-width: 260px; /* aumentado */
+  max-width: 300px; /* aumentado */
   box-sizing: border-box;
-  cursor: default;
 `;
 
 export const UpdateDot = styled.span`
@@ -189,7 +191,7 @@ export const UpdateDot = styled.span`
 
 export const UpdateTitle = styled.p`
   font-weight: 600;
-  font-size: 16px;
+  font-size: 18px; /* aumentado */
   color: #111827;
   margin: 0 0 6px 0;
   display: flex;
@@ -198,12 +200,12 @@ export const UpdateTitle = styled.p`
 
 export const UpdateDescription = styled.p`
   margin: 0 0 6px 22px;
-  font-size: 14px;
+  font-size: 15px; /* aumentado */
   color: #6b7280;
 `;
 
 export const UpdateTime = styled.p`
   margin: 0 0 0 22px;
-  font-size: 12px;
+  font-size: 13px; /* aumentado */
   color: #9ca3af;
 `;
