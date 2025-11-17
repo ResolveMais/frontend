@@ -28,7 +28,7 @@ const TestimonialsSection = () => {
           <S.TestimonialText>
             "O mais importante para mim é ter respostas rápidas e não falar com robô."
           </S.TestimonialText>
-          <S.TestimonialAuthor>Juntar Medeiros</S.TestimonialAuthor>
+          <S.TestimonialAuthor> Juan Medeiros</S.TestimonialAuthor>
           <S.TestimonialRole>Cliente</S.TestimonialRole>
         </S.TestimonialCard>
 
