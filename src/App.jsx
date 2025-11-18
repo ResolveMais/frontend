@@ -3,6 +3,7 @@ import { GlobalStyles } from "./styles/global-styles"
 import { ThemeProvider as StyledThemeProvider } from "styled-components"
 import { ThemeProvider, useTheme } from "./contexts/ThemeContext"
 import AppRoutes from "./routes"
+import { SnackProvider } from "./contexts/SnackContext"
 
 const InnerApp = () => {
   const { theme } = useTheme()
@@ -18,9 +19,11 @@ const InnerApp = () => {
 const App = () => {
   return (
     <ThemeProvider>
-      <AuthProvider>
-        <InnerApp />
-      </AuthProvider>
+      <SnackProvider>
+        <AuthProvider>
+          <InnerApp />
+        </AuthProvider>
+      </SnackProvider>
     </ThemeProvider>
   )
 }
