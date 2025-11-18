@@ -9,15 +9,17 @@ import TeamPage from "../pages/Team";
 import Empresa from "../pages/Empresa";
 import OpenTicket from "../pages/NewTicketForm.jsx";
 import TicketList from "../components/TicketList/index.jsx";
+import UserData from "../pages/UserData/index.jsx";
+
 const AppRoutes = () => (
     <Router>
         <Routes>
-
             <Route path="/empresa" Component={Empresa} />
             <Route path="/team" Component={TeamPage} />
             <Route path="/login" Component={Login} />
             <Route path="/register" Component={Register} />
             <Route path="/home" Component={Home} />
+            <Route path="/configuracoes" Component={UserData} />
             <Route path="/OpenTicket" Component={OpenTicket} />
             <Route path="/landing" Component={Landing} />
             <Route path="/PendingTickets" Component={TicketList} />
