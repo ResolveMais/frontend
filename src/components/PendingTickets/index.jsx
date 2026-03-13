@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ticketService } from '../../services/ticketService';
-import LoggedHeader from "../../components/LoggedHeader";
+import LoggedHeader from "../LoggedHeader";
 import * as S from './styles';
 
-const TicketList = () => {
+const PendingTickets= () => {
   const navigate = useNavigate();
   const [tickets, setTickets] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -150,4 +150,4 @@ const TicketList = () => {
   );
 };
 
-export default TicketList;
+export default PendingTickets;

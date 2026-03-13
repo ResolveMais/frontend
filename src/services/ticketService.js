@@ -61,17 +61,17 @@ export const ticketService = {
     }
   },
 
-  getUserPendingTickets: async () => {
+  getUserClosedTickets: async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await api.get('/tickets/user-pending-tickets', {
+      const response = await api.get('/tickets/user-closed-tickets', {
         headers: {
           'Authorization': `Bearer ${token}`
         }
       });
       return response.data;
     } catch (error) {
-      console.error('Erro ao buscar tickets pendentes:', error);
+      console.error('Erro ao buscar tickets finalizados:', error);
       throw error;
     }
   },

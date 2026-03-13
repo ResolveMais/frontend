@@ -8,7 +8,8 @@ import SimpleLayout from "../layout/SimpleLayout";
 import TeamPage from "../pages/Team";
 import Empresa from "../pages/Empresa";
 import OpenTicket from "../pages/NewTicketForm.jsx";
-import TicketList from "../components/TicketList/index.jsx";
+import PendingTickets from "../components/PendingTickets/index.jsx";
+import ClosedTickets from "../pages/ClosedTickets/index.jsx";
 import UserData from "../pages/UserData/index.jsx";
 
 const AppRoutes = () => (
@@ -22,7 +23,8 @@ const AppRoutes = () => (
             <Route path="/configuracoes" Component={UserData} />
             <Route path="/OpenTicket" Component={OpenTicket} />
             <Route path="/landing" Component={Landing} />
-            <Route path="/PendingTickets" Component={TicketList} />
+            <Route path="/PendingTickets" Component={PendingTickets} />
+            <Route path="/ClosedTickets" Component={ClosedTickets} />
             <Route element={<SimpleLayout />}>
                 <Route path="/" Component={Landing} />
             </Route>

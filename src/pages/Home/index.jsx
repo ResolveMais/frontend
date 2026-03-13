@@ -170,11 +170,11 @@ export default function Home() {
             Tickets Pendentes
           </S.ActionCard>
 
-          <S.ActionCard aria-label="Tickets resolvidos">
+          <S.ActionCard aria-label="Tickets finalizados" as={Link} to="/ClosedTickets">
             <S.ActionIcon>
               <IconCheck />
             </S.ActionIcon>
-            Tickets Resolvidos
+            Tickets Finalizados
           </S.ActionCard>
         </S.ActionsGrid>
 
