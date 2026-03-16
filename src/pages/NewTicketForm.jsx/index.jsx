@@ -19,7 +19,7 @@ const NewTicketForm = () => {
     const [showSuccess, setShowSuccess] = useState(false);
     const navigate = useNavigate();
 
-    const API_BASE = 'http://localhost:3001';
+    const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
 
     useEffect(() => {
         const token = localStorage.getItem('token');
@@ -43,7 +43,7 @@ const NewTicketForm = () => {
         try {
             setLoading(true);
             
-            const url = `${API_BASE}/api/tickets/companies`;
+            const url = `${API_BASE}/tickets/companies`;
             
             const response = await fetch(url, {
                 method: 'GET',
@@ -92,7 +92,7 @@ const NewTicketForm = () => {
         }
 
         try {
-            const url = `${API_BASE}/api/tickets/complaint-titles/${companyId}`;
+            const url = `${API_BASE}/tickets/complaint-titles/${companyId}`;
             
             const response = await fetch(url, {
                 method: 'GET',
@@ -140,7 +140,7 @@ const NewTicketForm = () => {
 
         try {
             const token = localStorage.getItem('token');
-            const url = `${API_BASE}/api/tickets/create`;
+            const url = `${API_BASE}/tickets/create`;
             
             const response = await fetch(url, {
                 method: 'POST',
