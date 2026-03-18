@@ -48,6 +48,20 @@ const IconCheck = () => (
   </svg>
 );
 
+const IconChat = () => (
+  <svg
+    stroke="currentColor"
+    fill="currentColor"
+    strokeWidth="0"
+    viewBox="0 0 24 24"
+    height="34"
+    width="34"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <path d="M3 3H21V17H6L3 20V3ZM5 5V15.17L5.17 15H19V5H5ZM7 8H17V10H7V8ZM7 11H14V13H7V11Z" />
+  </svg>
+);
+
 // ✅ FUNÇÃO AUXILIAR: Formatar tempo relativo
 const formatTimeAgo = (dateString) => {
   if (!dateString) return 'Data não disponível';
@@ -175,6 +189,13 @@ export default function Home() {
               <IconCheck />
             </S.ActionIcon>
             Tickets Finalizados
+          </S.ActionCard>
+
+          <S.ActionCard aria-label="Chatbot de atendimento" as={Link} to="/chatbot">
+            <S.ActionIcon>
+              <IconChat />
+            </S.ActionIcon>
+            Chatbot IA
           </S.ActionCard>
         </S.ActionsGrid>
 

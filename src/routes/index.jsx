@@ -11,6 +11,7 @@ import OpenTicket from "../pages/NewTicketForm.jsx";
 import PendingTickets from "../components/PendingTickets/index.jsx";
 import ClosedTickets from "../pages/ClosedTickets/index.jsx";
 import UserData from "../pages/UserData/index.jsx";
+import ChatbotPage from "../pages/Chatbot";
 
 const AppRoutes = () => (
     <Router>
@@ -25,6 +26,7 @@ const AppRoutes = () => (
             <Route path="/landing" Component={Landing} />
             <Route path="/PendingTickets" Component={PendingTickets} />
             <Route path="/ClosedTickets" Component={ClosedTickets} />
+            <Route path="/chatbot" Component={ChatbotPage} />
             <Route element={<SimpleLayout />}>
                 <Route path="/" Component={Landing} />
             </Route>
