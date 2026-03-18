@@ -186,3 +186,19 @@ O token JWT:
 
 - O frontend depende do backend para autenticação e dados dos tickets.
 - Se `VITE_API_URL` estiver incorreta, login, cadastro e tickets não funcionarão.
+
+## Chatbot IA (novo)
+
+### Rota nova
+
+- `/chatbot`: pagina de assistente virtual da plataforma
+
+### Funcionalidades
+
+- stream de resposta em tempo real (SSE)
+- historico de conversa carregado ao abrir a pagina
+- limpar conversa com delecao logica no backend (`del = true`)
+
+### Integracao
+
+A pagina consome os endpoints em `/api/chatbot` usando o token JWT em `Authorization`.
