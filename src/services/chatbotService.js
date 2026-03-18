@@ -32,17 +32,18 @@ const parseSseEvent = (rawEventBlock) => {
 };
 
 export const chatbotService = {
-  getConversation: async () => {
+  getConversation: async ({ ticketId } = {}) => {
     const headers = getAuthHeader();
-    const response = await api.get("/chatbot/conversation", { headers });
+    const params = ticketId ? { ticketId } : undefined;
+    const response = await api.get("/chatbot/conversation", { headers, params });
     return response.data;
   },
 
-  clearConversation: async (conversationId = null) => {
+  clearConversation: async ({ conversationId = null, ticketId = null } = {}) => {
     const headers = getAuthHeader();
     const response = await api.post(
       "/chatbot/conversation/clear",
-      { conversationId },
+      { conversationId, ticketId },
       { headers }
     );
     return response.data;
@@ -51,6 +52,7 @@ export const chatbotService = {
   streamMessage: async ({
     message,
     conversationId = null,
+    ticketId = null,
     onStart = () => { },
     onToken = () => { },
     onDone = () => { },
@@ -70,7 +72,7 @@ export const chatbotService = {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({ message, conversationId }),
+        body: JSON.stringify({ message, conversationId, ticketId }),
       }
     );
 
