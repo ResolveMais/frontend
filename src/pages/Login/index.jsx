@@ -8,6 +8,7 @@ import * as yup from "yup";
 import { api } from "../../services/api";
 import { useAuth } from "../../contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
+import { getHomePathByUserType } from "../../utils/userType";
 
 const schema = yup.object().shape({
     email: yup.string().email("E-mail inválido").required("E-mail é obrigatório"),
@@ -37,7 +38,7 @@ const Login = () => {
             if (response.status === 200 && response.data?.token) {
                 const { user, token } = response.data;
                 login({ user, token });
-                window.location.href = "/";
+                navigate(getHomePathByUserType(user?.userType), { replace: true });
             } else {
                 alert("Erro ao fazer login. Tente novamente.");
             }
@@ -51,7 +52,7 @@ const Login = () => {
 
     useEffect(() => {
         if (!userData?.id && !isLoggedIn) logout();
-        else navigate("/home");
+        else navigate(getHomePathByUserType(userData?.userType), { replace: true });
     }, [userData, isLoggedIn, logout, navigate]);
 
     return (
