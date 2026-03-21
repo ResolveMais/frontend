@@ -1,5 +1,7 @@
 import Button from "../../components/Button";
 import Input from "../../components/Input";
+import PhoneInput from "../../components/PhoneInput";
+import CpfInput from "../../components/CpfInput";
 import * as S from "./styles";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -31,6 +33,7 @@ const Register = () => {
         register,
         handleSubmit,
         formState: { errors },
+        control,
     } = useForm({
         resolver: yupResolver(schema),
     });
@@ -74,56 +77,63 @@ const Register = () => {
                 <S.Logo src="../../../assets/images/logo.png" alt="Resolve Mais" />
             </S.LogoContainer>
 
-            <S.Left>
-                <S.Image src="../../../assets/images/register.png" alt="Register" />
-                <S.Text>Bem-vindo!</S.Text>
-                <S.SubText>Faça o seu cadastro.</S.SubText>
-            </S.Left>
+            <S.Content>
+                <S.Left>
+                    <S.Image src="../../../assets/images/register.png" alt="Register" />
+                    <S.Text>Comece agora</S.Text>
+                    <S.SubText>Crie sua conta e acompanhe o status dos chamados.</S.SubText>
+                </S.Left>
 
-            <S.Right>
-                <S.FormTitle>Fazer Cadastro</S.FormTitle>
+                <S.Right>
+                    <S.FormHeader>
+                        <S.FormTitle>Criar conta</S.FormTitle>
+                        <S.FormSubtitle>Cadastro rapido e seguro para sua equipe.</S.FormSubtitle>
+                    </S.FormHeader>
 
-                <S.Form onSubmit={handleSubmit(onSubmit)}>
-                    <Input
-                        label="Nome:"
-                        placeholder="Digite o seu nome"
-                        type="text"
-                        register={register("name")}
-                        errors={errors.name}
-                    />
-                    <Input
-                        label="Telefone:"
-                        placeholder="Digite o seu telefone"
-                        type="text"
-                        register={register("phone")}
-                        errors={errors.phone}
-                    />
-                    <Input
-                        label="CPF:"
-                        placeholder="Digite o seu cpf"
-                        type="text"
-                        register={register("cpf")}
-                        errors={errors.cpf}
-                    />
-                    <Input
-                        label="E-mail:"
-                        placeholder="Digite o e-mail"
-                        type="text"
-                        register={register("email")}
-                        errors={errors.email}
-                    />
-                    <Input
-                        label="Senha:"
-                        placeholder="Digite a senha"
-                        type="password"
-                        register={register("password")}
-                        errors={errors.password}
-                    />
+                    <S.Form onSubmit={handleSubmit(onSubmit)}>
+                        <Input
+                            label="Nome:"
+                            placeholder="Digite o seu nome"
+                            type="text"
+                            register={register("name")}
+                            errors={errors.name}
+                        />
+                        <PhoneInput
+                            label="Telefone:"
+                            placeholder="(11) 99999-9999"
+                            control={control}
+                            name="phone"
+                            errors={errors.phone}
+                        />
+                        <CpfInput
+                            label="CPF:"
+                            placeholder="000.000.000-00"
+                            control={control}
+                            name="cpf"
+                            errors={errors.cpf}
+                        />
+                        <Input
+                            label="E-mail:"
+                            placeholder="Digite o e-mail"
+                            type="text"
+                            register={register("email")}
+                            errors={errors.email}
+                        />
+                        <Input
+                            label="Senha:"
+                            placeholder="Digite a senha"
+                            type="password"
+                            register={register("password")}
+                            errors={errors.password}
+                        />
 
-                    <Button variant="transparent" redirect="/login">Login</Button>
-                    <Button variant="primary" type="submit" disabled={loading}>Cadastrar</Button>
-                </S.Form>
-            </S.Right>
+                        <S.Actions>
+                            <Button variant="transparent" redirect="/login" full>Login</Button>
+                            <Button variant="primary" type="submit" disabled={loading} full>Cadastrar</Button>
+                        </S.Actions>
+                    </S.Form>
+                </S.Right>
+            </S.Content>
         </S.Container>
     )
 }

@@ -62,23 +62,30 @@ const Login = () => {
                 <S.Logo src="../../../assets/images/logo.png" alt="Resolve Mais" />
             </S.LogoContainer>
 
-            <S.Left>
-                <S.FormTitle>Login</S.FormTitle>
+            <S.Content>
+                <S.Left>
+                    <S.FormHeader>
+                        <S.FormTitle>Entrar</S.FormTitle>
+                        <S.FormSubtitle>Use seu e-mail e senha para continuar.</S.FormSubtitle>
+                    </S.FormHeader>
 
-                <S.Form onSubmit={handleSubmit(onSubmit)}>
-                    <Input label="E-mail:" placeholder="Digite o e-mail" type="text" register={register("email")} errors={errors.email} />
-                    <Input label="Senha:" placeholder="Digite a senha" type="password" register={register("password")} errors={errors.password} />
+                    <S.Form onSubmit={handleSubmit(onSubmit)}>
+                        <Input label="E-mail:" placeholder="Digite o e-mail" type="text" register={register("email")} errors={errors.email} />
+                        <Input label="Senha:" placeholder="Digite a senha" type="password" register={register("password")} errors={errors.password} />
 
-                    <Button variant="transparent" redirect="/register">Cadastro</Button>
-                    <Button variant="primary" type="submit" disabled={loading}>Enviar</Button>
-                </S.Form>
-            </S.Left>
+                        <S.Actions>
+                            <Button variant="transparent" redirect="/register" full>Cadastro</Button>
+                            <Button variant="primary" type="submit" disabled={loading} full>Entrar</Button>
+                        </S.Actions>
+                    </S.Form>
+                </S.Left>
 
-            <S.Right>
-                <S.Image src="../../../assets/images/login.png" alt="Login" />
-                <S.Text>Bem-vindo de volta!</S.Text>
-                <S.SubText>Estamos felizes em vê-lo novamente.</S.SubText>
-            </S.Right>
+                <S.Right>
+                    <S.Image src="../../../assets/images/login.png" alt="Login" />
+                    <S.Text>Bem-vindo de volta</S.Text>
+                    <S.SubText>Acompanhe seus chamados e resolva tudo em um só lugar.</S.SubText>
+                </S.Right>
+            </S.Content>
         </S.Container>
     )
 }
