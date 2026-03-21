@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import * as S from "./styles";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
 import LoggedHeader from "../../components/LoggedHeader";
 import { ticketService } from '../../services/ticketService';
@@ -115,7 +115,6 @@ const UpdateCard = ({ update }) => {
 
 export default function Home() {
   const { userData } = useAuth();
-  const navigate = useNavigate();
   const [updates, setUpdates] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -170,28 +169,28 @@ export default function Home() {
         <S.WelcomeSubtitle>Como podemos ajudar você hoje?</S.WelcomeSubtitle>
 
         <S.ActionsGrid>
-          <S.ActionCard aria-label="Abrir novo ticket" as={Link} to="/OpenTicket">
+          <S.ActionCard aria-label="Abrir novo ticket" as={Link} to="/cliente/open-ticket">
             <S.ActionIcon>
               <IconPlus />
             </S.ActionIcon>
             Abrir Novo Ticket
           </S.ActionCard>
 
-          <S.ActionCard aria-label="Tickets pendentes" as={Link} to="/PendingTickets">
+          <S.ActionCard aria-label="Tickets pendentes" as={Link} to="/cliente/pending-tickets">
             <S.ActionIcon>
               <IconList />
             </S.ActionIcon>
             Tickets Pendentes
           </S.ActionCard>
 
-          <S.ActionCard aria-label="Tickets finalizados" as={Link} to="/ClosedTickets">
+          <S.ActionCard aria-label="Tickets finalizados" as={Link} to="/cliente/closed-tickets">
             <S.ActionIcon>
               <IconCheck />
             </S.ActionIcon>
             Tickets Finalizados
           </S.ActionCard>
 
-          <S.ActionCard aria-label="Chatbot de atendimento" as={Link} to="/chatbot">
+          <S.ActionCard aria-label="Chatbot de atendimento" as={Link} to="/cliente/chatbot">
             <S.ActionIcon>
               <IconChat />
             </S.ActionIcon>

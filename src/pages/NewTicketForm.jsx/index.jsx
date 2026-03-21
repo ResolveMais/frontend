@@ -159,7 +159,7 @@ const NewTicketForm = () => {
                 if (response.ok) {
                     setShowSuccess(true);
                     setTimeout(() => {
-                        navigate('/home');
+                        navigate('/cliente/home');
                     }, 2000);
                 } else {
                     alert(data.message || `Erro ${response.status} ao criar ticket`);
