@@ -50,7 +50,7 @@ const PhoneInput = ({
             />
             {errors && (
               <ErrorMessage>
-                {errors?.message || errors || "Este campo e obrigatorio"}
+                {errors?.message || errors || "Este campo é obrigatório"}
               </ErrorMessage>
             )}
           </InputContainer>

@@ -162,6 +162,77 @@ export const Form = styled.form`
     max-width: 420px;
 `;
 
+export const SectionTitle = styled.h3`
+    margin-top: 4px;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--auth-accent-dark);
+`;
+
+export const UserTypeGroup = styled.div`
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+`;
+
+export const UserTypeLabel = styled.span`
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--auth-ink);
+`;
+
+export const UserTypeButtons = styled.div`
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 8px;
+`;
+
+export const UserTypeOption = styled.label`
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid rgba(15, 46, 47, 0.2);
+    border-radius: 10px;
+    background: #ffffff;
+    min-height: 38px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+
+    &:hover {
+        border-color: var(--auth-accent);
+    }
+`;
+
+export const UserTypeRadio = styled.input`
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+
+    &:checked + span {
+        color: #ffffff;
+        background: linear-gradient(145deg, #1aa36f 0%, #0f7e5a 100%);
+        border-color: transparent;
+    }
+`;
+
+export const UserTypeText = styled.span`
+    width: 100%;
+    text-align: center;
+    border-radius: 9px;
+    border: 1px solid transparent;
+    color: var(--auth-ink-soft);
+    font-size: 13px;
+    font-weight: 600;
+    padding: 9px 8px;
+    transition: all 0.2s ease;
+`;
+
+export const UserTypeError = styled.span`
+    color: #d64933;
+    font-size: 12px;
+`;
+
 export const Right = styled.div`
     padding: 52px 48px;
     display: flex;

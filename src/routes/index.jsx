@@ -1,37 +1,120 @@
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import Layout from "../layout/Layout";
-import Home from "../pages/Home";
+import { BrowserRouter as Router, Navigate, Route, Routes } from "react-router-dom";
+
 import Landing from "../pages/Landing";
 import Login from "../pages/Login";
 import Register from "../pages/Register";
-import SimpleLayout from "../layout/SimpleLayout";
 import TeamPage from "../pages/Team";
 import Empresa from "../pages/Empresa";
-import OpenTicket from "../pages/NewTicketForm.jsx";
-import PendingTickets from "../components/PendingTickets/index.jsx";
-import ClosedTickets from "../pages/ClosedTickets/index.jsx";
-import UserData from "../pages/UserData/index.jsx";
-import ChatbotPage from "../pages/Chatbot";
+
+import ClientHome from "../areas/cliente/pages/Home";
+import ClientOpenTicket from "../areas/cliente/pages/OpenTicket";
+import ClientPendingTickets from "../areas/cliente/pages/PendingTickets";
+import ClientClosedTickets from "../areas/cliente/pages/ClosedTickets";
+import ClientUserData from "../areas/cliente/pages/UserData";
+import ClientChatbot from "../areas/cliente/pages/Chatbot";
+
+import EmployeeHome from "../areas/funcionario/pages/Home";
+import CompanyHome from "../areas/empresa/pages/Home";
+import CompanyAdmins from "../areas/empresa/pages/Admins";
+
+import RoleGate from "./RoleGate";
+import { USER_TYPES } from "../utils/userType";
 
 const AppRoutes = () => (
-    <Router>
-        <Routes>
-            <Route path="/empresa" Component={Empresa} />
-            <Route path="/team" Component={TeamPage} />
-            <Route path="/login" Component={Login} />
-            <Route path="/register" Component={Register} />
-            <Route path="/home" Component={Home} />
-            <Route path="/configuracoes" Component={UserData} />
-            <Route path="/OpenTicket" Component={OpenTicket} />
-            <Route path="/landing" Component={Landing} />
-            <Route path="/PendingTickets" Component={PendingTickets} />
-            <Route path="/ClosedTickets" Component={ClosedTickets} />
-            <Route path="/chatbot" Component={ChatbotPage} />
-            <Route element={<SimpleLayout />}>
-                <Route path="/" Component={Landing} />
-            </Route>
-        </Routes>
-    </Router>
+  <Router>
+    <Routes>
+      <Route path="/" element={<Landing />} />
+      <Route path="/landing" element={<Landing />} />
+      <Route path="/team" element={<TeamPage />} />
+      <Route path="/empresa" element={<Empresa />} />
+      <Route path="/login" element={<Login />} />
+      <Route path="/register" element={<Register />} />
+
+      <Route
+        path="/cliente/home"
+        element={
+          <RoleGate allowedTypes={[USER_TYPES.CLIENTE]}>
+            <ClientHome />
+          </RoleGate>
+        }
+      />
+      <Route
+        path="/cliente/open-ticket"
+        element={
+          <RoleGate allowedTypes={[USER_TYPES.CLIENTE]}>
+            <ClientOpenTicket />
+          </RoleGate>
+        }
+      />
+      <Route
+        path="/cliente/pending-tickets"
+        element={
+          <RoleGate allowedTypes={[USER_TYPES.CLIENTE]}>
+            <ClientPendingTickets />
+          </RoleGate>
+        }
+      />
+      <Route
+        path="/cliente/closed-tickets"
+        element={
+          <RoleGate allowedTypes={[USER_TYPES.CLIENTE]}>
+            <ClientClosedTickets />
+          </RoleGate>
+        }
+      />
+      <Route
+        path="/cliente/configuracoes"
+        element={
+          <RoleGate allowedTypes={[USER_TYPES.CLIENTE]}>
+            <ClientUserData />
+          </RoleGate>
+        }
+      />
+      <Route
+        path="/cliente/chatbot"
+        element={
+          <RoleGate allowedTypes={[USER_TYPES.CLIENTE]}>
+            <ClientChatbot />
+          </RoleGate>
+        }
+      />
+
+      <Route
+        path="/funcionario/home"
+        element={
+          <RoleGate allowedTypes={[USER_TYPES.FUNCIONARIO]}>
+            <EmployeeHome />
+          </RoleGate>
+        }
+      />
+
+      <Route
+        path="/empresa/home"
+        element={
+          <RoleGate allowedTypes={[USER_TYPES.EMPRESA]}>
+            <CompanyHome />
+          </RoleGate>
+        }
+      />
+      <Route
+        path="/empresa/administradores"
+        element={
+          <RoleGate allowedTypes={[USER_TYPES.EMPRESA]}>
+            <CompanyAdmins />
+          </RoleGate>
+        }
+      />
+
+      <Route path="/home" element={<Navigate to="/cliente/home" replace />} />
+      <Route path="/OpenTicket" element={<Navigate to="/cliente/open-ticket" replace />} />
+      <Route path="/PendingTickets" element={<Navigate to="/cliente/pending-tickets" replace />} />
+      <Route path="/ClosedTickets" element={<Navigate to="/cliente/closed-tickets" replace />} />
+      <Route path="/configuracoes" element={<Navigate to="/cliente/configuracoes" replace />} />
+      <Route path="/chatbot" element={<Navigate to="/cliente/chatbot" replace />} />
+
+      <Route path="*" element={<Navigate to="/" replace />} />
+    </Routes>
+  </Router>
 );
 
 export default AppRoutes;
