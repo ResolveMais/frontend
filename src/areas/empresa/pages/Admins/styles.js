@@ -7,7 +7,7 @@ export const Page = styled.div`
 `;
 
 export const Container = styled.main`
-    width: 100%;
+    width: min(980px, 95%);
     margin: 0 auto;
     display: grid;
     gap: 16px;
