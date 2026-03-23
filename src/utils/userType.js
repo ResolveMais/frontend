@@ -37,4 +37,12 @@ export const getHomePathByUserType = (userType) => {
   return "/cliente/home";
 };
 
+export const getUserSettingsPathByUserType = (userType) => {
+  const normalizedType = normalizeUserType(userType);
+
+  if (normalizedType === USER_TYPES.EMPRESA) return "/empresa/usuario";
+  if (normalizedType === USER_TYPES.FUNCIONARIO) return "/funcionario/configuracoes";
+  return "/cliente/configuracoes";
+};
+
 export const isCompanyUser = (userType) => normalizeUserType(userType) === USER_TYPES.EMPRESA;
