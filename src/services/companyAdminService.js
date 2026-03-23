@@ -45,8 +45,22 @@ export const companyAdminService = {
     return response.data;
   },
 
+  updateCompanyProfile: async (payload) => {
+    const response = await api.patch("/companies/my-company/profile", payload, {
+      headers: withAuthHeader(),
+    });
+    return response.data;
+  },
+
   addEmployee: async (payload) => {
     const response = await api.post("/companies/my-company/employees", payload, {
+      headers: withAuthHeader(),
+    });
+    return response.data;
+  },
+
+  updateEmployee: async (employeeUserId, payload) => {
+    const response = await api.patch(`/companies/my-company/employees/${employeeUserId}`, payload, {
       headers: withAuthHeader(),
     });
     return response.data;
