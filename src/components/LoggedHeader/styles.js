@@ -97,6 +97,13 @@ const styles = {
       boxShadow: '0 4px 12px rgba(16, 185, 129, 0.4)'
     }
   },
+
+  userAvatarImage: {
+    width: '100%',
+    height: '100%',
+    borderRadius: '50%',
+    objectFit: 'cover',
+  },
   
   userInfo: {
     display: 'flex',
@@ -141,6 +148,18 @@ const styles = {
     '&:active': {
       transform: 'translateY(0)'
     }
+  },
+
+  logoutButtonInline: {
+    background: '#ffffff',
+    border: '1px solid #e74c3c',
+    color: '#e74c3c',
+    fontSize: '0.85rem',
+    cursor: 'pointer',
+    padding: '0.5rem 0.9rem',
+    borderRadius: '8px',
+    fontWeight: '600',
+    transition: 'all 0.2s ease',
   },
   
   userMenuContainer: {

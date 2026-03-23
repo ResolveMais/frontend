@@ -1,21 +1,26 @@
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
-import { getHomePathByUserType, normalizeUserType, USER_TYPES } from "../../utils/userType";
+import { getHomePathByUserType, getUserSettingsPathByUserType, normalizeUserType, USER_TYPES } from "../../utils/userType";
 import styles from "./styles";
 
 const LoggedHeader = () => {
   const { userData, logout } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
-  const [showLogout, setShowLogout] = useState(false);
+  const [avatarLoadError, setAvatarLoadError] = useState(false);
 
   const userType = normalizeUserType(userData?.userType);
+  const settingsPath = getUserSettingsPathByUserType(userType);
+
+  useEffect(() => {
+    setAvatarLoadError(false);
+  }, [userData?.avatarUrl]);
 
   const menuItems = useMemo(() => {
     if (userType === USER_TYPES.CLIENTE) {
       return [
-        { key: "configuracoes", label: "Configuracoes", path: "/cliente/configuracoes" },
+        { key: "configuracoes", label: "Configurações", path: "/cliente/configuracoes" },
         { key: "home", label: "Home", path: "/cliente/home" },
         { key: "atendimentos", label: "Atendimentos", path: "/cliente/pending-tickets" },
       ];
@@ -24,7 +29,15 @@ const LoggedHeader = () => {
     if (userType === USER_TYPES.EMPRESA) {
       return [
         { key: "home", label: "Home", path: "/empresa/home" },
+        { key: "configuracoes", label: "Configurações", path: "/empresa/configuracoes" },
         { key: "admins", label: "Administradores", path: "/empresa/administradores" },
+      ];
+    }
+
+    if (userType === USER_TYPES.FUNCIONARIO) {
+      return [
+        { key: "home", label: "Home", path: "/funcionario/home" },
+        { key: "configuracoes", label: "Configurações", path: "/funcionario/configuracoes" },
       ];
     }
 
@@ -36,12 +49,12 @@ const LoggedHeader = () => {
     navigate("/login");
   };
 
-  const handleNavigation = (path) => {
-    navigate(path);
+  const handleOpenSettings = () => {
+    navigate(settingsPath);
   };
 
-  const toggleLogout = () => {
-    setShowLogout((previousState) => !previousState);
+  const handleNavigation = (path) => {
+    navigate(path);
   };
 
   const isActivePage = (path) => {
@@ -82,16 +95,23 @@ const LoggedHeader = () => {
         </div>
 
         <div style={styles.userMenuContainer}>
-          <div style={styles.userAvatar} onClick={toggleLogout}>
-            {getUserInitials()}
+          <div style={styles.userAvatar} onClick={handleOpenSettings} title="Abrir configurações do usuário">
+            {userData?.avatarUrl && !avatarLoadError ? (
+              <img
+                src={userData.avatarUrl}
+                alt="Foto do usuário"
+                style={styles.userAvatarImage}
+                onError={() => setAvatarLoadError(true)}
+              />
+            ) : (
+              getUserInitials()
+            )}
           </div>
-
-          {showLogout && (
-            <button style={styles.logoutButton} onClick={handleLogout}>
-              Sair
-            </button>
-          )}
         </div>
+
+        <button style={styles.logoutButtonInline} onClick={handleLogout} type="button">
+          Sair
+        </button>
       </div>
     </header>
   );
