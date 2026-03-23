@@ -14,8 +14,11 @@ import ClientUserData from "../areas/cliente/pages/UserData";
 import ClientChatbot from "../areas/cliente/pages/Chatbot";
 
 import EmployeeHome from "../areas/funcionario/pages/Home";
+import EmployeeUserData from "../areas/funcionario/pages/UserData";
 import CompanyHome from "../areas/empresa/pages/Home";
 import CompanyAdmins from "../areas/empresa/pages/Admins";
+import CompanySettings from "../areas/empresa/pages/Settings";
+import CompanyUserData from "../areas/empresa/pages/UserData";
 
 import RoleGate from "./RoleGate";
 import { USER_TYPES } from "../utils/userType";
@@ -87,12 +90,36 @@ const AppRoutes = () => (
           </RoleGate>
         }
       />
+      <Route
+        path="/funcionario/configuracoes"
+        element={
+          <RoleGate allowedTypes={[USER_TYPES.FUNCIONARIO]}>
+            <EmployeeUserData />
+          </RoleGate>
+        }
+      />
 
       <Route
         path="/empresa/home"
         element={
           <RoleGate allowedTypes={[USER_TYPES.EMPRESA]}>
             <CompanyHome />
+          </RoleGate>
+        }
+      />
+      <Route
+        path="/empresa/configuracoes"
+        element={
+          <RoleGate allowedTypes={[USER_TYPES.EMPRESA]}>
+            <CompanySettings />
+          </RoleGate>
+        }
+      />
+      <Route
+        path="/empresa/usuario"
+        element={
+          <RoleGate allowedTypes={[USER_TYPES.EMPRESA]}>
+            <CompanyUserData />
           </RoleGate>
         }
       />
