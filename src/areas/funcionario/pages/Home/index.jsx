@@ -4,7 +4,7 @@ const EmployeeHome = () => {
   return (
     <CenteredMessage
       title="Home Funcionario"
-      description="Area inicial do funcionario criada. Aqui vamos incluir a tela de atendimento de chamados nas proximas etapas."
+      description="Area inicial do funcionario criada. Use o menu Configuracoes para manter seus dados pessoais atualizados."
       showHeader
     />
   );
