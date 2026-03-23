@@ -4,7 +4,7 @@ const CompanyHome = () => {
   return (
     <CenteredMessage
       title="Home Empresa"
-      description="Area inicial da empresa criada. Use o menu Administradores para definir o administrador principal ou associar novos administradores."
+      description="Area inicial da empresa criada. Use o menu Configuracoes para editar dados da empresa e o menu Administradores para definir o administrador principal ou associar novos administradores."
       showHeader
     />
   );
