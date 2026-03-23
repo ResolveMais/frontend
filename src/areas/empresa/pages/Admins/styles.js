@@ -78,6 +78,12 @@ export const SectionAssociateAdmin = styled.div`
     gap: 6px;
 `;
 
+export const AdminsGroup = styled.div`
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+`;
+
 export const Label = styled.label`
     font-weight: 600;
     font-size: 13px;

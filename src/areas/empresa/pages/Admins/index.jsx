@@ -352,7 +352,7 @@ const CompanyAdminsPage = () => {
               </Button>
             </S.Form>
 
-            <div>
+            <S.AdminsGroup>
               {loading && <p>Carregando administradores...</p>}
               {!loading && admins.length === 0 && (
                 <p>Nenhum administrador associado.</p>
@@ -388,7 +388,7 @@ const CompanyAdminsPage = () => {
                     </S.RowActions>
                   </S.ItemRow>
                 ))}
-            </div>
+            </S.AdminsGroup>
           </S.SectionGrid>
         </S.Card>
 
