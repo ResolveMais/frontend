@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+﻿import { useCallback, useEffect, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 
 import * as S from "./styles";
@@ -18,8 +18,13 @@ const CompanyAdminsPage = () => {
   const [employees, setEmployees] = useState([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [activeTab, setActiveTab] = useState("employees");
+  const [showAdminPanel, setShowAdminPanel] = useState(false);
+  const [showEmployeeForm, setShowEmployeeForm] = useState(false);
   const [associateEmail, setAssociateEmail] = useState("");
   const [editingEmployeeId, setEditingEmployeeId] = useState(null);
+  const [adminSearch, setAdminSearch] = useState("");
+  const [employeeSearch, setEmployeeSearch] = useState("");
 
   const adminForm = useForm({
     defaultValues: {
@@ -267,7 +272,56 @@ const CompanyAdminsPage = () => {
     }
   };
 
-  const editingEmployee = employees.find((employee) => employee.id === editingEmployeeId) || null;
+  const editingEmployee =
+    employees.find((employee) => employee.id === editingEmployeeId) || null;
+
+  const mergedEmployees = useMemo(() => {
+    const adminById = new Map(admins.map((admin) => [admin.id, admin]));
+    const map = new Map();
+
+    employees.forEach((employee) => {
+      const admin = adminById.get(employee.id);
+      map.set(employee.id, {
+        ...employee,
+        isAdmin: Boolean(admin),
+        isPrimaryAdmin: Boolean(admin?.isPrimary),
+      });
+    });
+
+    adminById.forEach((admin) => {
+      if (!map.has(admin.id)) {
+        map.set(admin.id, {
+          ...admin,
+          isAdmin: true,
+          isPrimaryAdmin: Boolean(admin.isPrimary),
+        });
+      }
+    });
+
+    return Array.from(map.values()).sort((a, b) =>
+      String(a.name || "").localeCompare(String(b.name || "")),
+    );
+  }, [admins, employees]);
+
+  const filteredAdmins = useMemo(() => {
+    const term = adminSearch.trim().toLowerCase();
+    if (!term) return admins;
+    return admins.filter((admin) =>
+      [admin.name, admin.email, admin.jobTitle]
+        .filter(Boolean)
+        .some((value) => String(value).toLowerCase().includes(term)),
+    );
+  }, [admins, adminSearch]);
+
+  const filteredEmployees = useMemo(() => {
+    const term = employeeSearch.trim().toLowerCase();
+    if (!term) return mergedEmployees;
+    return mergedEmployees.filter((employee) =>
+      [employee.name, employee.email, employee.jobTitle]
+        .filter(Boolean)
+        .some((value) => String(value).toLowerCase().includes(term)),
+    );
+  }, [employeeSearch, mergedEmployees]);
 
   return (
     <S.Page>
@@ -275,255 +329,360 @@ const CompanyAdminsPage = () => {
 
       <S.Container>
         <S.Card>
-          <S.CardTitle>Administradores e Funcionários</S.CardTitle>
-          {!loading && company && (
-            <S.CardText>
-              {company.name} - CNPJ: {company.cnpj}
-            </S.CardText>
-          )}
+          <S.HeaderRow>
+            <div>
+              <S.CardTitle>Administradores e Funcionários</S.CardTitle>
+              {!loading && company && (
+                <S.CardText>
+                  {company.name} - CNPJ: {company.cnpj}
+                </S.CardText>
+              )}
+            </div>
+            <S.HeaderStats>
+              <S.Stat>
+                <span>Administradores</span>
+                <strong>{admins.length}</strong>
+              </S.Stat>
+              <S.Stat>
+                <span>Funcionários</span>
+                <strong>{mergedEmployees.length}</strong>
+              </S.Stat>
+            </S.HeaderStats>
+          </S.HeaderRow>
         </S.Card>
 
         <S.Card>
-          <S.SectionTitle>Administradores</S.SectionTitle>
+          <S.TabsHeader>
+            <S.TabButton
+              type="button"
+              data-active={activeTab === "employees"}
+              onClick={() => setActiveTab("employees")}
+            >
+              Funcionários <S.TabCount>{mergedEmployees.length}</S.TabCount>
+            </S.TabButton>
+            <S.TabButton
+              type="button"
+              data-active={activeTab === "admins"}
+              onClick={() => setActiveTab("admins")}
+            >
+              Administradores <S.TabCount>{admins.length}</S.TabCount>
+            </S.TabButton>
+          </S.TabsHeader>
 
-          <S.SectionGrid>
-            <S.SectionContent>
-              <S.SectionAssociateAdmin>
-                <S.Label>E-mail para associar admin existente:</S.Label>
-                <S.AssociateEmailInput
-                  value={associateEmail}
-                  onChange={(event) => setAssociateEmail(event.target.value)}
-                  placeholder="usuario@empresa.com"
+          {activeTab === "employees" && (
+            <S.TabContent>
+              <S.TabHeader>
+                <div>
+                  <S.SectionTitle>Funcionários</S.SectionTitle>
+                  <S.TabDescription>
+                    Administradores também aparecem aqui para facilitar a visualização
+                    do time.
+                  </S.TabDescription>
+                </div>
+              </S.TabHeader>
+
+              <S.ActionBar>
+                <S.SearchInput
+                  value={employeeSearch}
+                  onChange={(event) => setEmployeeSearch(event.target.value)}
+                  placeholder="Buscar por nome, e-mail ou cargo"
                 />
-              </S.SectionAssociateAdmin>
-              <S.SectionButtons>
                 <Button
                   variant="primary"
                   type="button"
-                  onClick={associateExistingAdmin}
+                  onClick={() => setShowEmployeeForm((prev) => !prev)}
                   disabled={saving}
-                  full
                 >
-                  Associar
+                  {showEmployeeForm ? "Fechar cadastro" : "Criar funcionário"}
                 </Button>
-              </S.SectionButtons>
-            </S.SectionContent>
+              </S.ActionBar>
 
-            <S.Form onSubmit={adminForm.handleSubmit(createAdmin)}>
-              <S.FormTitle>Criar novo administrador</S.FormTitle>
-              <Input
-                label="Nome:"
-                placeholder="Nome completo"
-                type="text"
-                register={adminForm.register("name")}
-              />
-              <Input
-                label="E-mail:"
-                placeholder="usuario@empresa.com"
-                type="text"
-                register={adminForm.register("email")}
-              />
-              <PhoneInput
-                label="Telefone:"
-                placeholder="(11) 99999-9999"
-                control={adminForm.control}
-                name="phone"
-              />
-              <CpfInput
-                label="CPF:"
-                placeholder="000.000.000-00"
-                control={adminForm.control}
-                name="cpf"
-              />
-              <Input
-                label="Cargo:"
-                placeholder="Ex: Coordenador de Suporte"
-                type="text"
-                register={adminForm.register("jobTitle")}
-              />
-              <Input
-                label="Senha:"
-                placeholder="Senha"
-                type="password"
-                register={adminForm.register("password")}
-              />
-              <Button variant="primary" type="submit" disabled={saving}>
-                Criar e associar admin
-              </Button>
-            </S.Form>
-
-            <S.AdminsGroup>
-              {loading && <p>Carregando administradores...</p>}
-              {!loading && admins.length === 0 && (
-                <p>Nenhum administrador associado.</p>
+              {showEmployeeForm && (
+                <S.Panel>
+                  <S.Form onSubmit={employeeCreateForm.handleSubmit(createEmployee)}>
+                    <S.FormTitle>Criar novo funcionário</S.FormTitle>
+                    <Input
+                      label="Nome:"
+                      placeholder="Nome completo"
+                      type="text"
+                      register={employeeCreateForm.register("name")}
+                    />
+                    <Input
+                      label="E-mail:"
+                      placeholder="funcionario@empresa.com"
+                      type="text"
+                      register={employeeCreateForm.register("email")}
+                    />
+                    <PhoneInput
+                      label="Telefone:"
+                      placeholder="(11) 99999-9999"
+                      control={employeeCreateForm.control}
+                      name="phone"
+                    />
+                    <CpfInput
+                      label="CPF:"
+                      placeholder="000.000.000-00"
+                      control={employeeCreateForm.control}
+                      name="cpf"
+                    />
+                    <Input
+                      label="Cargo:"
+                      placeholder="Ex: Analista de Atendimento"
+                      type="text"
+                      register={employeeCreateForm.register("jobTitle")}
+                    />
+                    <Input
+                      label="Senha:"
+                      placeholder="Senha"
+                      type="password"
+                      register={employeeCreateForm.register("password")}
+                    />
+                    <Button variant="primary" type="submit" disabled={saving}>
+                      Criar funcionário
+                    </Button>
+                  </S.Form>
+                </S.Panel>
               )}
-              {!loading &&
-                admins.map((admin) => (
-                  <S.ItemRow key={admin.id}>
-                    <div>
-                      <strong>{admin.name}</strong> ({admin.email})
-                      {admin.isPrimary && <S.Badge>Principal</S.Badge>}
-                    </div>
-                    <S.InfoRow>
-                      CPF: {admin.cpf || "-"} | Telefone: {admin.phone || "-"} |
-                      Cargo: {admin.jobTitle || "-"}
-                    </S.InfoRow>
+
+              <S.InfosContainer>
+                {loading && <p>Carregando funcionários...</p>}
+                {!loading && filteredEmployees.length === 0 && (
+                  <S.EmptyState>Nenhum funcionário encontrado.</S.EmptyState>
+                )}
+                {!loading &&
+                  filteredEmployees.map((employee) => (
+                    <S.ItemRow key={employee.id}>
+                      <div>
+                        <strong>{employee.name}</strong> ({employee.email})
+                        {employee.isAdmin && (
+                          <S.Badge $tone="neutral">Administrador</S.Badge>
+                        )}
+                        {employee.isPrimaryAdmin && <S.Badge>Principal</S.Badge>}
+                      </div>
+                      <S.InfoRow>
+                        CPF: {employee.cpf || "-"} | Telefone:{" "}
+                        {employee.phone || "-"} | Cargo: {employee.jobTitle || "-"}
+                      </S.InfoRow>
+                      <S.RowActions>
+                        {employee.isAdmin ? (
+                          <Button
+                            variant="transparent"
+                            type="button"
+                            onClick={() => setActiveTab("admins")}
+                          >
+                            Gerenciar na aba Administradores
+                          </Button>
+                        ) : (
+                          <>
+                            <Button
+                              variant="transparent"
+                              type="button"
+                              disabled={saving}
+                              onClick={() => startEditEmployee(employee)}
+                            >
+                              Editar
+                            </Button>
+                            <Button
+                              variant="secondary"
+                              type="button"
+                              disabled={saving}
+                              onClick={() => removeEmployee(employee.id)}
+                            >
+                              Remover da empresa
+                            </Button>
+                          </>
+                        )}
+                      </S.RowActions>
+                    </S.ItemRow>
+                  ))}
+              </S.InfosContainer>
+
+              {editingEmployee && (
+                <S.Panel>
+                  <S.Form onSubmit={employeeEditForm.handleSubmit(saveEmployeeEdition)}>
+                    <S.FormTitle>Editar funcionário</S.FormTitle>
+                    <Input
+                      label="Nome:"
+                      placeholder="Nome completo"
+                      type="text"
+                      register={employeeEditForm.register("name")}
+                    />
+                    <Input
+                      label="E-mail:"
+                      placeholder="funcionario@empresa.com"
+                      type="text"
+                      register={employeeEditForm.register("email")}
+                    />
+                    <PhoneInput
+                      label="Telefone:"
+                      placeholder="(11) 99999-9999"
+                      control={employeeEditForm.control}
+                      name="phone"
+                    />
+                    <Input
+                      label="Cargo:"
+                      placeholder="Ex: Analista de Atendimento"
+                      type="text"
+                      register={employeeEditForm.register("jobTitle")}
+                    />
+                    <S.ReadOnlyInfo>
+                      <strong>CPF bloqueado:</strong> {editingEmployee.cpf || "-"}
+                    </S.ReadOnlyInfo>
                     <S.RowActions>
-                      <Button
-                        variant="transparent"
-                        type="button"
-                        disabled={saving || admin.isPrimary}
-                        onClick={() => setPrimary(admin.id)}
-                      >
-                        Tornar principal
+                      <Button variant="primary" type="submit" disabled={saving}>
+                        Salvar funcionário
                       </Button>
                       <Button
                         variant="secondary"
                         type="button"
                         disabled={saving}
-                        onClick={() => removeAdmin(admin.id)}
+                        onClick={cancelEditEmployee}
                       >
-                        Remover
+                        Cancelar
                       </Button>
                     </S.RowActions>
-                  </S.ItemRow>
-                ))}
-            </S.AdminsGroup>
-          </S.SectionGrid>
-        </S.Card>
+                  </S.Form>
+                </S.Panel>
+              )}
+            </S.TabContent>
+          )}
 
-        <S.Card>
-          <S.SectionTitle>Funcionários</S.SectionTitle>
+          {activeTab === "admins" && (
+            <S.TabContent>
+              <S.TabHeader>
+                <div>
+                  <S.SectionTitle>Administradores</S.SectionTitle>
+                  <S.TabDescription>
+                    Associe um administrador existente ou crie um novo para a empresa.
+                  </S.TabDescription>
+                </div>
+              </S.TabHeader>
 
-          <S.Form onSubmit={employeeCreateForm.handleSubmit(createEmployee)}>
-            <S.FormTitle>Criar novo funcionário</S.FormTitle>
-            <Input
-              label="Nome:"
-              placeholder="Nome completo"
-              type="text"
-              register={employeeCreateForm.register("name")}
-            />
-            <Input
-              label="E-mail:"
-              placeholder="funcionario@empresa.com"
-              type="text"
-              register={employeeCreateForm.register("email")}
-            />
-            <PhoneInput
-              label="Telefone:"
-              placeholder="(11) 99999-9999"
-              control={employeeCreateForm.control}
-              name="phone"
-            />
-            <CpfInput
-              label="CPF:"
-              placeholder="000.000.000-00"
-              control={employeeCreateForm.control}
-              name="cpf"
-            />
-            <Input
-              label="Cargo:"
-              placeholder="Ex: Analista de Atendimento"
-              type="text"
-              register={employeeCreateForm.register("jobTitle")}
-            />
-            <Input
-              label="Senha:"
-              placeholder="Senha"
-              type="password"
-              register={employeeCreateForm.register("password")}
-            />
-            <Button variant="primary" type="submit" disabled={saving}>
-              Criar funcionário
-            </Button>
-          </S.Form>
-
-          <S.InfosContainer>
-            {loading && <p>Carregando funcionários...</p>}
-            {!loading && employees.length === 0 && (
-              <p>Nenhum funcionário associado.</p>
-            )}
-            {!loading &&
-              employees.map((employee) => (
-                <S.ItemRow key={employee.id}>
-                  <div>
-                    <strong>{employee.name}</strong> ({employee.email})
-                  </div>
-                  <S.InfoRow>
-                    CPF: {employee.cpf || "-"} | Telefone:{" "}
-                    {employee.phone || "-"} | Cargo: {employee.jobTitle || "-"}
-                  </S.InfoRow>
-                  <S.RowActions>
-                    <Button
-                      variant="transparent"
-                      type="button"
-                      disabled={saving}
-                      onClick={() => startEditEmployee(employee)}
-                    >
-                      Editar
-                    </Button>
-                    <Button
-                      variant="secondary"
-                      type="button"
-                      disabled={saving}
-                      onClick={() => removeEmployee(employee.id)}
-                    >
-                      Remover da empresa
-                    </Button>
-                  </S.RowActions>
-                </S.ItemRow>
-              ))}
-          </S.InfosContainer>
-
-          {editingEmployee && (
-            <S.Form
-              onSubmit={employeeEditForm.handleSubmit(saveEmployeeEdition)}
-              style={{ marginTop: "18px", display: "grid", gap: "10px" }}
-            >
-              <S.FormTitle>
-                Editar funcionário
-              </S.FormTitle>
-              <Input
-                label="Nome:"
-                placeholder="Nome completo"
-                type="text"
-                register={employeeEditForm.register("name")}
-              />
-              <Input
-                label="E-mail:"
-                placeholder="funcionario@empresa.com"
-                type="text"
-                register={employeeEditForm.register("email")}
-              />
-              <PhoneInput
-                label="Telefone:"
-                placeholder="(11) 99999-9999"
-                control={employeeEditForm.control}
-                name="phone"
-              />
-              <Input
-                label="Cargo:"
-                placeholder="Ex: Analista de Atendimento"
-                type="text"
-                register={employeeEditForm.register("jobTitle")}
-              />
-              <S.ReadOnlyInfo>
-                <strong>CPF bloqueado:</strong> {editingEmployee.cpf || "-"}
-              </S.ReadOnlyInfo>
-              <S.RowActions>
-                <Button variant="primary" type="submit" disabled={saving}>
-                  Salvar funcionário
-                </Button>
+              <S.ActionBar>
+                <S.SearchInput
+                  value={adminSearch}
+                  onChange={(event) => setAdminSearch(event.target.value)}
+                  placeholder="Buscar por nome, e-mail ou cargo"
+                />
                 <Button
-                  variant="secondary"
+                  variant="primary"
                   type="button"
+                  onClick={() => setShowAdminPanel((prev) => !prev)}
                   disabled={saving}
-                  onClick={cancelEditEmployee}
                 >
-                  Cancelar
+                  {showAdminPanel ? "Fechar painel" : "Associar administrador"}
                 </Button>
-              </S.RowActions>
-            </S.Form>
+              </S.ActionBar>
+
+              {showAdminPanel && (
+                <S.Panel>
+                  <S.SectionGrid>
+                    <S.SectionContent>
+                      <S.SectionAssociateAdmin>
+                        <S.Label>E-mail para associar admin existente:</S.Label>
+                        <S.AssociateEmailInput
+                          value={associateEmail}
+                          onChange={(event) => setAssociateEmail(event.target.value)}
+                          placeholder="usuario@empresa.com"
+                        />
+                      </S.SectionAssociateAdmin>
+                      <S.SectionButtons>
+                        <Button
+                          variant="primary"
+                          type="button"
+                          onClick={associateExistingAdmin}
+                          disabled={saving}
+                          full
+                        >
+                          Associar
+                        </Button>
+                      </S.SectionButtons>
+                    </S.SectionContent>
+
+                    <S.Form onSubmit={adminForm.handleSubmit(createAdmin)}>
+                      <S.FormTitle>Criar novo administrador</S.FormTitle>
+                      <Input
+                        label="Nome:"
+                        placeholder="Nome completo"
+                        type="text"
+                        register={adminForm.register("name")}
+                      />
+                      <Input
+                        label="E-mail:"
+                        placeholder="usuario@empresa.com"
+                        type="text"
+                        register={adminForm.register("email")}
+                      />
+                      <PhoneInput
+                        label="Telefone:"
+                        placeholder="(11) 99999-9999"
+                        control={adminForm.control}
+                        name="phone"
+                      />
+                      <CpfInput
+                        label="CPF:"
+                        placeholder="000.000.000-00"
+                        control={adminForm.control}
+                        name="cpf"
+                      />
+                      <Input
+                        label="Cargo:"
+                        placeholder="Ex: Coordenador de Suporte"
+                        type="text"
+                        register={adminForm.register("jobTitle")}
+                      />
+                      <Input
+                        label="Senha:"
+                        placeholder="Senha"
+                        type="password"
+                        register={adminForm.register("password")}
+                      />
+                      <Button variant="primary" type="submit" disabled={saving}>
+                        Criar e associar admin
+                      </Button>
+                    </S.Form>
+                  </S.SectionGrid>
+                </S.Panel>
+              )}
+
+              <S.AdminsGroup>
+                {loading && <p>Carregando administradores...</p>}
+                {!loading && filteredAdmins.length === 0 && (
+                  <S.EmptyState>Nenhum administrador encontrado.</S.EmptyState>
+                )}
+                {!loading &&
+                  filteredAdmins.map((admin) => (
+                    <S.ItemRow key={admin.id}>
+                      <div>
+                        <strong>{admin.name}</strong> ({admin.email})
+                        {admin.isPrimary && <S.Badge>Principal</S.Badge>}
+                      </div>
+                      <S.InfoRow>
+                        CPF: {admin.cpf || "-"} | Telefone: {admin.phone || "-"} |
+                        Cargo: {admin.jobTitle || "-"}
+                      </S.InfoRow>
+                      <S.RowActions>
+                        <Button
+                          variant="transparent"
+                          type="button"
+                          disabled={saving || admin.isPrimary}
+                          onClick={() => setPrimary(admin.id)}
+                        >
+                          Tornar principal
+                        </Button>
+                        <Button
+                          variant="secondary"
+                          type="button"
+                          disabled={saving}
+                          onClick={() => removeAdmin(admin.id)}
+                        >
+                          Remover
+                        </Button>
+                      </S.RowActions>
+                    </S.ItemRow>
+                  ))}
+              </S.AdminsGroup>
+            </S.TabContent>
           )}
         </S.Card>
       </S.Container>
