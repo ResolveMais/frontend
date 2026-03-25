@@ -3,6 +3,8 @@ import { BrowserRouter as Router, Navigate, Route, Routes } from "react-router-d
 import Landing from "../pages/Landing";
 import Login from "../pages/Login";
 import Register from "../pages/Register";
+import ForgotPassword from "../pages/ForgotPassword";
+import ResetPassword from "../pages/ResetPassword";
 import TeamPage from "../pages/Team";
 import Empresa from "../pages/Empresa";
 
@@ -32,6 +34,8 @@ const AppRoutes = () => (
       <Route path="/empresa" element={<Empresa />} />
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
+      <Route path="/forgot-password" element={<ForgotPassword />} />
+      <Route path="/reset-password" element={<ResetPassword />} />
 
       <Route
         path="/cliente/home"
