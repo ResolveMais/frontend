@@ -1,4 +1,5 @@
 import { createGlobalStyle, styled } from 'styled-components';
+import { Link } from 'react-router-dom';
 
 export const GlobalStyle = createGlobalStyle`
     :root {
@@ -206,3 +207,18 @@ export const Actions = styled.div`
     }
 `;
 
+export const FormExtras = styled.div`
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+`;
+
+export const ForgotLink = styled(Link)`
+    font-size: 13px;
+    color: var(--auth-accent-dark);
+    font-weight: 600;
+
+    &:hover {
+        text-decoration: underline;
+    }
+`;

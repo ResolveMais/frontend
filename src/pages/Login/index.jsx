@@ -5,10 +5,10 @@ import * as S from "./styles";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
-import { api } from "../../services/api";
 import { useAuth } from "../../contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { getHomePathByUserType } from "../../utils/userType";
+import { authService } from "../../services/authService";
 
 const schema = yup.object().shape({
     email: yup.string().email("E-mail inválido").required("E-mail é obrigatório"),
@@ -30,13 +30,13 @@ const Login = () => {
     const onSubmit = async (data) => {
         setLoading(true);
         try {
-            const response = await api.post("/auth/login", {
+            const response = await authService.login({
                 email: data.email,
                 password: data.password,
             });
 
-            if (response.status === 200 && response.data?.token) {
-                const { user, token } = response.data;
+            if (response?.token) {
+                const { user, token } = response;
                 login({ user, token });
                 navigate(getHomePathByUserType(user?.userType), { replace: true });
             } else {
@@ -73,6 +73,10 @@ const Login = () => {
                     <S.Form onSubmit={handleSubmit(onSubmit)}>
                         <Input label="E-mail:" placeholder="Digite o e-mail" type="text" register={register("email")} errors={errors.email} />
                         <Input label="Senha:" placeholder="Digite a senha" type="password" register={register("password")} errors={errors.password} />
+
+                        <S.FormExtras>
+                            <S.ForgotLink to="/forgot-password">Esqueci minha senha</S.ForgotLink>
+                        </S.FormExtras>
 
                         <S.Actions>
                             <Button variant="transparent" redirect="/register" full>Cadastro</Button>
