@@ -52,6 +52,27 @@ export const companyAdminService = {
     return response.data;
   },
 
+  listComplaintTitles: async () => {
+    const response = await api.get("/companies/my-company/complaint-titles", {
+      headers: withAuthHeader(),
+    });
+    return response.data;
+  },
+
+  addComplaintTitle: async (payload) => {
+    const response = await api.post("/companies/my-company/complaint-titles", payload, {
+      headers: withAuthHeader(),
+    });
+    return response.data;
+  },
+
+  removeComplaintTitle: async (complaintTitleId) => {
+    const response = await api.delete(`/companies/my-company/complaint-titles/${complaintTitleId}`, {
+      headers: withAuthHeader(),
+    });
+    return response.data;
+  },
+
   addEmployee: async (payload) => {
     const response = await api.post("/companies/my-company/employees", payload, {
       headers: withAuthHeader(),

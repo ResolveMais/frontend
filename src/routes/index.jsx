@@ -19,6 +19,7 @@ import EmployeeHome from "../areas/funcionario/pages/Home";
 import EmployeeUserData from "../areas/funcionario/pages/UserData";
 import CompanyHome from "../areas/empresa/pages/Home";
 import CompanyAdmins from "../areas/empresa/pages/Admins";
+import CompanyComplaintTitles from "../areas/empresa/pages/ComplaintTitles";
 import CompanySettings from "../areas/empresa/pages/Settings";
 import CompanyUserData from "../areas/empresa/pages/UserData";
 
@@ -116,6 +117,14 @@ const AppRoutes = () => (
         element={
           <RoleGate allowedTypes={[USER_TYPES.EMPRESA]}>
             <CompanySettings />
+          </RoleGate>
+        }
+      />
+      <Route
+        path="/empresa/assuntos"
+        element={
+          <RoleGate allowedTypes={[USER_TYPES.EMPRESA]}>
+            <CompanyComplaintTitles />
           </RoleGate>
         }
       />

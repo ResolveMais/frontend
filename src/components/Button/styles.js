@@ -129,5 +129,6 @@ export const LinkButton = styled(Link)`
     font-size: 14px;
     text-align: center;
     width: ${({ $full }) => ($full ? "100%" : "auto")};
+    height: 34px;
     ${({ $variant, theme }) => getVariant(theme, $variant || "primary")}
 `;

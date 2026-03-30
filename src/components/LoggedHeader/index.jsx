@@ -1,7 +1,12 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
-import { getHomePathByUserType, getUserSettingsPathByUserType, normalizeUserType, USER_TYPES } from "../../utils/userType";
+import {
+  getHomePathByUserType,
+  getUserSettingsPathByUserType,
+  normalizeUserType,
+  USER_TYPES,
+} from "../../utils/userType";
 import styles from "./styles";
 
 const LoggedHeader = () => {
@@ -20,7 +25,7 @@ const LoggedHeader = () => {
   const menuItems = useMemo(() => {
     if (userType === USER_TYPES.CLIENTE) {
       return [
-        { key: "configuracoes", label: "Configurações", path: "/cliente/configuracoes" },
+        { key: "configuracoes", label: "Configuracoes", path: "/cliente/configuracoes" },
         { key: "home", label: "Home", path: "/cliente/home" },
         { key: "atendimentos", label: "Atendimentos", path: "/cliente/pending-tickets" },
       ];
@@ -29,7 +34,7 @@ const LoggedHeader = () => {
     if (userType === USER_TYPES.EMPRESA) {
       return [
         { key: "home", label: "Home", path: "/empresa/home" },
-        { key: "configuracoes", label: "Configurações", path: "/empresa/configuracoes" },
+        { key: "configuracoes", label: "Configuracoes", path: "/empresa/configuracoes" },
         { key: "admins", label: "Administradores", path: "/empresa/administradores" },
       ];
     }
@@ -37,7 +42,7 @@ const LoggedHeader = () => {
     if (userType === USER_TYPES.FUNCIONARIO) {
       return [
         { key: "home", label: "Home", path: "/funcionario/home" },
-        { key: "configuracoes", label: "Configurações", path: "/funcionario/configuracoes" },
+        { key: "configuracoes", label: "Configuracoes", path: "/funcionario/configuracoes" },
       ];
     }
 
@@ -95,11 +100,11 @@ const LoggedHeader = () => {
         </div>
 
         <div style={styles.userMenuContainer}>
-          <div style={styles.userAvatar} onClick={handleOpenSettings} title="Abrir configurações do usuário">
+          <div style={styles.userAvatar} onClick={handleOpenSettings} title="Abrir configuracoes do usuario">
             {userData?.avatarUrl && !avatarLoadError ? (
               <img
                 src={userData.avatarUrl}
-                alt="Foto do usuário"
+                alt="Foto do usuario"
                 style={styles.userAvatarImage}
                 onError={() => setAvatarLoadError(true)}
               />

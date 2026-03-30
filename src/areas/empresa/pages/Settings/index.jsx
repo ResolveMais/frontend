@@ -12,7 +12,7 @@ const CompanySettings = () => {
   const { showSnack } = useSnack();
   const [company, setCompany] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [saving, setSaving] = useState(false);
+  const [savingCompany, setSavingCompany] = useState(false);
 
   const companyForm = useForm({
     defaultValues: {
@@ -27,6 +27,7 @@ const CompanySettings = () => {
       const response = await companyAdminService.list();
       const companyData = response.company || null;
       setCompany(companyData);
+
       if (companyData) {
         companyForm.reset({
           name: companyData.name || "",
@@ -36,7 +37,7 @@ const CompanySettings = () => {
     } catch (error) {
       showSnack({
         variant: "error",
-        message: error?.response?.data?.message || "Não foi possível carregar os dados da empresa.",
+        message: error?.response?.data?.message || "Nao foi possivel carregar os dados da empresa.",
       });
     } finally {
       setLoading(false);
@@ -49,7 +50,7 @@ const CompanySettings = () => {
 
   const updateCompanyProfile = async (formData) => {
     try {
-      setSaving(true);
+      setSavingCompany(true);
       const response = await companyAdminService.updateCompanyProfile({
         name: formData.name,
         description: formData.description,
@@ -64,7 +65,7 @@ const CompanySettings = () => {
         message: error?.response?.data?.message || "Erro ao atualizar dados da empresa.",
       });
     } finally {
-      setSaving(false);
+      setSavingCompany(false);
     }
   };
 
@@ -89,7 +90,10 @@ const CompanySettings = () => {
               label="Nome da empresa:"
               placeholder="Nome da empresa"
               type="text"
-              register={companyForm.register("name")}
+              register={companyForm.register("name", {
+                required: "Informe o nome da empresa",
+              })}
+              errors={companyForm.formState.errors.name}
             />
             <Input
               label="Descricao:"
@@ -99,11 +103,33 @@ const CompanySettings = () => {
             />
             <Input label="CNPJ:" placeholder="CNPJ" type="text" register={{}} value={company?.cnpj || ""} disabled />
             <S.ButtonsGroup>
-              <Button variant="primary" type="submit" disabled={saving}>
+              <Button variant="primary" type="submit" disabled={savingCompany}>
                 Salvar dados da empresa
               </Button>
             </S.ButtonsGroup>
           </S.Form>
+        </S.Card>
+
+        <S.Card>
+          <S.SectionHeader>
+            <div>
+              <S.SectionTitle>Assuntos recorrentes</S.SectionTitle>
+              <S.SectionDescription>
+                Agora os assuntos de tickets ficam em uma pagina dedicada para facilitar o cadastro e a manutencao.
+              </S.SectionDescription>
+            </div>
+          </S.SectionHeader>
+
+          <S.SupportingText>
+            Nessa pagina o administrador pode adicionar temas como demora na entrega, problemas no site, problemas com o
+            produto e outros assuntos mais recorrentes para novos tickets.
+          </S.SupportingText>
+
+          <S.ButtonsGroup>
+            <Button variant="primary" redirect="/empresa/assuntos">
+              Abrir pagina de assuntos
+            </Button>
+          </S.ButtonsGroup>
         </S.Card>
       </S.Container>
     </S.Page>
