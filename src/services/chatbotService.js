@@ -26,7 +26,7 @@ const parseSseEvent = (rawEventBlock) => {
 
   try {
     return { eventName, data: JSON.parse(dataPayload) };
-  } catch (error) {
+  } catch {
     return { eventName, data: null };
   }
 };
@@ -53,6 +53,7 @@ export const chatbotService = {
     message,
     conversationId = null,
     ticketId = null,
+    signal,
     onStart = () => { },
     onToken = () => { },
     onDone = () => { },
@@ -73,6 +74,7 @@ export const chatbotService = {
           Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({ message, conversationId, ticketId }),
+        signal,
       }
     );
 
