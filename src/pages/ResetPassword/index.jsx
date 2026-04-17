@@ -58,7 +58,8 @@ const ResetPassword = () => {
     } catch (error) {
       console.error("Erro ao redefinir senha:", error);
       setFeedback(
-        error?.response?.data?.message || "Não foi possível redefinir sua senha. Solicite um novo link.",
+        error?.response?.data?.message ||
+          "Não foi possível redefinir sua senha. Solicite um novo link.",
       );
       setSuccess(false);
     } finally {
@@ -81,7 +82,7 @@ const ResetPassword = () => {
         if (isMounted) {
           setTokenValid(true);
         }
-      } catch (error) {
+      } catch {
         if (!isMounted) return;
         setTokenValid(false);
         setFeedback("Token de recuperação inválido ou expirado.");
@@ -105,7 +106,9 @@ const ResetPassword = () => {
 
       <S.Card>
         <S.Title>Nova senha</S.Title>
-        <S.Subtitle>Defina sua nova senha para voltar a acessar sua conta.</S.Subtitle>
+        <S.Subtitle>
+          Defina sua nova senha para voltar a acessar sua conta.
+        </S.Subtitle>
 
         <S.Form onSubmit={handleSubmit(onSubmit)}>
           <Input
@@ -123,7 +126,12 @@ const ResetPassword = () => {
             errors={errors.confirmPassword}
           />
 
-          <Button type="submit" variant="primary" disabled={loading || !tokenValid} full>
+          <Button
+            type="submit"
+            variant="primary"
+            disabled={loading || !tokenValid}
+            full
+          >
             {loading ? "Salvando..." : "Redefinir senha"}
           </Button>
         </S.Form>
