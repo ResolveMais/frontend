@@ -1,4 +1,9 @@
-import { BrowserRouter as Router, Navigate, Route, Routes } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Navigate,
+  Route,
+  Routes,
+} from "react-router-dom";
 
 import Landing from "../pages/Landing";
 import Login from "../pages/Login";
@@ -21,6 +26,7 @@ import CompanyHome from "../areas/empresa/pages/Home";
 import CompanyAdmins from "../areas/empresa/pages/Admins";
 import CompanyComplaintTitles from "../areas/empresa/pages/ComplaintTitles";
 import CompanySettings from "../areas/empresa/pages/Settings";
+import CompanyTicketsPage from "../areas/empresa/pages/Tickets";
 import CompanyUserData from "../areas/empresa/pages/UserData";
 
 import RoleGate from "./RoleGate";
@@ -113,6 +119,14 @@ const AppRoutes = () => (
         }
       />
       <Route
+        path="/empresa/chamados"
+        element={
+          <RoleGate allowedTypes={[USER_TYPES.EMPRESA]}>
+            <CompanyTicketsPage />
+          </RoleGate>
+        }
+      />
+      <Route
         path="/empresa/configuracoes"
         element={
           <RoleGate allowedTypes={[USER_TYPES.EMPRESA]}>
@@ -146,11 +160,26 @@ const AppRoutes = () => (
       />
 
       <Route path="/home" element={<Navigate to="/cliente/home" replace />} />
-      <Route path="/OpenTicket" element={<Navigate to="/cliente/open-ticket" replace />} />
-      <Route path="/PendingTickets" element={<Navigate to="/cliente/pending-tickets" replace />} />
-      <Route path="/ClosedTickets" element={<Navigate to="/cliente/closed-tickets" replace />} />
-      <Route path="/configuracoes" element={<Navigate to="/cliente/configuracoes" replace />} />
-      <Route path="/chatbot" element={<Navigate to="/cliente/chatbot" replace />} />
+      <Route
+        path="/OpenTicket"
+        element={<Navigate to="/cliente/open-ticket" replace />}
+      />
+      <Route
+        path="/PendingTickets"
+        element={<Navigate to="/cliente/pending-tickets" replace />}
+      />
+      <Route
+        path="/ClosedTickets"
+        element={<Navigate to="/cliente/closed-tickets" replace />}
+      />
+      <Route
+        path="/configuracoes"
+        element={<Navigate to="/cliente/configuracoes" replace />}
+      />
+      <Route
+        path="/chatbot"
+        element={<Navigate to="/cliente/chatbot" replace />}
+      />
 
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>

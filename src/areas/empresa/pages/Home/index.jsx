@@ -4,10 +4,17 @@ import * as S from "./styles";
 
 const QUICK_ACTIONS = [
   {
+    label: "Chamados",
+    title: "Acompanhe a operação em tempo real",
+    description: "Visualize tickets abertos, redistribua responsáveis e acompanhe o histórico completo de cada atendimento.",
+    buttonLabel: "Abrir central",
+    path: "/empresa/chamados",
+    variant: "primary",
+  },
+  {
     label: "Assuntos recorrentes",
     title: "Monte os temas mais comuns dos tickets",
-    description:
-      "Cadastre opções como demora na entrega, problemas no site e defeitos no produto para agilizar a abertura de chamados.",
+    description: "Cadastre opções como demora na entrega, problemas no site e defeitos no produto para agilizar a abertura de chamados.",
     buttonLabel: "Gerenciar assuntos",
     path: "/empresa/assuntos",
     variant: "primary",
@@ -15,8 +22,7 @@ const QUICK_ACTIONS = [
   {
     label: "Dados da empresa",
     title: "Mantenha as informações sempre atualizadas",
-    description:
-      "Revise nome, descrição e dados cadastrais para que o cliente encontre sua empresa com clareza.",
+    description: "Revise nome, descrição e dados cadastrais para que o cliente encontre sua empresa com clareza.",
     buttonLabel: "Abrir configurações",
     path: "/empresa/configuracoes",
     variant: "secondary",
@@ -24,8 +30,7 @@ const QUICK_ACTIONS = [
   {
     label: "Administradores",
     title: "Defina quem cuida da operação",
-    description:
-      "Organize os responsáveis pela empresa e mantenha a administração pronta para crescer sem confusão.",
+    description: "Organize os responsáveis pela empresa e mantenha a administração pronta para crescer sem confusão.",
     buttonLabel: "Ver administradores",
     path: "/empresa/administradores",
     variant: "transparent",
@@ -51,8 +56,8 @@ const CompanyHome = () => {
             </S.Description>
 
             <S.Actions>
-              <Button variant="primary" redirect="/empresa/assuntos">
-                Cadastrar assuntos
+              <Button variant="primary" redirect="/empresa/chamados">
+                Abrir central de chamados
               </Button>
               <Button variant="secondary" redirect="/empresa/configuracoes">
                 Ajustar perfil da empresa
