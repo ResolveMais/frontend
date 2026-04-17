@@ -86,11 +86,14 @@ export const getConversationModeLabel = (ticket) => {
     if (ticket.assignedEmployee?.name) {
       return `Atendimento humano com ${ticket.assignedEmployee.name}`;
     }
-    return "Atendimento humano aguardando responsavel";
+    return "Atendimento humano aguardando responsável";
   }
 
   if (ticket.status === TICKET_STATUS.RESOLVIDO) {
-    return "Aguardando confirmacao do cliente";
+    if (ticket.evaluation?.pending) {
+      return "Aguardando avaliação do cliente";
+    }
+    return "Aguardando confirmação do cliente";
   }
 
   return "Chamado encerrado";

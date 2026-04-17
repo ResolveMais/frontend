@@ -156,6 +156,17 @@ export const ticketService = {
     return response.data;
   },
 
+  submitEvaluation: async (ticketId, { rating, comment = "" }) => {
+    const response = await api.post(
+      `/tickets/${ticketId}/evaluation`,
+      { rating, comment },
+      {
+        headers: getAuthHeader(),
+      }
+    );
+    return response.data;
+  },
+
   updateAssignment: async (ticketId, assignedUserId) => {
     const response = await api.patch(
       `/tickets/${ticketId}/assignment`,

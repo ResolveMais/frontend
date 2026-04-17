@@ -63,6 +63,26 @@ const getDefaultHeroText = (mode) => {
   return "Acompanhe seus tickets, converse com o chatbot no primeiro contato e siga para o atendimento humano quando a empresa assumir o chamado.";
 };
 
+const EVALUATION_RATING_OPTIONS = [1, 2, 3, 4, 5];
+
+const getEvaluationCopy = (ticket) => {
+  if (ticket?.evaluation?.resolutionSource === "chatbot") {
+    return {
+      title: "Como foi a ajuda do chatbot?",
+      description: "Seu problema foi resolvido pelo Resolve Assist. Avalie essa experiência para melhorar os próximos atendimentos.",
+      successMessage: "Ticket marcado como resolvido e avaliação registrada com sucesso.",
+      submitLabel: "Enviar avaliação",
+    };
+  }
+
+  return {
+    title: "Como foi o atendimento recebido?",
+    description: "O ticket foi marcado como resolvido. Avalie o atendimento para registrar como a empresa conduziu essa solução.",
+    successMessage: "Avaliação registrada com sucesso.",
+    submitLabel: "Registrar avaliação",
+  };
+};
+
 const TicketWorkspace = ({ mode = "customer", title }) => {
   const { userData } = useAuth();
   const { showSnack } = useSnack();
@@ -71,6 +91,7 @@ const TicketWorkspace = ({ mode = "customer", title }) => {
   const shouldStickToBottomRef = useRef(true);
   const botStreamAbortControllerRef = useRef(null);
   const pendingBotMessageRef = useRef(null);
+  const promptedEvaluationKeysRef = useRef(new Set());
 
   const [workspace, setWorkspace] = useState({
     tickets: [],
@@ -94,6 +115,9 @@ const TicketWorkspace = ({ mode = "customer", title }) => {
   const [actionLoading, setActionLoading] = useState(false);
   const [botStreaming, setBotStreaming] = useState(false);
   const [messageAvatarErrors, setMessageAvatarErrors] = useState({});
+  const [evaluationDialog, setEvaluationDialog] = useState({ isOpen: false, mode: null });
+  const [evaluationRating, setEvaluationRating] = useState(0);
+  const [evaluationComment, setEvaluationComment] = useState("");
 
   const isCompanyMode = mode === "company";
   const isEmployeeMode = mode === "employee";
@@ -329,11 +353,43 @@ const TicketWorkspace = ({ mode = "customer", title }) => {
 
   useEffect(() => {
     setIsHistoryDialogOpen(false);
+    setEvaluationDialog({
+      isOpen: false,
+      mode: null,
+    });
+    setEvaluationRating(0);
+    setEvaluationComment("");
   }, [selectedTicketId]);
 
   useEffect(() => {
     setMessageAvatarErrors({});
   }, [selectedTicketId]);
+
+  useEffect(() => {
+    if (!isCustomerMode || !selectedTicket?.evaluation?.pending) return;
+    if (evaluationDialog.isOpen) return;
+
+    const promptKey = `${selectedTicket.id}-${selectedTicket.resolvedAt || selectedTicket.updatedAt || ""}`;
+
+    if (promptedEvaluationKeysRef.current.has(promptKey)) {
+      return;
+    }
+
+    promptedEvaluationKeysRef.current.add(promptKey);
+    setEvaluationRating(0);
+    setEvaluationComment("");
+    setEvaluationDialog({
+      isOpen: true,
+      mode: "resolved-ticket",
+    });
+  }, [
+    evaluationDialog.isOpen,
+    isCustomerMode,
+    selectedTicket?.evaluation?.pending,
+    selectedTicket?.id,
+    selectedTicket?.resolvedAt,
+    selectedTicket?.updatedAt,
+  ]);
 
   useEffect(() => {
     if (!isHistoryDialogOpen) return undefined;
@@ -460,6 +516,97 @@ const TicketWorkspace = ({ mode = "customer", title }) => {
             [messageId]: true,
           }
     );
+  };
+
+  const closeEvaluationDialog = () => {
+    if (actionLoading) return;
+
+    setEvaluationDialog({
+      isOpen: false,
+      mode: null,
+    });
+  };
+
+  const openEvaluationDialog = (mode) => {
+    setEvaluationRating(selectedTicket?.evaluation?.rating || 0);
+    setEvaluationComment(selectedTicket?.evaluation?.comment || "");
+    setEvaluationDialog({
+      isOpen: true,
+      mode,
+    });
+  };
+
+  const handleOpenPendingEvaluation = () => {
+    openEvaluationDialog("resolved-ticket");
+  };
+
+  const handleStartChatbotEvaluation = () => {
+    openEvaluationDialog("chatbot-resolution");
+  };
+
+  const handleSubmitEvaluation = async () => {
+    if (!selectedTicket?.id) return;
+
+    if (!Number.isInteger(evaluationRating) || evaluationRating < 1 || evaluationRating > 5) {
+      showSnack({
+        variant: "error",
+        message: "Selecione uma nota de 1 a 5 para continuar.",
+      });
+      return;
+    }
+
+    const evaluationCopy = getEvaluationCopy(selectedTicket);
+    let resolvedByChatbot = false;
+
+    try {
+      setActionLoading(true);
+
+      if (evaluationDialog.mode === "chatbot-resolution") {
+        const resolveResponse = await ticketService.updateStatus(
+          selectedTicket.id,
+          "resolvido"
+        );
+
+        if (resolveResponse?.status >= 400) {
+          throw new Error(
+            resolveResponse.message || "Não foi possível marcar o ticket como resolvido."
+          );
+        }
+
+        resolvedByChatbot = true;
+      }
+
+      const response = await ticketService.submitEvaluation(selectedTicket.id, {
+        rating: evaluationRating,
+        comment: evaluationComment,
+      });
+
+      if (response?.status >= 400) {
+        throw new Error(
+          response.message || "Não foi possível registrar a avaliação."
+        );
+      }
+
+      closeEvaluationDialog();
+      setEvaluationRating(0);
+      setEvaluationComment("");
+      await applyActionResult(response, evaluationCopy.successMessage);
+    } catch (error) {
+      if (resolvedByChatbot) {
+        await refreshSelectedTicket();
+        await loadWorkspace({ silent: true, showError: false });
+      }
+
+      showSnack({
+        variant: "error",
+        message:
+          error?.response?.data?.message ||
+          error?.message ||
+          "Não foi possível registrar a avaliação.",
+      });
+    } finally {
+      setActionLoading(false);
+    }
   };
 
   const openHistoryDialog = () => {
@@ -729,12 +876,7 @@ const TicketWorkspace = ({ mode = "customer", title }) => {
         <S.ActionButton
           key="resolve-customer"
           type="button"
-          onClick={() =>
-            updateTicketStatusWithStreamingGuard(
-              "resolvido",
-              "Ticket marcado como resolvido."
-            )
-          }
+          onClick={handleStartChatbotEvaluation}
           disabled={actionLoading}
         >
           Resolvi o problema
@@ -1004,6 +1146,27 @@ const TicketWorkspace = ({ mode = "customer", title }) => {
                     : "A conversa fica centralizada aqui e cada mensagem identifica claramente quem enviou. Use o histórico em dialog quando quiser revisar as movimentações do ticket."}
                 </S.ConversationBanner>
 
+                {isCustomerMode && selectedTicket.evaluation?.pending ? (
+                  <S.EvaluationPrompt>
+                    <S.EvaluationPromptContent>
+                      <S.EvaluationPromptTitle>
+                        {getEvaluationCopy(selectedTicket).title}
+                      </S.EvaluationPromptTitle>
+                      <S.EvaluationPromptText>
+                        {getEvaluationCopy(selectedTicket).description}
+                      </S.EvaluationPromptText>
+                    </S.EvaluationPromptContent>
+
+                    <S.ActionButton
+                      type="button"
+                      onClick={handleOpenPendingEvaluation}
+                      disabled={actionLoading}
+                    >
+                      Avaliar atendimento
+                    </S.ActionButton>
+                  </S.EvaluationPrompt>
+                ) : null}
+
                 <S.ChatShell>
                   <S.Messages
                     ref={messagesContainerRef}
@@ -1171,6 +1334,88 @@ const TicketWorkspace = ({ mode = "customer", title }) => {
                 </S.LogList>
               ) : null}
             </S.HistoryDialogBody>
+          </S.HistoryDialog>
+        </S.HistoryDialogOverlay>
+      ) : null}
+
+      {isCustomerMode && selectedTicket && evaluationDialog.isOpen ? (
+        <S.HistoryDialogOverlay onClick={closeEvaluationDialog}>
+          <S.HistoryDialog
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="ticket-evaluation-dialog-title"
+            onClick={(event) => event.stopPropagation()}
+          >
+            <S.HistoryDialogHeader>
+              <div>
+                <S.HistoryDialogTitle id="ticket-evaluation-dialog-title">
+                  {getEvaluationCopy(selectedTicket).title}
+                </S.HistoryDialogTitle>
+                <S.HistoryDialogText>
+                  {getEvaluationCopy(selectedTicket).description}
+                </S.HistoryDialogText>
+              </div>
+
+              <S.ActionButton
+                type="button"
+                $secondary
+                onClick={closeEvaluationDialog}
+                disabled={actionLoading}
+              >
+                Depois
+              </S.ActionButton>
+            </S.HistoryDialogHeader>
+
+            <S.EvaluationDialogBody>
+              <div>
+                <S.MetaLabel>Sua nota</S.MetaLabel>
+                <S.EvaluationStars>
+                  {EVALUATION_RATING_OPTIONS.map((option) => (
+                    <S.EvaluationStarButton
+                      key={option}
+                      type="button"
+                      $active={evaluationRating === option}
+                      onClick={() => setEvaluationRating(option)}
+                      disabled={actionLoading}
+                    >
+                      {option} estrela{option > 1 ? "s" : ""}
+                    </S.EvaluationStarButton>
+                  ))}
+                </S.EvaluationStars>
+              </div>
+
+              <div>
+                <S.MetaLabel>Comentario opcional</S.MetaLabel>
+                <S.EvaluationTextarea
+                  value={evaluationComment}
+                  onChange={(event) => setEvaluationComment(event.target.value)}
+                  placeholder="Conte rapidamente como foi a resolução."
+                  disabled={actionLoading}
+                />
+              </div>
+
+              <S.EvaluationHint>
+                Essa avaliação fica vinculada ao ticket e ajuda a medir a qualidade do atendimento.
+              </S.EvaluationHint>
+
+              <S.EvaluationActions>
+                <S.ActionButton
+                  type="button"
+                  $secondary
+                  onClick={closeEvaluationDialog}
+                  disabled={actionLoading}
+                >
+                  Cancelar
+                </S.ActionButton>
+                <S.ActionButton
+                  type="button"
+                  onClick={handleSubmitEvaluation}
+                  disabled={actionLoading}
+                >
+                  {actionLoading ? "Enviando..." : getEvaluationCopy(selectedTicket).submitLabel}
+                </S.ActionButton>
+              </S.EvaluationActions>
+            </S.EvaluationDialogBody>
           </S.HistoryDialog>
         </S.HistoryDialogOverlay>
       ) : null}

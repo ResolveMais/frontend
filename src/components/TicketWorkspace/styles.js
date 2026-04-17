@@ -689,3 +689,108 @@ export const HistoryDialogBody = styled.div`
     radial-gradient(circle at top left, rgba(16, 185, 129, 0.06), transparent 28%),
     #f8fafc;
 `;
+
+export const EvaluationPrompt = styled.div`
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 14px;
+  flex-wrap: wrap;
+  padding: 16px 18px;
+  border-radius: 16px;
+  border: 1px solid #fcd34d;
+  background:
+    radial-gradient(circle at top right, rgba(250, 204, 21, 0.22), transparent 34%),
+    linear-gradient(180deg, #fffbeb 0%, #fef3c7 100%);
+`;
+
+export const EvaluationPromptContent = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  max-width: 620px;
+`;
+
+export const EvaluationPromptTitle = styled.strong`
+  color: #92400e;
+  font-size: 0.96rem;
+`;
+
+export const EvaluationPromptText = styled.p`
+  margin: 0;
+  color: #92400e;
+  line-height: 1.55;
+`;
+
+export const EvaluationDialogBody = styled.div`
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  background:
+    radial-gradient(circle at top right, rgba(250, 204, 21, 0.16), transparent 30%),
+    #fffdf7;
+`;
+
+export const EvaluationStars = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+`;
+
+export const EvaluationStarButton = styled.button`
+  min-width: 52px;
+  border: 1px solid ${({ $active }) => ($active ? "#f59e0b" : "#d6dce5")};
+  background: ${({ $active }) => ($active ? "#fef3c7" : "#ffffff")};
+  color: ${({ $active }) => ($active ? "#92400e" : "#475569")};
+  border-radius: 12px;
+  padding: 10px 12px;
+  cursor: pointer;
+  font-weight: 700;
+  transition: 0.2s ease;
+
+  &:hover:not(:disabled) {
+    transform: translateY(-1px);
+    border-color: #f59e0b;
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.55;
+  }
+`;
+
+export const EvaluationHint = styled.p`
+  margin: 0;
+  color: #64748b;
+  font-size: 0.88rem;
+  line-height: 1.5;
+`;
+
+export const EvaluationTextarea = styled.textarea`
+  width: 100%;
+  min-height: 108px;
+  resize: vertical;
+  border: 1px solid #d4dce2;
+  border-radius: 14px;
+  padding: 12px 14px;
+  outline: none;
+  background: #ffffff;
+
+  &:focus {
+    border-color: #10b981;
+    box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.14);
+  }
+
+  &:disabled {
+    background: #f8fafc;
+    cursor: not-allowed;
+  }
+`;
+
+export const EvaluationActions = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  flex-wrap: wrap;
+`;
