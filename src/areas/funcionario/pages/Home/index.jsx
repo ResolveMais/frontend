@@ -1,13 +1,10 @@
-import CenteredMessage from "../../../shared/components/CenteredMessage";
+import TicketWorkspace from "../../../../components/TicketWorkspace";
 
-const EmployeeHome = () => {
-  return (
-    <CenteredMessage
-      title="Home Funcionario"
-      description="Area inicial do funcionario criada. Use o menu Configuracoes para manter seus dados pessoais atualizados."
-      showHeader
-    />
-  );
-};
+const EmployeeHome = () => (
+  <TicketWorkspace
+    mode="employee"
+    title="Fila de atendimento"
+  />
+);
 
 export default EmployeeHome;
