@@ -1,31 +1,83 @@
-import { createContext, useContext, useState, useCallback } from "react";
+import {
+  createContext,
+  useContext,
+  useState,
+  useCallback,
+  useRef,
+  useEffect,
+} from "react";
 import Snack from "../components/Snack";
 
 const SnackContext = createContext({
-    showSnack: ({ variant, message }) => { },
+  showSnack: () => {},
 });
 
 export const SnackProvider = ({ children }) => {
-    const [snack, setSnack] = useState({
-        open: false,
-        message: "",
-        variant: "info",
-    });
+  const [snack, setSnack] = useState({
+    open: false,
+    message: "",
+    variant: "info",
+    actionLabel: "",
+    onAction: null,
+  });
+  const closeTimerRef = useRef(null);
 
-    const showSnack = useCallback(({ message, variant = "info" }) => {
-        setSnack({ open: true, message, variant });
+  const closeSnack = useCallback(() => {
+    setSnack((prev) => ({
+      ...prev,
+      open: false,
+    }));
+  }, []);
 
-        setTimeout(() => {
-            setSnack((prev) => ({ ...prev, open: false }));
-        }, 3000);
-    }, []);
+  const showSnack = useCallback(
+    ({
+      message,
+      variant = "info",
+      actionLabel = "",
+      onAction = null,
+      duration = 3000,
+    }) => {
+      if (closeTimerRef.current) {
+        clearTimeout(closeTimerRef.current);
+      }
 
-    return (
-        <SnackContext.Provider value={{ snack, showSnack }}>
-            {children}
-            <Snack open={snack.open} message={snack.message} variant={snack.variant} />
-        </SnackContext.Provider>
-    );
-}
+      setSnack({
+        open: true,
+        message,
+        variant,
+        actionLabel,
+        onAction,
+      });
+
+      closeTimerRef.current = setTimeout(() => {
+        closeSnack();
+      }, duration);
+    },
+    [closeSnack],
+  );
+
+  useEffect(
+    () => () => {
+      if (closeTimerRef.current) {
+        clearTimeout(closeTimerRef.current);
+      }
+    },
+    [],
+  );
+
+  return (
+    <SnackContext.Provider value={{ snack, showSnack }}>
+      {children}
+      <Snack
+        open={snack.open}
+        message={snack.message}
+        variant={snack.variant}
+        actionLabel={snack.actionLabel}
+        onAction={snack.onAction}
+        onClose={closeSnack}
+      />
+    </SnackContext.Provider>
+  );
+};
 
 export const useSnack = () => useContext(SnackContext);
