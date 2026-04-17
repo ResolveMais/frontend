@@ -97,21 +97,19 @@ export const Main = styled.main`
   margin: 0 auto;
 `;
 
-/* Welcome Section */
 export const WelcomeTitle = styled.h1`
-  font-size: 32px; /* aumentado */
+  font-size: 32px;
   font-weight: 700;
   margin-bottom: 4px;
 `;
 
 export const WelcomeSubtitle = styled.p`
   font-weight: 400;
-  font-size: 16px; /* aumentado */
+  font-size: 16px;
   color: #6b7280;
   margin-bottom: 24px;
 `;
 
-/* Action Buttons */
 export const ActionsGrid = styled.div`
   display: flex;
   gap: 24px;
@@ -126,16 +124,17 @@ export const ActionCard = styled.button`
   border: none;
   color: white;
   font-weight: 600;
-  font-size: 16px; /* aumentado */
-  padding: 28px 32px; /* aumentado */
-  min-width: 220px; /* aumentado */
+  font-size: 16px;
+  padding: 28px 32px;
+  min-width: 220px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 18px; /* aumentado */
+  gap: 18px;
   cursor: pointer;
   box-shadow: 0 4px 15px rgba(16, 185, 129, 0.35);
   transition: background-color 0.2s ease-in-out;
+  text-decoration: none;
 
   &:hover {
     background-color: #059669;
@@ -154,17 +153,16 @@ export const ActionIcon = styled.div`
   }
 `;
 
-/* Updates Section */
 export const UpdatesTitle = styled.h2`
-  font-size: 20px; /* maior */
+  font-size: 20px;
   font-weight: 700;
   margin-bottom: 16px;
 `;
 
 export const UpdatesGrid = styled.div`
   display: flex;
-  gap: 24px; /* aumentado */
-  flex-wrap: nowrap; /* impede quebrar linha */
+  gap: 24px;
+  flex-wrap: nowrap;
   justify-content: space-between;
   width: 100%;
 `;
@@ -173,9 +171,9 @@ export const UpdateCard = styled.div`
   background: white;
   border-radius: 14px;
   border: 1px solid #d1d5db;
-  padding: 22px 26px; /* aumentado */
-  min-width: 260px; /* aumentado */
-  max-width: 300px; /* aumentado */
+  padding: 22px 26px;
+  min-width: 260px;
+  max-width: 300px;
   box-sizing: border-box;
 `;
 
@@ -191,7 +189,7 @@ export const UpdateDot = styled.span`
 
 export const UpdateTitle = styled.p`
   font-weight: 600;
-  font-size: 18px; /* aumentado */
+  font-size: 18px;
   color: #111827;
   margin: 0 0 6px 0;
   display: flex;
@@ -200,12 +198,12 @@ export const UpdateTitle = styled.p`
 
 export const UpdateDescription = styled.p`
   margin: 0 0 6px 22px;
-  font-size: 15px; /* aumentado */
+  font-size: 15px;
   color: #6b7280;
 `;
 
 export const UpdateTime = styled.p`
   margin: 0 0 0 22px;
-  font-size: 13px; /* aumentado */
+  font-size: 13px;
   color: #9ca3af;
 `;
