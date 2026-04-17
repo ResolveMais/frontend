@@ -7,7 +7,7 @@ import {
   normalizeUserType,
   USER_TYPES,
 } from "../../utils/userType";
-import styles from "./styles";
+import * as S from "./styles";
 
 const LoggedHeader = () => {
   const { userData, logout } = useAuth();
@@ -25,7 +25,7 @@ const LoggedHeader = () => {
   const menuItems = useMemo(() => {
     if (userType === USER_TYPES.CLIENTE) {
       return [
-        { key: "configuracoes", label: "Configuracoes", path: "/cliente/configuracoes" },
+        { key: "configuracoes", label: "Configurações", path: "/cliente/configuracoes" },
         { key: "home", label: "Home", path: "/cliente/home" },
         { key: "atendimentos", label: "Atendimentos", path: "/cliente/pending-tickets" },
       ];
@@ -34,15 +34,16 @@ const LoggedHeader = () => {
     if (userType === USER_TYPES.EMPRESA) {
       return [
         { key: "home", label: "Home", path: "/empresa/home" },
-        { key: "configuracoes", label: "Configuracoes", path: "/empresa/configuracoes" },
+        { key: "tickets", label: "Chamados", path: "/empresa/chamados" },
+        { key: "configuracoes", label: "Configurações", path: "/empresa/configuracoes" },
         { key: "admins", label: "Administradores", path: "/empresa/administradores" },
       ];
     }
 
     if (userType === USER_TYPES.FUNCIONARIO) {
       return [
-        { key: "home", label: "Home", path: "/funcionario/home" },
-        { key: "configuracoes", label: "Configuracoes", path: "/funcionario/configuracoes" },
+        { key: "home", label: "Atendimentos", path: "/funcionario/home" },
+        { key: "configuracoes", label: "Configurações", path: "/funcionario/configuracoes" },
       ];
     }
 
@@ -75,50 +76,49 @@ const LoggedHeader = () => {
   };
 
   return (
-    <header style={styles.headerContainer}>
-      <div style={styles.leftSection}>
-        <img src="/assets/flaticon.svg" alt="Resolve + Logo" style={styles.logo} />
-      </div>
+    <S.HeaderContainer>
+      <S.LeftSection>
+        <S.Logo src="/assets/flaticon.svg" alt="Resolve + Logo" />
+      </S.LeftSection>
 
-      <nav style={styles.navSection}>
-        <ul style={styles.navList}>
+      <S.NavSection>
+        <S.NavList>
           {menuItems.map((item) => (
-            <li
+            <S.NavItem
               key={item.key}
-              style={isActivePage(item.path) ? styles.navItemActive : styles.navItem}
+              $active={isActivePage(item.path)}
               onClick={() => handleNavigation(item.path)}
             >
               {item.label}
-            </li>
+            </S.NavItem>
           ))}
-        </ul>
-      </nav>
+        </S.NavList>
+      </S.NavSection>
 
-      <div style={styles.rightSection}>
-        <div style={styles.userInfo}>
-          <span style={styles.userName}>{userData?.name || ""}</span>
-        </div>
+      <S.RightSection>
+        <S.UserInfo>
+          <S.UserName>{userData?.name || ""}</S.UserName>
+        </S.UserInfo>
 
-        <div style={styles.userMenuContainer}>
-          <div style={styles.userAvatar} onClick={handleOpenSettings} title="Abrir configuracoes do usuario">
+        <S.UserMenuContainer>
+          <S.UserAvatar onClick={handleOpenSettings} title="Abrir configurações do usuário">
             {userData?.avatarUrl && !avatarLoadError ? (
-              <img
+              <S.UserAvatarImage
                 src={userData.avatarUrl}
-                alt="Foto do usuario"
-                style={styles.userAvatarImage}
+                alt="Foto do usuário"
                 onError={() => setAvatarLoadError(true)}
               />
             ) : (
               getUserInitials()
             )}
-          </div>
-        </div>
+          </S.UserAvatar>
+        </S.UserMenuContainer>
 
-        <button style={styles.logoutButtonInline} onClick={handleLogout} type="button">
+        <S.LogoutButtonInline onClick={handleLogout} type="button">
           Sair
-        </button>
-      </div>
-    </header>
+        </S.LogoutButtonInline>
+      </S.RightSection>
+    </S.HeaderContainer>
   );
 };
 
