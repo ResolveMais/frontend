@@ -45,4 +45,20 @@ export const getUserSettingsPathByUserType = (userType) => {
   return "/cliente/configuracoes";
 };
 
+export const getTicketInboxPathByUserType = (userType) => {
+  const normalizedType = normalizeUserType(userType);
+
+  if (normalizedType === USER_TYPES.EMPRESA) return "/empresa/chamados";
+  if (normalizedType === USER_TYPES.FUNCIONARIO) return "/funcionario/home";
+  return "/cliente/chatbot";
+};
+
+export const getTicketPathByUserType = (userType, ticketId) => {
+  const basePath = getTicketInboxPathByUserType(userType);
+
+  if (!ticketId) return basePath;
+
+  return `${basePath}?ticketId=${ticketId}`;
+};
+
 export const isCompanyUser = (userType) => normalizeUserType(userType) === USER_TYPES.EMPRESA;
