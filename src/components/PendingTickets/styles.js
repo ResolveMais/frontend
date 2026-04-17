@@ -1,7 +1,54 @@
-import styled from 'styled-components';
+import styled from "styled-components";
+
+const statusStyles = {
+  aberto: {
+    color: "#f59e0b",
+    background: "#fef3c7",
+    border: "#f59e0b",
+  },
+  pendente: {
+    color: "#ef4444",
+    background: "#fee2e2",
+    border: "#ef4444",
+  },
+  fechado: {
+    color: "#6b7280",
+    background: "#f3f4f6",
+    border: "#6b7280",
+  },
+  finalizado: {
+    color: "#6b7280",
+    background: "#f3f4f6",
+    border: "#6b7280",
+  },
+  resolvido: {
+    color: "#10b981",
+    background: "#d1fae5",
+    border: "#10b981",
+  },
+  default: {
+    color: "#6b7280",
+    background: "#f3f4f6",
+    border: "#6b7280",
+  },
+};
+
+const getStatusStyle = ($status, prop) =>
+  (statusStyles[$status] || statusStyles.default)[prop];
+
+const actionButtonStyles = `
+  padding: 8px 14px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: background 0.2s ease, transform 0.1s ease;
+  white-space: nowrap;
+`;
 
 export const Container = styled.div`
-  margin-top: 60px;  
+  margin-top: 60px;
   width: 100%;
   min-height: 100vh;
   background-color: #f5f5f5;
@@ -24,23 +71,7 @@ export const Header = styled.div`
   justify-content: center;
   margin-top: 30px;
   margin-bottom: 40px;
-  position: relative;
   padding: 0 20px;
-`;
-
-export const BackButton = styled.button`
-  position: absolute;
-  left: 20px;
-  background: none;
-  border: none;
-  font-size: 26px;
-  color: #333;
-  cursor: pointer;
-  transition: transform 0.15s ease;
-
-  &:hover {
-    transform: translateX(-3px);
-  }
 `;
 
 export const PageTitle = styled.h1`
@@ -48,13 +79,6 @@ export const PageTitle = styled.h1`
   font-weight: 600;
   color: #222;
   margin: 0;
-`;
-
-export const Subtitle = styled.p`
-  font-size: 14px;
-  color: #666;
-  margin: 4px 0 0 0;
-  text-align: center;
 `;
 
 export const EmptyState = styled.div`
@@ -68,7 +92,7 @@ export const TicketCard = styled.div`
   background: #fff;
   border-radius: 12px;
   padding: 16px 14px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
   display: flex;
   flex-direction: column;
   transition: box-shadow 0.2s ease, transform 0.2s ease;
@@ -76,7 +100,7 @@ export const TicketCard = styled.div`
 
   &:hover {
     transform: translateY(-1px);
-    box-shadow: 0 3px 8px rgba(0,0,0,0.12);
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.12);
   }
 `;
 
@@ -93,7 +117,12 @@ export const TicketHeader = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
+  gap: 12px;
   margin-bottom: 12px;
+
+  @media (max-width: 640px) {
+    flex-direction: column;
+  }
 `;
 
 export const TicketInfo = styled.div`
@@ -101,6 +130,17 @@ export const TicketInfo = styled.div`
   align-items: center;
   flex-wrap: wrap;
   gap: 8px;
+`;
+
+export const TicketActions = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+
+  @media (max-width: 640px) {
+    width: 100%;
+  }
 `;
 
 export const TicketTitle = styled.h2`
@@ -113,48 +153,17 @@ export const TicketTitle = styled.h2`
 export const TicketStatus = styled.span`
   font-size: 14px;
   font-weight: 600;
-  color: ${({ status }) => {
-    switch (status) {
-      case 'aberto': return '#f59e0b';
-      case 'pendente': return '#ef4444';
-      case 'fechado': return '#6b7280';
-      case 'resolvido': return '#10b981';
-      default: return '#6b7280';
-    }
-  }};
-  background-color: ${({ status }) => {
-    switch (status) {
-      case 'aberto': return '#fef3c7';
-      case 'pendente': return '#fee2e2';
-      case 'fechado': return '#f3f4f6';
-      case 'resolvido': return '#d1fae5';
-      default: return '#f3f4f6';
-    }
-  }};
+  color: ${({ $status }) => getStatusStyle($status, "color")};
+  background-color: ${({ $status }) => getStatusStyle($status, "background")};
   padding: 4px 10px;
   border-radius: 20px;
-  border: 1px solid ${({ status }) => {
-    switch (status) {
-      case 'aberto': return '#f59e0b';
-      case 'pendente': return '#ef4444';
-      case 'fechado': return '#6b7280';
-      case 'resolvido': return '#10b981';
-      default: return '#6b7280';
-    }
-  }};
+  border: 1px solid ${({ $status }) => getStatusStyle($status, "border")};
 `;
 
 export const VerDetalhesButton = styled.button`
-  padding: 8px 14px;
-  border: none;
-  border-radius: 8px;
-  background-color: #00C853;
+  ${actionButtonStyles}
+  background-color: #00c853;
   color: #fff;
-  cursor: pointer;
-  font-size: 14px;
-  font-weight: 500;
-  transition: background 0.2s ease, transform 0.1s ease;
-  white-space: nowrap;
 
   &:hover {
     background-color: #00b84d;
@@ -163,6 +172,25 @@ export const VerDetalhesButton = styled.button`
 
   &:active {
     background-color: #009d42;
+    transform: scale(0.98);
+  }
+`;
+
+export const SecondaryButton = styled.button`
+  ${actionButtonStyles}
+  width: ${({ $full }) => ($full ? "100%" : "auto")};
+  margin-top: ${({ $withTopSpacing }) => ($withTopSpacing ? "12px" : "0")};
+  align-self: ${({ $alignSelf }) => $alignSelf || "auto"};
+  background-color: #eef2f7;
+  color: #1f2937;
+
+  &:hover {
+    background-color: #e1e7ef;
+    transform: scale(1.03);
+  }
+
+  &:active {
+    background-color: #d3dbe6;
     transform: scale(0.98);
   }
 `;
@@ -180,7 +208,6 @@ export const TicketDate = styled.p`
   color: #888;
 `;
 
-/* ===== MODAL ===== */
 export const ModalOverlay = styled.div`
   position: fixed;
   top: 0;
@@ -203,12 +230,19 @@ export const ModalContent = styled.div`
   max-width: 460px;
   max-height: 85vh;
   overflow-y: auto;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
   animation: fadeIn 0.25s ease;
 
   @keyframes fadeIn {
-    from { opacity: 0; transform: scale(0.95); }
-    to { opacity: 1; transform: scale(1); }
+    from {
+      opacity: 0;
+      transform: scale(0.95);
+    }
+
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
   }
 `;
 
@@ -235,52 +269,47 @@ export const ModalInfo = styled.p`
 export const ModalStatus = styled.span`
   font-size: 14px;
   font-weight: 600;
-  color: ${({ status }) => {
-    switch (status) {
-      case 'aberto': return '#f59e0b';
-      case 'pendente': return '#ef4444';
-      case 'fechado': return '#6b7280';
-      case 'resolvido': return '#10b981';
-      default: return '#6b7280';
-    }
-  }};
-  background-color: ${({ status }) => {
-    switch (status) {
-      case 'aberto': return '#fef3c7';
-      case 'pendente': return '#fee2e2';
-      case 'fechado': return '#f3f4f6';
-      case 'resolvido': return '#d1fae5';
-      default: return '#f3f4f6';
-    }
-  }};
+  color: ${({ $status }) => getStatusStyle($status, "color")};
+  background-color: ${({ $status }) => getStatusStyle($status, "background")};
   padding: 4px 10px;
   border-radius: 20px;
-  border: 1px solid ${({ status }) => {
-    switch (status) {
-      case 'aberto': return '#f59e0b';
-      case 'pendente': return '#ef4444';
-      case 'fechado': return '#6b7280';
-      case 'resolvido': return '#10b981';
-      default: return '#6b7280';
-    }
-  }};
+  border: 1px solid ${({ $status }) => getStatusStyle($status, "border")};
   margin-left: 8px;
 `;
 
-export const CloseButton = styled.button`
+export const DescriptionBox = styled.div`
+  margin-top: 0.5rem;
+  padding: 1rem;
+  background-color: #f9fafb;
+  border-radius: 6px;
+  border: 1px solid #e5e7eb;
+`;
+
+export const ModalActions = styled.div`
   margin-top: 20px;
+  display: flex;
+  gap: 12px;
+
+  @media (max-width: 520px) {
+    flex-direction: column;
+  }
+`;
+
+export const CloseButton = styled.button`
+  ${actionButtonStyles}
   width: 100%;
-  background-color: #00C853;
-  color: white;
-  border: none;
-  border-radius: 8px;
-  padding: 12px;
-  font-size: 16px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: background 0.2s ease;
+  background-color: #00c853;
+  color: #fff;
 
   &:hover {
     background-color: #00b84d;
+  }
+`;
+
+export const ChatButton = styled(CloseButton)`
+  background-color: #0f766e;
+
+  &:hover {
+    background-color: #0d5f59;
   }
 `;
