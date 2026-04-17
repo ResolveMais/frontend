@@ -17,6 +17,15 @@ export const TICKET_SENDER_TYPE = Object.freeze({
 const normalizeValue = (value) => String(value || "").trim().toLowerCase();
 const BOT_SENDER_NAMES = Object.freeze(["resolve assist"]);
 
+const isSameNormalizedValue = (leftValue, rightValue) => {
+  const normalizedLeftValue = normalizeValue(leftValue);
+  const normalizedRightValue = normalizeValue(rightValue);
+
+  if (!normalizedLeftValue || !normalizedRightValue) return false;
+
+  return normalizedLeftValue === normalizedRightValue;
+};
+
 export const getUserInitials = (name, fallback = "US") => {
   const normalizedName = String(name || "").trim();
 
@@ -97,31 +106,37 @@ const isLikelyBotMessage = (message) => {
   return normalizedRole === "assistant" && !message?.senderType && !message?.senderUserId;
 };
 
-export const getMessageSenderLabel = (message) => {
+export const getMessageSenderLabel = (message, { ticketCustomer = null } = {}) => {
   const normalizedRole = normalizeValue(message?.role);
 
   switch (message?.senderType) {
     case TICKET_SENDER_TYPE.CLIENTE:
-      return message.senderName || "Cliente";
+      return (
+        message?.senderUser?.name ||
+        message.senderName ||
+        ticketCustomer?.name ||
+        "Cliente"
+      );
     case TICKET_SENDER_TYPE.FUNCIONARIO:
-      return message.senderName || "Atendente";
+      return message?.senderUser?.name || message.senderName || "Atendente";
     case TICKET_SENDER_TYPE.EMPRESA:
-      return message.senderName || "Empresa";
+      return message?.senderUser?.name || message.senderName || "Empresa";
     case TICKET_SENDER_TYPE.BOT:
       return message.senderName || "Resolve Assist";
     case TICKET_SENDER_TYPE.SISTEMA:
       return message.senderName || "Sistema";
     default:
+      if (message?.senderUser?.name) return message.senderUser.name;
       if (message?.senderName) return message.senderName;
       if (normalizedRole === "system") return "Sistema";
-      if (normalizedRole === "user") return "Cliente";
+      if (normalizedRole === "user") return ticketCustomer?.name || "Cliente";
       if (normalizedRole === "assistant") {
         if (isLikelyBotMessage(message)) {
           return "Resolve Assist";
         }
-        return "Atendente";
+        return message?.senderUser?.name || message?.senderName || "Atendente";
       }
-      return "Mensagem";
+      return message?.senderUser?.name || message?.senderName || "Mensagem";
   }
 };
 
@@ -151,10 +166,18 @@ export const getMessageTagLabel = (message) => {
 
 export const getMessageUiMeta = (
   message,
-  { viewerType = "customer", ticketStatus = "" } = {}
+  {
+    viewerType = "customer",
+    ticketStatus = "",
+    currentUser = null,
+    ticketCustomer = null,
+  } = {}
 ) => {
   const normalizedRole = normalizeValue(message?.role);
-  const resolvedSenderLabel = getMessageSenderLabel(message, { ticketStatus });
+  const resolvedSenderLabel = getMessageSenderLabel(message, {
+    ticketStatus,
+    ticketCustomer,
+  });
   const tagLabel = getMessageTagLabel(message, { ticketStatus });
   const isSystemMessage =
     message?.senderType === TICKET_SENDER_TYPE.SISTEMA ||
@@ -168,6 +191,12 @@ export const getMessageUiMeta = (
       message?.senderType
     ) ||
     (!message?.senderType && normalizedRole === "assistant" && !isBotMessage);
+  const currentUserId = Number(currentUser?.id || 0);
+  const senderUserId = Number(message?.senderUserId || message?.senderUser?.id || 0);
+  const isOwnSupportMessage =
+    currentUserId > 0 && senderUserId > 0
+      ? currentUserId === senderUserId
+      : isSameNormalizedValue(resolvedSenderLabel, currentUser?.name);
 
   if (isSystemMessage) {
     return {
@@ -183,14 +212,22 @@ export const getMessageUiMeta = (
   if (isCustomerMessage) {
     const isOutgoing = viewerType === "customer";
     const senderLabel = isOutgoing ? "Você" : resolvedSenderLabel;
+    const avatarName =
+      isOutgoing && currentUser?.name ? currentUser.name : resolvedSenderLabel;
+    const avatarUrl = isOutgoing
+      ? currentUser?.avatarUrl ||
+        message?.senderUser?.avatarUrl ||
+        ticketCustomer?.avatarUrl ||
+        null
+      : message?.senderUser?.avatarUrl || ticketCustomer?.avatarUrl || null;
 
     return {
       align: isOutgoing ? "right" : "left",
       variant: "customer",
       senderLabel,
       tagLabel,
-      avatarText: getUserInitials(senderLabel, "CL"),
-      avatarUrl: null,
+      avatarText: getUserInitials(avatarName, "CL"),
+      avatarUrl,
       isSystem: false,
     };
   }
@@ -208,14 +245,24 @@ export const getMessageUiMeta = (
 
   if (isSupportMessage) {
     const isOutgoing = viewerType !== "customer";
+    const senderLabel =
+      isOutgoing && isOwnSupportMessage ? "Você" : resolvedSenderLabel;
+    const avatarName =
+      isOutgoing && isOwnSupportMessage && currentUser?.name
+        ? currentUser.name
+        : resolvedSenderLabel;
+    const avatarUrl =
+      isOutgoing && isOwnSupportMessage
+        ? currentUser?.avatarUrl || message?.senderUser?.avatarUrl || null
+        : message?.senderUser?.avatarUrl || null;
 
     return {
       align: isOutgoing ? "right" : "left",
       variant: "support",
-      senderLabel: resolvedSenderLabel,
+      senderLabel,
       tagLabel,
-      avatarText: getUserInitials(resolvedSenderLabel, "AT"),
-      avatarUrl: null,
+      avatarText: getUserInitials(avatarName, "AT"),
+      avatarUrl,
       isSystem: false,
     };
   }
@@ -226,7 +273,7 @@ export const getMessageUiMeta = (
     senderLabel: resolvedSenderLabel,
     tagLabel,
     avatarText: getUserInitials(resolvedSenderLabel, "MS"),
-    avatarUrl: null,
+    avatarUrl: message?.senderUser?.avatarUrl || null,
     isSystem: false,
   };
 };

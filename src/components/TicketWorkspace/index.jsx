@@ -21,12 +21,21 @@ import {
   TICKET_STATUS,
 } from "../../utils/ticket";
 
-const createLocalMessage = ({ role, content, senderType, senderName }) => ({
+const createLocalMessage = ({
+  role,
+  content,
+  senderType,
+  senderName,
+  senderUser = null,
+  senderUserId = null,
+}) => ({
   id: `local-${role}-${Date.now()}-${Math.random().toString(16).slice(2)}`,
   role,
   content,
   senderType,
   senderName,
+  senderUser,
+  senderUserId,
   createdAt: new Date().toISOString(),
 });
 
@@ -84,6 +93,7 @@ const TicketWorkspace = ({ mode = "customer", title }) => {
   const [detailLoading, setDetailLoading] = useState(false);
   const [actionLoading, setActionLoading] = useState(false);
   const [botStreaming, setBotStreaming] = useState(false);
+  const [messageAvatarErrors, setMessageAvatarErrors] = useState({});
 
   const isCompanyMode = mode === "company";
   const isEmployeeMode = mode === "employee";
@@ -322,6 +332,10 @@ const TicketWorkspace = ({ mode = "customer", title }) => {
   }, [selectedTicketId]);
 
   useEffect(() => {
+    setMessageAvatarErrors({});
+  }, [selectedTicketId]);
+
+  useEffect(() => {
     if (!isHistoryDialogOpen) return undefined;
 
     const previousBodyOverflow = document.body.style.overflow;
@@ -435,6 +449,17 @@ const TicketWorkspace = ({ mode = "customer", title }) => {
     const distanceFromBottom = scrollHeight - scrollTop - clientHeight;
 
     shouldStickToBottomRef.current = distanceFromBottom <= 48;
+  };
+
+  const handleMessageAvatarError = (messageId) => {
+    setMessageAvatarErrors((previous) =>
+      previous[messageId]
+        ? previous
+        : {
+            ...previous,
+            [messageId]: true,
+          }
+    );
   };
 
   const openHistoryDialog = () => {
@@ -555,6 +580,15 @@ const TicketWorkspace = ({ mode = "customer", title }) => {
       content: cleanText,
       senderType: TICKET_SENDER_TYPE.CLIENTE,
       senderName: userData?.name || "Cliente",
+      senderUserId: userData?.id || null,
+      senderUser: userData
+        ? {
+            id: userData.id,
+            name: userData.name,
+            avatarUrl: userData.avatarUrl || null,
+            userType: userData.userType || null,
+          }
+        : null,
     });
     const localAssistantMessage = createLocalMessage({
       role: "assistant",
@@ -990,8 +1024,13 @@ const TicketWorkspace = ({ mode = "customer", title }) => {
                         const messageUi = getMessageUiMeta(message, {
                           viewerType: isCustomerMode ? "customer" : "support",
                           ticketStatus: selectedTicket.status,
+                          currentUser: userData,
+                          ticketCustomer: selectedTicket.customer,
                         });
                         const messageContent = String(message.content || "").trim();
+                        const shouldShowAvatarImage =
+                          Boolean(messageUi.avatarUrl) &&
+                          !messageAvatarErrors[message.id];
 
                         return (
                           <S.MessageRow key={message.id} $align={messageUi.align}>
@@ -1009,7 +1048,15 @@ const TicketWorkspace = ({ mode = "customer", title }) => {
                                 $variant={messageUi.variant}
                                 $align={messageUi.align}
                               >
-                                {messageUi.avatarText}
+                                {shouldShowAvatarImage ? (
+                                  <S.MessageAvatarImage
+                                    src={messageUi.avatarUrl}
+                                    alt={messageUi.senderLabel}
+                                    onError={() => handleMessageAvatarError(message.id)}
+                                  />
+                                ) : (
+                                  messageUi.avatarText
+                                )}
                               </S.MessageAvatar>
                             )}
 
