@@ -182,7 +182,7 @@ export const getMessageUiMeta = (
 
   if (isCustomerMessage) {
     const isOutgoing = viewerType === "customer";
-    const senderLabel = isOutgoing ? "Voce" : resolvedSenderLabel;
+    const senderLabel = isOutgoing ? "Você" : resolvedSenderLabel;
 
     return {
       align: isOutgoing ? "right" : "left",

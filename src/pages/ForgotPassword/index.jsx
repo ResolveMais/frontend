@@ -114,7 +114,7 @@ const ForgotPassword = () => {
 
         {submitted && <S.Feedback>{feedback}</S.Feedback>}
         {remaining > 0 && (
-          <S.TimerText>Voce poderá solicitar novamente em {remaining}s.</S.TimerText>
+          <S.TimerText>Você poderá solicitar novamente em {remaining}s.</S.TimerText>
         )}
 
         <S.FooterActions>
