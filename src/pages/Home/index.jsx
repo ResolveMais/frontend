@@ -87,7 +87,6 @@ const UpdateCard = ({ update }) => {
     if (currentUpdate.type === "creation") {
       return currentUpdate.ticket?.description || "Novo ticket";
     }
-
     return currentUpdate.message || "Atualização do ticket";
   };
 
@@ -151,84 +150,86 @@ export default function Home() {
   };
 
   return (
-    <div style={{ margin: 0, padding: 0 }}>
+    <S.Page>
       <LoggedHeader />
 
-      <S.Main style={{ marginTop: "70px", padding: "2rem" }}>
-        <S.WelcomeTitle>
-          Bem-vindo, <span>{userData?.name || ""}</span>
-        </S.WelcomeTitle>
-        <S.WelcomeSubtitle>Como podemos ajudar você hoje?</S.WelcomeSubtitle>
+      <S.Container>
+        <S.HeroSection>
+          <S.Eyebrow>
+            <S.EyebrowDot />
+            <span>Área do cliente</span>
+          </S.Eyebrow>
 
-        <S.ActionsGrid>
-          <S.ActionCard
-            as={Link}
-            to="/cliente/open-ticket"
-            aria-label="Abrir novo ticket"
-          >
-            <S.ActionIcon>
-              <IconPlus />
-            </S.ActionIcon>
-            Abrir Novo Ticket
-          </S.ActionCard>
+          <S.WelcomeTitle>
+            Bem-vindo, <span>{userData?.name || ""}</span>
+          </S.WelcomeTitle>
 
-          <S.ActionCard
-            as={Link}
-            to="/cliente/pending-tickets"
-            aria-label="Tickets pendentes"
-          >
-            <S.ActionIcon>
-              <IconList />
-            </S.ActionIcon>
-            Tickets Pendentes
-          </S.ActionCard>
+          <S.WelcomeSubtitle>Como podemos ajudar você hoje?</S.WelcomeSubtitle>
 
-          <S.ActionCard
-            as={Link}
-            to="/cliente/closed-tickets"
-            aria-label="Tickets finalizados"
-          >
-            <S.ActionIcon>
-              <IconCheck />
-            </S.ActionIcon>
-            Tickets Finalizados
-          </S.ActionCard>
-        </S.ActionsGrid>
+          <S.ActionsGrid>
+            <S.ActionCard as={Link} to="/cliente/open-ticket" aria-label="Abrir novo ticket">
+              <S.ActionIcon>
+                <IconPlus />
+              </S.ActionIcon>
+              Abrir Novo Ticket
+            </S.ActionCard>
 
-        <S.UpdatesTitle>Últimas atualizações</S.UpdatesTitle>
+            <S.ActionCard as={Link} to="/cliente/pending-tickets" aria-label="Tickets pendentes">
+              <S.ActionIcon>
+                <IconList />
+              </S.ActionIcon>
+              Tickets Pendentes
+            </S.ActionCard>
 
-        {loading ? <p>Carregando atualizações...</p> : null}
+            <S.ActionCard as={Link} to="/cliente/closed-tickets" aria-label="Tickets finalizados">
+              <S.ActionIcon>
+                <IconCheck />
+              </S.ActionIcon>
+              Tickets Finalizados
+            </S.ActionCard>
+          </S.ActionsGrid>
+        </S.HeroSection>
+
+        <S.SectionHeader>
+          <div>
+            <S.SectionTitle>Últimas atualizações</S.SectionTitle>
+            <S.SectionText>Acompanhe o histórico recente dos seus tickets.</S.SectionText>
+          </div>
+        </S.SectionHeader>
+
+        {loading && <S.EmptyState>Carregando atualizações...</S.EmptyState>}
 
         {error && updates.length === 0 && (
-          <div style={{ color: "#ef4444", marginBottom: "1rem" }}>
+          <S.EmptyState>
             {error}
             <button
               onClick={handleRetry}
               style={{
                 marginLeft: "1rem",
-                backgroundColor: "#10b981",
+                backgroundColor: "#18bf6f",
                 color: "white",
                 border: "none",
-                padding: "0.5rem 1rem",
-                borderRadius: "4px",
+                padding: "0.4rem 1rem",
+                borderRadius: "8px",
                 cursor: "pointer",
+                fontWeight: 600,
               }}
             >
-              Tentar Novamente
+              Tentar novamente
             </button>
-          </div>
+          </S.EmptyState>
         )}
 
         <S.UpdatesGrid>
           {updates.length === 0 && !loading && !error && (
-            <p>Nenhuma atualização recente</p>
+            <S.EmptyState>Nenhuma atualização recente.</S.EmptyState>
           )}
 
           {updates.map((update) => (
             <UpdateCard key={update.id} update={update} />
           ))}
         </S.UpdatesGrid>
-      </S.Main>
-    </div>
+      </S.Container>
+    </S.Page>
   );
 }

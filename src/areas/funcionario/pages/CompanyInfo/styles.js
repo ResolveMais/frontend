@@ -8,7 +8,7 @@ export const Page = styled.div`
 `;
 
 export const Container = styled.main`
-  width: min(760px, 94%);
+  width: min(860px, 94%);
   margin: 0 auto;
   display: grid;
   gap: 24px;
@@ -59,70 +59,14 @@ export const WelcomeTitle = styled.h1`
   color: #123134;
   font-size: clamp(1.9rem, 3vw, 2.65rem);
   line-height: 1.12;
-
-  span {
-    color: #0d6b3c;
-  }
 `;
 
 export const WelcomeSubtitle = styled.p`
   margin: 0;
-  max-width: 600px;
+  max-width: 520px;
   color: #456263;
   font-size: 1rem;
   line-height: 1.65;
-`;
-
-export const ActionsGrid = styled.div`
-  display: flex;
-  gap: 14px;
-  flex-wrap: wrap;
-  padding-top: 6px;
-  justify-content: center;
-`;
-
-export const ActionCard = styled.a`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 14px;
-  padding: 24px 28px;
-  min-width: 190px;
-  border-radius: 18px;
-  border: 1px solid rgba(13, 107, 60, 0.18);
-  background: linear-gradient(145deg, #18bf6f 0%, #0d9e5a 100%);
-  color: #ffffff;
-  font-weight: 600;
-  font-size: 0.95rem;
-  text-align: center;
-  text-decoration: none;
-  cursor: pointer;
-  box-shadow: 0 8px 24px rgba(13, 107, 60, 0.28);
-  transition: transform 0.18s ease, box-shadow 0.18s ease;
-
-  &:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 14px 32px rgba(13, 107, 60, 0.36);
-  }
-
-  &:active {
-    transform: translateY(-1px);
-  }
-`;
-
-export const ActionIcon = styled.div`
-  width: 36px;
-  height: 36px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  opacity: 0.92;
-
-  svg {
-    width: 100%;
-    height: 100%;
-    fill: white;
-  }
 `;
 
 export const SectionHeader = styled.div`
@@ -144,65 +88,42 @@ export const SectionText = styled.p`
   line-height: 1.55;
 `;
 
-export const UpdatesGrid = styled.div`
+export const TitleGrid = styled.div`
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
   gap: 16px;
-
-  @media (max-width: 640px) {
-    grid-template-columns: 1fr;
-  }
 `;
 
-export const UpdateCard = styled.div`
+export const TitleCard = styled.div`
   display: grid;
   gap: 8px;
   padding: 20px;
   border-radius: 18px;
   border: 1px solid rgba(15, 46, 47, 0.12);
   background: rgba(255, 255, 255, 0.96);
-  box-shadow: 0 14px 28px rgba(15, 46, 47, 0.06);
-  transition: transform 0.18s ease, box-shadow 0.18s ease;
-
-  &:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 18px 34px rgba(15, 46, 47, 0.1);
-  }
+  box-shadow: 0 10px 24px rgba(15, 46, 47, 0.06);
 `;
 
-export const UpdateTitle = styled.p`
-  margin: 0;
-  display: flex;
-  align-items: center;
-  gap: 10px;
+export const TitleLabel = styled.span`
+  color: #0d6b3c;
+  font-size: 0.78rem;
   font-weight: 700;
-  font-size: 0.98rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+`;
+
+export const TitleHeading = styled.h3`
+  margin: 0;
   color: #123134;
+  font-size: 1.1rem;
   line-height: 1.3;
 `;
 
-export const UpdateDot = styled.span`
-  display: inline-block;
-  flex-shrink: 0;
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  background: radial-gradient(circle at 30% 30%, #77f2af 0%, #18bf6f 55%, #0d6b3c 100%);
-  box-shadow: 0 0 0 3px rgba(13, 107, 60, 0.12);
-`;
-
-export const UpdateDescription = styled.p`
-  margin: 0 0 0 20px;
-  font-size: 0.9rem;
+export const TitleText = styled.p`
+  margin: 0;
   color: #4d6a6b;
+  font-size: 0.9rem;
   line-height: 1.6;
-`;
-
-export const UpdateTime = styled.p`
-  margin: 0 0 0 20px;
-  font-size: 0.8rem;
-  color: #7a9a9b;
-  font-weight: 500;
 `;
 
 export const EmptyState = styled.p`
@@ -210,5 +131,3 @@ export const EmptyState = styled.p`
   color: #7a9a9b;
   font-size: 0.95rem;
 `;
-
-export const Main = styled.main``;

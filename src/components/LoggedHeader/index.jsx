@@ -42,8 +42,9 @@ const LoggedHeader = () => {
 
     if (userType === USER_TYPES.FUNCIONARIO) {
       return [
-        { key: "home", label: "Atendimentos", path: "/funcionario/home" },
+        { key: "home", label: "Home", path: "/funcionario/home" },
         { key: "configuracoes", label: "Configurações", path: "/funcionario/configuracoes" },
+        { key: "atendimentos", label: "Atendimentos", path: "/funcionario/atendimentos" },
       ];
     }
 

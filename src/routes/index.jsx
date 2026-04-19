@@ -22,12 +22,14 @@ import ClientChatbot from "../areas/cliente/pages/Chatbot";
 
 import EmployeeHome from "../areas/funcionario/pages/Home";
 import EmployeeUserData from "../areas/funcionario/pages/UserData";
+import EmployeeChat from "../areas/funcionario/pages/Atendimento";
 import CompanyHome from "../areas/empresa/pages/Home";
 import CompanyAdmins from "../areas/empresa/pages/Admins";
 import CompanyComplaintTitles from "../areas/empresa/pages/ComplaintTitles";
 import CompanySettings from "../areas/empresa/pages/Settings";
 import CompanyTicketsPage from "../areas/empresa/pages/Tickets";
 import CompanyUserData from "../areas/empresa/pages/UserData";
+import CompanyInfo from "../areas/funcionario/pages/CompanyInfo";
 
 import RoleGate from "./RoleGate";
 import { USER_TYPES } from "../utils/userType";
@@ -106,6 +108,22 @@ const AppRoutes = () => (
         element={
           <RoleGate allowedTypes={[USER_TYPES.FUNCIONARIO]}>
             <EmployeeUserData />
+          </RoleGate>
+        }
+      />
+      <Route
+        path="/funcionario/atendimentos"
+        element={
+          <RoleGate allowedTypes={[USER_TYPES.FUNCIONARIO]}>
+            <EmployeeChat />
+          </RoleGate>
+        }
+      />
+      <Route
+        path="/funcionario/CompanyInfo"
+        element={
+          <RoleGate allowedTypes={[USER_TYPES.FUNCIONARIO]}>
+            <CompanyInfo />
           </RoleGate>
         }
       />
