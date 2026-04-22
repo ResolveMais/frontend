@@ -18,7 +18,7 @@ const HeroSection = () => {
 
         <S.ButtonGroup>
           <Button variant="primary" redirect="/empresa" full>
-            PARA SUA EMPRESA - SAÍBA MAIS
+            PARA SUA EMPRESA - SAIBA MAIS
           </Button>
           
           <Button variant="green-border" redirect="/login" full>
