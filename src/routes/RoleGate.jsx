@@ -1,13 +1,20 @@
-import { Navigate } from "react-router-dom";
+import { Navigate, useLocation } from "react-router-dom";
 import PropTypes from "prop-types";
 import { useAuth } from "../contexts/AuthContext";
 import { getHomePathByUserType, normalizeUserType } from "../utils/userType";
 
 const RoleGate = ({ allowedTypes, children }) => {
   const { isLoggedIn, userData } = useAuth();
+  const location = useLocation();
 
   if (!isLoggedIn || !userData?.id) {
-    return <Navigate to="/login" replace />;
+    const redirectTarget = `${location.pathname}${location.search}${location.hash}`;
+    return (
+      <Navigate
+        to={`/login?redirect=${encodeURIComponent(redirectTarget)}`}
+        replace
+      />
+    );
   }
 
   const currentType = normalizeUserType(userData?.userType);
