@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import Button from "../../components/Button";
 import LoggedHeader from "../../components/LoggedHeader";
 import { useSnack } from "../../contexts/SnackContext";
@@ -19,7 +19,10 @@ const NewTicketForm = () => {
   const [selectedCompany, setSelectedCompany] = useState(null);
   const [showSuccess, setShowSuccess] = useState(false);
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const { showSnack } = useSnack();
+  const requestedCompanyId = searchParams.get("companyId") || "";
+  const currentRedirectPath = `/cliente/open-ticket${searchParams.toString() ? `?${searchParams.toString()}` : ""}`;
 
   const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:3001/api";
 
@@ -35,12 +38,12 @@ const NewTicketForm = () => {
 
     if (!token) {
       showErrorSnack("Você precisa fazer login para criar um ticket.");
-      navigate("/login");
+      navigate(`/login?redirect=${encodeURIComponent(currentRedirectPath)}`);
       return;
     }
 
     fetchCompanies();
-  }, [navigate, showErrorSnack]);
+  }, [currentRedirectPath, navigate, showErrorSnack]);
 
   const fetchCompanies = async () => {
     const token = localStorage.getItem("token");
@@ -97,7 +100,7 @@ const NewTicketForm = () => {
 
     if (!token) {
       showErrorSnack("Sessão expirada. Faça login novamente.");
-      navigate("/login");
+      navigate(`/login?redirect=${encodeURIComponent(currentRedirectPath)}`);
       return;
     }
 
@@ -131,6 +134,23 @@ const NewTicketForm = () => {
       showErrorSnack("Erro ao carregar assuntos.");
     }
   };
+
+  useEffect(() => {
+    if (!requestedCompanyId || companies.length === 0 || selectedCompany)
+      return;
+
+    const matchedCompany = companies.find(
+      (company) => String(company.id) === String(requestedCompanyId),
+    );
+
+    if (!matchedCompany) return;
+
+    setFormData((previous) => ({ ...previous, companyId: matchedCompany.id }));
+    setSelectedCompany(matchedCompany);
+    fetchComplaintTitles(matchedCompany.id);
+    setStep(2);
+    setSearchTerm("");
+  }, [companies, requestedCompanyId, selectedCompany]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -207,7 +227,14 @@ const NewTicketForm = () => {
       <S.Page>
         <S.LoadingContainer>
           <p>Verificando autenticação...</p>
-          <Button variant="primary" onClick={() => navigate("/login")}>
+          <Button
+            variant="primary"
+            onClick={() =>
+              navigate(
+                `/login?redirect=${encodeURIComponent(currentRedirectPath)}`,
+              )
+            }
+          >
             Fazer Login
           </Button>
         </S.LoadingContainer>
@@ -417,7 +444,9 @@ const NewTicketForm = () => {
               </Button>
               <Button
                 type="submit"
-                variant={formData.description.length < 20 ? "disabled" : "primary"}
+                variant={
+                  formData.description.length < 20 ? "disabled" : "primary"
+                }
                 disabled={loading || formData.description.length < 20}
                 full
               >
