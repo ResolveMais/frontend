@@ -167,46 +167,159 @@ export const SectionText = styled.p`
 
 export const CardGrid = styled.section`
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 16px;
+
+  @media (max-width: 980px) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  @media (max-width: 700px) {
+    grid-template-columns: 1fr;
+  }
 `;
 
 export const ActionCard = styled.article`
   display: grid;
-  gap: 12px;
-  padding: 20px;
-  border-radius: 18px;
+  gap: 16px;
+  min-height: 240px;
+  padding: 22px;
+  border-radius: 22px;
   border: 1px solid rgba(15, 46, 47, 0.12);
-  background: rgba(255, 255, 255, 0.96);
-  box-shadow: 0 14px 28px rgba(15, 46, 47, 0.06);
+  background: ${({ $featured }) =>
+    $featured
+      ? "linear-gradient(140deg, rgba(231, 251, 240, 0.98) 0%, rgba(255, 255, 255, 0.98) 62%)"
+      : "rgba(255, 255, 255, 0.96)"};
+  box-shadow: ${({ $featured }) =>
+    $featured
+      ? "0 18px 36px rgba(13, 107, 60, 0.12)"
+      : "0 14px 28px rgba(15, 46, 47, 0.06)"};
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.24s ease, box-shadow 0.24s ease, border-color 0.24s ease;
+
+  ${({ $featured }) =>
+    $featured
+      ? `
+        grid-column: span 2;
+      `
+      : ""}
+
+  &::before {
+    content: "";
+    position: absolute;
+    top: -52px;
+    right: -40px;
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    background: ${({ $featured }) =>
+      $featured
+        ? "radial-gradient(circle, rgba(24, 191, 111, 0.18) 0%, rgba(24, 191, 111, 0) 72%)"
+        : "radial-gradient(circle, rgba(18, 49, 52, 0.07) 0%, rgba(18, 49, 52, 0) 72%)"};
+    pointer-events: none;
+  }
+
+  &:hover {
+    transform: translateY(-4px);
+    border-color: rgba(13, 107, 60, 0.18);
+    box-shadow: ${({ $featured }) =>
+      $featured
+        ? "0 22px 42px rgba(13, 107, 60, 0.16)"
+        : "0 18px 34px rgba(15, 46, 47, 0.1)"};
+  }
+
+  @media (max-width: 980px) {
+    ${({ $featured }) =>
+      $featured
+        ? `
+          grid-column: span 2;
+        `
+        : ""}
+  }
+
+  @media (max-width: 700px) {
+    min-height: auto;
+    grid-column: span 1;
+  }
+`;
+
+export const CardTop = styled.div`
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 14px;
+  position: relative;
+  z-index: 1;
 `;
 
 export const CardLabel = styled.span`
+  display: inline-flex;
+  width: fit-content;
   color: #0d6b3c;
-  font-size: 0.78rem;
-  font-weight: 700;
-  letter-spacing: 0.04em;
+  font-size: 0.76rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
+`;
+
+export const CardMeta = styled.p`
+  margin: 8px 0 0;
+  color: #5b7779;
+  font-size: 0.86rem;
+  font-weight: 600;
+`;
+
+export const CardBadge = styled.span`
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 42px;
+  height: 42px;
+  padding: 0 12px;
+  border-radius: 999px;
+  background: ${({ $featured }) =>
+    $featured ? "rgba(13, 107, 60, 0.12)" : "rgba(18, 49, 52, 0.08)"};
+  color: ${({ $featured }) => ($featured ? "#0d6b3c" : "#36575b")};
+  font-size: 0.88rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  flex-shrink: 0;
+  position: relative;
+  z-index: 1;
+`;
+
+export const CardBody = styled.div`
+  display: grid;
+  align-content: start;
+  gap: 12px;
+  position: relative;
+  z-index: 1;
 `;
 
 export const CardHeading = styled.h3`
   margin: 0;
   color: #123134;
-  font-size: 1.18rem;
-  line-height: 1.3;
+  font-size: clamp(1.16rem, 1.8vw, 1.38rem);
+  line-height: 1.28;
+  max-width: 22ch;
 `;
 
 export const CardText = styled.p`
   margin: 0;
   color: #4d6a6b;
   line-height: 1.6;
+  max-width: 34ch;
 `;
 
 export const CardFooter = styled.div`
   display: flex;
   flex-wrap: wrap;
   align-self: flex-end;
-  padding-top: 4px;
+  margin-top: auto;
+  padding-top: 2px;
+  position: relative;
+  z-index: 1;
 `;
 
 export const SupportCard = styled.section`

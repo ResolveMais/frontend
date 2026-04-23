@@ -191,14 +191,14 @@ O token JWT:
 
 ### Rota nova
 
-- `/chatbot`: pagina de assistente virtual da plataforma
+- `/chatbot`: página de assistente virtual da plataforma
 
 ### Funcionalidades
 
 - stream de resposta em tempo real (SSE)
-- historico de conversa carregado ao abrir a pagina
+- historico de conversa carregado ao abrir a página
 - limpar conversa com delecao logica no backend (`del = true`)
 
 ### Integracao
 
-A pagina consome os endpoints em `/api/chatbot` usando o token JWT em `Authorization`.
+A página consome os endpoints em `/api/chatbot` usando o token JWT em `Authorization`.

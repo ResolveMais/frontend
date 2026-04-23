@@ -75,7 +75,7 @@ const CompanySettings = () => {
 
       <S.Container>
         <S.Card>
-          <S.CardTitle>Configuracoes da Empresa</S.CardTitle>
+          <S.CardTitle>Configurações da Empresa</S.CardTitle>
           {!loading && company && (
             <S.CardText>
               {company.name} - CNPJ: {company.cnpj}
@@ -115,19 +115,19 @@ const CompanySettings = () => {
             <div>
               <S.SectionTitle>Assuntos recorrentes</S.SectionTitle>
               <S.SectionDescription>
-                Agora os assuntos de tickets ficam em uma pagina dedicada para facilitar o cadastro e a manutencao.
+                Agora os assuntos de tickets ficam em uma página dedicada para facilitar o cadastro e a manutenção.
               </S.SectionDescription>
             </div>
           </S.SectionHeader>
 
           <S.SupportingText>
-            Nessa pagina o administrador pode adicionar temas como demora na entrega, problemas no site, problemas com o
+            Nessa página o administrador pode adicionar temas como demora na entrega, problemas no site, problemas com o
             produto e outros assuntos mais recorrentes para novos tickets.
           </S.SupportingText>
 
           <S.ButtonsGroup>
             <Button variant="primary" redirect="/empresa/assuntos">
-              Abrir pagina de assuntos
+              Abrir página de assuntos
             </Button>
           </S.ButtonsGroup>
         </S.Card>
