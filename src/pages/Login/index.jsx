@@ -6,8 +6,8 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { useAuth } from "../../contexts/AuthContext";
-import { useNavigate } from "react-router-dom";
-import { getHomePathByUserType } from "../../utils/userType";
+import { useNavigate, useSearchParams } from "react-router-dom";
+import { USER_TYPES, getHomePathByUserType, normalizeUserType } from "../../utils/userType";
 import { authService } from "../../services/authService";
 
 const schema = yup.object().shape({
@@ -17,8 +17,22 @@ const schema = yup.object().shape({
 
 const Login = () => {
     const navigate = useNavigate();
+    const [searchParams] = useSearchParams();
     const { userData, isLoggedIn, logout, login } = useAuth();
     const [loading, setLoading] = useState(false);
+    const redirectPath = searchParams.get("redirect") || "";
+    const registerPath = redirectPath
+        ? `/register?redirect=${encodeURIComponent(redirectPath)}`
+        : "/register";
+    const resolvePostAuthPath = (userType) => {
+        const normalizedUserType = normalizeUserType(userType);
+
+        if (redirectPath && (!redirectPath.startsWith("/cliente/") || normalizedUserType === USER_TYPES.CLIENTE)) {
+            return redirectPath;
+        }
+
+        return getHomePathByUserType(userType);
+    };
     const {
         register,
         handleSubmit,
@@ -38,7 +52,7 @@ const Login = () => {
             if (response?.token) {
                 const { user, token } = response;
                 login({ user, token });
-                navigate(getHomePathByUserType(user?.userType), { replace: true });
+                navigate(resolvePostAuthPath(user?.userType), { replace: true });
             } else {
                 alert("Erro ao fazer login. Tente novamente.");
             }
@@ -52,8 +66,8 @@ const Login = () => {
 
     useEffect(() => {
         if (!userData?.id && !isLoggedIn) logout();
-        else navigate(getHomePathByUserType(userData?.userType), { replace: true });
-    }, [userData, isLoggedIn, logout, navigate]);
+        else navigate(resolvePostAuthPath(userData?.userType), { replace: true });
+    }, [userData, isLoggedIn, logout, navigate, redirectPath]);
 
     return (
         <S.Container>
@@ -79,7 +93,7 @@ const Login = () => {
                         </S.FormExtras>
 
                         <S.Actions>
-                            <Button variant="transparent" redirect="/register" full>Cadastro</Button>
+                            <Button variant="transparent" redirect={registerPath} full>Cadastro</Button>
                             <Button variant="primary" type="submit" disabled={loading} full>Entrar</Button>
                         </S.Actions>
                     </S.Form>
