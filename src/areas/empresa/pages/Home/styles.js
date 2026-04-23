@@ -11,28 +11,25 @@ export const Container = styled.main`
   width: min(1100px, 94%);
   margin: 0 auto;
   display: grid;
-  gap: 20px;
-  padding-bottom: 32px;
+  gap: 24px;
+  padding-bottom: 40px;
 `;
 
 export const HeroSection = styled.section`
   display: grid;
-  grid-template-columns: minmax(0, 1.35fr) minmax(300px, 0.9fr);
-  gap: 18px;
-
-  @media (max-width: 900px) {
-    grid-template-columns: 1fr;
-  }
 `;
 
 export const HeroContent = styled.article`
   display: grid;
-  gap: 14px;
-  padding: 28px;
+  gap: 18px;
+  width: 100%;
+  justify-items: center;
+  padding: 32px;
   border-radius: 22px;
   border: 1px solid rgba(15, 46, 47, 0.12);
   background: linear-gradient(135deg, rgba(255, 255, 255, 0.98) 0%, rgba(241, 251, 246, 0.98) 100%);
   box-shadow: 0 16px 34px rgba(15, 46, 47, 0.08);
+  text-align: center;
 `;
 
 export const Eyebrow = styled.span`
@@ -64,86 +61,129 @@ export const EyebrowDot = styled.span`
 
 export const Title = styled.h1`
   margin: 0;
-  max-width: 620px;
+  max-width: 22ch;
   color: #123134;
   font-size: clamp(1.9rem, 3vw, 2.65rem);
   line-height: 1.12;
+  text-wrap: balance;
 `;
 
 export const Description = styled.p`
   margin: 0;
-  max-width: 640px;
+  max-width: 520px;
   color: #456263;
   font-size: 1rem;
   line-height: 1.65;
+  text-align: center;
 `;
 
 export const Actions = styled.div`
   display: flex;
-  gap: 12px;
+  gap: 14px;
   flex-wrap: wrap;
   padding-top: 6px;
+  justify-content: center;
 `;
 
-export const HighlightCard = styled.aside`
-  display: grid;
-  gap: 14px;
-  padding: 24px;
-  border-radius: 22px;
-  background: linear-gradient(180deg, #123134 0%, #1d474a 100%);
-  color: #f5fffb;
-  box-shadow: 0 18px 34px rgba(18, 49, 52, 0.18);
-`;
-
-export const HighlightLabel = styled.span`
-  color: rgba(230, 255, 243, 0.78);
-  font-size: 0.78rem;
-  font-weight: 700;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-`;
-
-export const HighlightTitle = styled.h2`
-  margin: 0;
-  font-size: 1.4rem;
-  line-height: 1.2;
-`;
-
-export const HighlightText = styled.p`
-  margin: 0;
-  color: rgba(239, 251, 245, 0.84);
-  line-height: 1.6;
-`;
-
-export const StepList = styled.div`
-  display: grid;
-  gap: 12px;
-`;
-
-export const StepItem = styled.div`
-  display: grid;
-  grid-template-columns: auto 1fr;
-  gap: 12px;
-  align-items: start;
-`;
-
-export const StepNumber = styled.span`
-  display: inline-flex;
+export const HeroActionCard = styled.a`
+  display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  width: 28px;
-  height: 28px;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.12);
+  gap: 14px;
+  min-width: 190px;
+  padding: 22px 28px;
+  border-radius: 18px;
+  border: 1px solid
+    ${({ $secondary }) =>
+      $secondary ? "rgba(15, 46, 47, 0.14)" : "rgba(13, 107, 60, 0.18)"};
+  background: ${({ $secondary }) =>
+    $secondary
+      ? "linear-gradient(145deg, #1d474a 0%, #123134 100%)"
+      : "linear-gradient(145deg, #18bf6f 0%, #0d9e5a 100%)"};
   color: #ffffff;
-  font-size: 0.92rem;
+  font-size: 0.95rem;
   font-weight: 700;
+  text-align: center;
+  text-decoration: none;
+  box-shadow: ${({ $secondary }) =>
+    $secondary
+      ? "0 8px 24px rgba(18, 49, 52, 0.22)"
+      : "0 8px 24px rgba(13, 107, 60, 0.28)"};
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+
+  &:hover {
+    transform: translateY(-3px);
+    box-shadow: ${({ $secondary }) =>
+      $secondary
+        ? "0 14px 32px rgba(18, 49, 52, 0.32)"
+        : "0 14px 32px rgba(13, 107, 60, 0.36)"};
+  }
+
+  &:active {
+    transform: translateY(-1px);
+  }
 `;
 
-export const StepText = styled.p`
-  margin: 0;
-  color: rgba(239, 251, 245, 0.9);
-  line-height: 1.55;
+export const HeroActionIcon = styled.div`
+  width: 34px;
+  height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0.92;
+
+  svg {
+    width: 100%;
+    height: 100%;
+    fill: currentColor;
+  }
+`;
+
+export const MetricsGrid = styled.section`
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+
+  @media (max-width: 820px) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  @media (max-width: 560px) {
+    grid-template-columns: 1fr;
+  }
+`;
+
+export const MetricCard = styled.article`
+  display: grid;
+  gap: 8px;
+  padding: 20px;
+  border-radius: 20px;
+  border: 1px solid rgba(15, 46, 47, 0.12);
+  background: ${({ $tone }) =>
+    $tone === "warning"
+      ? "linear-gradient(135deg, rgba(255,255,255,0.98) 0%, rgba(255,248,235,0.98) 100%)"
+      : "rgba(255, 255, 255, 0.96)"};
+  box-shadow: 0 10px 24px rgba(15, 46, 47, 0.06);
+  text-align: center;
+`;
+
+export const MetricValue = styled.strong`
+  color: ${({ $tone }) => {
+    if ($tone === "success") return "#0d6b3c";
+    if ($tone === "warning") return "#b45309";
+    return "#123134";
+  }};
+  font-size: clamp(2.1rem, 3vw, 2.6rem);
+  line-height: 1;
+`;
+
+export const MetricLabel = styled.span`
+  color: #6f8d8f;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
 `;
 
 export const SectionHeader = styled.div`
