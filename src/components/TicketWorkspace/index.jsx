@@ -306,6 +306,8 @@ const TicketWorkspace = ({ mode = "customer", title }) => {
   }, [isCompanyMode, selectedTicketId, searchParams]);
 
   useEffect(() => {
+    if (workspaceLoading) return;
+
     shouldStickToBottomRef.current = true;
     if (!selectedTicketId) {
       loadTicketContext("");
@@ -314,7 +316,7 @@ const TicketWorkspace = ({ mode = "customer", title }) => {
 
     loadTicketContext(selectedTicketId);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedTicketId]);
+  }, [selectedTicketId, workspaceLoading]);
 
   useEffect(
     () => () => {

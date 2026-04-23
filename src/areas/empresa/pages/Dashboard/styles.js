@@ -262,6 +262,32 @@ export const PanelHeader = styled.div`
   gap: 16px;
 `;
 
+export const DialogHeaderActions = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+`;
+
+export const PanelActionButton = styled.button`
+  border: 1px solid rgba(13, 107, 60, 0.16);
+  background: rgba(226, 250, 236, 0.9);
+  color: #0d6b3c;
+  border-radius: 999px;
+  padding: 10px 14px;
+  font-size: 0.88rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+  white-space: nowrap;
+
+  &:hover {
+    transform: translateY(-1px);
+    border-color: rgba(13, 107, 60, 0.24);
+    box-shadow: 0 12px 22px rgba(13, 107, 60, 0.12);
+  }
+`;
+
 export const PanelTitle = styled.h2`
   margin: 0;
   color: #123134;
@@ -494,6 +520,7 @@ export const HighlightCaption = styled.p`
 export const TeamGrid = styled.section`
   display: grid;
   grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+  align-items: start;
   gap: 18px;
 
   @media (max-width: 980px) {
@@ -657,6 +684,24 @@ export const Table = styled.table`
   }
 `;
 
+export const TableActionButton = styled.button`
+  border: 1px solid rgba(18, 49, 52, 0.12);
+  background: rgba(18, 49, 52, 0.04);
+  color: #123134;
+  border-radius: 999px;
+  padding: 8px 12px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.2s ease, border-color 0.2s ease;
+  white-space: nowrap;
+
+  &:hover {
+    background: rgba(13, 107, 60, 0.08);
+    border-color: rgba(13, 107, 60, 0.18);
+  }
+`;
+
 export const StatusBadge = styled.span`
   display: inline-flex;
   align-items: center;
@@ -767,4 +812,230 @@ export const EmptyInline = styled.p`
   margin: 0;
   color: #5f7a7d;
   line-height: 1.6;
+`;
+
+export const DialogOverlay = styled.div`
+  position: fixed;
+  inset: 0;
+  z-index: 1400;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: rgba(10, 26, 28, 0.42);
+  backdrop-filter: blur(8px);
+`;
+
+export const Dialog = styled.div`
+  width: min(980px, 100%);
+  max-height: min(88vh, 920px);
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  border-radius: 24px;
+  border: 1px solid rgba(15, 46, 47, 0.12);
+  background: rgba(255, 255, 255, 0.98);
+  box-shadow: 0 24px 52px rgba(15, 46, 47, 0.24);
+  overflow: hidden;
+`;
+
+export const DialogHeader = styled.div`
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 22px 24px;
+  border-bottom: 1px solid rgba(15, 46, 47, 0.08);
+`;
+
+export const DialogTitle = styled.h2`
+  margin: 0;
+  color: #123134;
+  font-size: 1.35rem;
+`;
+
+export const DialogText = styled.p`
+  margin: 6px 0 0;
+  color: #5b7678;
+  line-height: 1.55;
+`;
+
+export const DialogBody = styled.div`
+  overflow-y: auto;
+  display: grid;
+  gap: 18px;
+  padding: 24px;
+`;
+
+export const ReviewGroupList = styled.div`
+  display: grid;
+  gap: 18px;
+`;
+
+export const ReviewGroupCard = styled.article`
+  display: grid;
+  gap: 16px;
+  padding: 18px;
+  border-radius: 20px;
+  background: rgba(18, 49, 52, 0.035);
+`;
+
+export const ReviewGroupHeader = styled.div`
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+`;
+
+export const ReviewSummary = styled.div`
+  display: grid;
+  gap: 4px;
+  justify-items: end;
+
+  strong {
+    color: #123134;
+    font-size: 1.3rem;
+  }
+
+  span {
+    color: #5f7a7d;
+    font-size: 0.9rem;
+  }
+`;
+
+export const ReviewCardList = styled.div`
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 14px;
+`;
+
+export const ReviewCard = styled.article`
+  display: grid;
+  gap: 10px;
+  padding: 16px;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.96);
+  border: 1px solid rgba(15, 46, 47, 0.08);
+`;
+
+export const ReviewCardTop = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+`;
+
+export const ReviewProtocol = styled.span`
+  color: #123134;
+  font-size: 0.84rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+`;
+
+export const ReviewRating = styled.span`
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: rgba(13, 159, 93, 0.12);
+  color: #0d9f5d;
+  font-size: 0.8rem;
+  font-weight: 800;
+`;
+
+export const ReviewSubject = styled.h3`
+  margin: 0;
+  color: #123134;
+  font-size: 1rem;
+  line-height: 1.35;
+`;
+
+export const ReviewComment = styled.p`
+  margin: 0;
+  color: #4f6d70;
+  line-height: 1.55;
+`;
+
+export const ReviewMeta = styled.div`
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  color: #607c7e;
+  font-size: 0.84rem;
+`;
+
+export const TicketInfoGrid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 12px;
+`;
+
+export const TicketInfoCard = styled.div`
+  display: grid;
+  gap: 6px;
+  padding: 14px 16px;
+  border-radius: 18px;
+  background: rgba(18, 49, 52, 0.05);
+
+  strong {
+    color: #123134;
+    font-size: 0.84rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  span {
+    color: #567376;
+    line-height: 1.45;
+  }
+`;
+
+export const MessageList = styled.div`
+  display: grid;
+  gap: 12px;
+`;
+
+export const MessageCard = styled.article`
+  display: grid;
+  gap: 10px;
+  padding: 16px;
+  border-radius: 18px;
+  border: 1px solid
+    ${({ $system }) =>
+      $system ? "rgba(18, 49, 52, 0.08)" : "rgba(13, 107, 60, 0.12)"};
+  background: ${({ $system }) =>
+    $system ? "rgba(18, 49, 52, 0.035)" : "rgba(240, 251, 246, 0.88)"};
+`;
+
+export const MessageTop = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+`;
+
+export const MessageAuthor = styled.strong`
+  color: #123134;
+  font-size: 0.95rem;
+`;
+
+export const MessageBadge = styled.span`
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: rgba(18, 49, 52, 0.08);
+  color: #476568;
+  font-size: 0.78rem;
+  font-weight: 700;
+`;
+
+export const MessageContent = styled.p`
+  margin: 0;
+  color: #4c686b;
+  line-height: 1.65;
+  white-space: pre-wrap;
+`;
+
+export const MessageTime = styled.span`
+  color: #678284;
+  font-size: 0.82rem;
 `;

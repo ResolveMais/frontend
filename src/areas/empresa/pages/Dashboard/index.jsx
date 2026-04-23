@@ -5,6 +5,10 @@ import LoggedHeader from "../../../../components/LoggedHeader";
 import { companyAdminService } from "../../../../services/companyAdminService";
 import { ticketService } from "../../../../services/ticketService";
 import {
+  buildTicketProtocol,
+  formatDateTime,
+  getMessageSenderLabel,
+  getMessageTagLabel,
   getTicketStatusLabel,
   getTicketStatusTone,
   getUserInitials,
@@ -78,6 +82,12 @@ const formatRatingLabel = (value) =>
 
 const formatPercentLabel = (value) => `${Math.round(value || 0)}%`;
 
+const getResolutionSourceLabel = (value) => {
+  if (value === "chatbot") return "Resolvido pelo chatbot";
+  if (value === "human") return "Resolvido pelo atendimento";
+  return "Resolução registrada";
+};
+
 const buildDailyVolume = (tickets) => {
   const countsByDay = new Map();
   const today = new Date();
@@ -122,6 +132,57 @@ const buildSubjectSummary = (tickets) => {
     .sort((left, right) => right.count - left.count)
     .slice(0, 5);
 };
+
+const buildEmployeeReviewGroups = (employeeMetrics, tickets) =>
+  employeeMetrics
+    .map((employee) => {
+      const reviews = tickets
+        .filter(
+          (ticket) =>
+            String(ticket.assignedEmployee?.id || "") === String(employee.id) &&
+            Number(ticket.evaluation?.rating || 0) > 0
+        )
+        .sort((left, right) => {
+          const leftTime =
+            createDateFromValue(
+              left.evaluation?.submittedAt || left.updatedAt || left.createdAt
+            )?.getTime() || 0;
+          const rightTime =
+            createDateFromValue(
+              right.evaluation?.submittedAt || right.updatedAt || right.createdAt
+            )?.getTime() || 0;
+
+          return rightTime - leftTime;
+        })
+        .map((ticket) => ({
+          ticketId: ticket.id,
+          protocol: buildTicketProtocol(ticket.id),
+          subject: ticket.complaintTitle?.title || "Sem assunto",
+          rating: Number(ticket.evaluation?.rating || 0),
+          comment: ticket.evaluation?.comment || "",
+          submittedAt:
+            ticket.evaluation?.submittedAt || ticket.updatedAt || ticket.createdAt,
+          customerName: ticket.customer?.name || "Cliente",
+          resolutionSource: ticket.evaluation?.resolutionSource || null,
+        }));
+
+      return {
+        ...employee,
+        reviews,
+      };
+    })
+    .filter((employee) => employee.reviews.length > 0)
+    .sort((left, right) => {
+      if (right.reviews.length !== left.reviews.length) {
+        return right.reviews.length - left.reviews.length;
+      }
+
+      if ((right.averageRating || 0) !== (left.averageRating || 0)) {
+        return (right.averageRating || 0) - (left.averageRating || 0);
+      }
+
+      return String(left.name || "").localeCompare(String(right.name || ""));
+    });
 
 const getTicketLastActivity = (ticket) => {
   const timestamps = [
@@ -374,6 +435,15 @@ const CompanyDashboard = () => {
   const [employees, setEmployees] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [isReviewsDialogOpen, setIsReviewsDialogOpen] = useState(false);
+  const [ticketHistoryDialog, setTicketHistoryDialog] = useState({
+    isOpen: false,
+    loading: false,
+    error: "",
+    ticket: null,
+    detail: null,
+    messages: [],
+  });
 
   useEffect(() => {
     let active = true;
@@ -428,6 +498,38 @@ const CompanyDashboard = () => {
       active = false;
     };
   }, []);
+
+  useEffect(() => {
+    if (!isReviewsDialogOpen && !ticketHistoryDialog.isOpen) return undefined;
+
+    const previousBodyOverflow = document.body.style.overflow;
+    const handleEscapeKey = (event) => {
+      if (event.key !== "Escape") return;
+
+      if (ticketHistoryDialog.isOpen) {
+        setTicketHistoryDialog({
+          isOpen: false,
+          loading: false,
+          error: "",
+          ticket: null,
+          detail: null,
+          messages: [],
+        });
+      }
+
+      if (isReviewsDialogOpen) {
+        setIsReviewsDialogOpen(false);
+      }
+    };
+
+    document.body.style.overflow = "hidden";
+    window.addEventListener("keydown", handleEscapeKey);
+
+    return () => {
+      document.body.style.overflow = previousBodyOverflow;
+      window.removeEventListener("keydown", handleEscapeKey);
+    };
+  }, [isReviewsDialogOpen, ticketHistoryDialog.isOpen]);
 
   const todayKey = getDateKey(new Date());
   const totalTickets = tickets.length;
@@ -513,6 +615,10 @@ const CompanyDashboard = () => {
     })
     .slice(0, 6);
   const subjectSummary = buildSubjectSummary(tickets);
+  const employeeReviewGroups = buildEmployeeReviewGroups(
+    employeeMetrics,
+    tickets
+  );
   const alerts = buildOperationalAlerts({
     unassignedTickets,
     attentionEmployees,
@@ -533,6 +639,83 @@ const CompanyDashboard = () => {
     ...subjectSummary.map((item) => item.count),
     1
   );
+  const canOpenTicketInWorkspace =
+    (ticketHistoryDialog.detail?.status || ticketHistoryDialog.ticket?.status) !==
+    "fechado";
+
+  const closeTicketHistoryDialog = () => {
+    setTicketHistoryDialog({
+      isOpen: false,
+      loading: false,
+      error: "",
+      ticket: null,
+      detail: null,
+      messages: [],
+    });
+  };
+
+  const handleOpenTicketHistory = async (ticket) => {
+    const targetTicketId = String(ticket.id);
+
+    setTicketHistoryDialog({
+      isOpen: true,
+      loading: true,
+      error: "",
+      ticket,
+      detail: ticket,
+      messages: [],
+    });
+
+    try {
+      const [detailResponse, messagesResponse] = await Promise.all([
+        ticketService.getTicketDetail(ticket.id),
+        ticketService.getTicketMessages(ticket.id),
+      ]);
+
+      if (detailResponse?.status >= 400) {
+        throw new Error(
+          detailResponse.message ||
+            "Não foi possível carregar os detalhes do ticket."
+        );
+      }
+
+      if (messagesResponse?.status >= 400) {
+        throw new Error(
+          messagesResponse.message ||
+            "Não foi possível carregar a troca de mensagens."
+        );
+      }
+
+      setTicketHistoryDialog((previous) => {
+        if (String(previous.ticket?.id || "") !== targetTicketId) {
+          return previous;
+        }
+
+        return {
+          ...previous,
+          loading: false,
+          error: "",
+          detail: detailResponse.ticket || messagesResponse.ticket || ticket,
+          messages: messagesResponse.messages || [],
+        };
+      });
+    } catch (requestError) {
+      setTicketHistoryDialog((previous) => {
+        if (String(previous.ticket?.id || "") !== targetTicketId) {
+          return previous;
+        }
+
+        return {
+          ...previous,
+          loading: false,
+          error:
+            requestError?.response?.data?.message ||
+            requestError?.message ||
+            "Não foi possível carregar o histórico do ticket.",
+        };
+      });
+    }
+  };
 
   return (
     <S.Page>
@@ -781,6 +964,14 @@ const CompanyDashboard = () => {
                       Ranking com volume atribuído, entregas e qualidade percebida.
                     </S.PanelText>
                   </div>
+                  {employeeReviewGroups.length > 0 ? (
+                    <S.PanelActionButton
+                      type="button"
+                      onClick={() => setIsReviewsDialogOpen(true)}
+                    >
+                      Ver avaliações
+                    </S.PanelActionButton>
+                  ) : null}
                 </S.PanelHeader>
 
                 {employeeMetrics.length === 0 ? (
@@ -910,6 +1101,7 @@ const CompanyDashboard = () => {
                           <th>Responsável</th>
                           <th>Status</th>
                           <th>Abertura</th>
+                          <th>Histórico</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -924,6 +1116,14 @@ const CompanyDashboard = () => {
                               </S.StatusBadge>
                             </td>
                             <td>{formatShortDate(ticket.createdAt)}</td>
+                            <td>
+                              <S.TableActionButton
+                                type="button"
+                                onClick={() => handleOpenTicketHistory(ticket)}
+                              >
+                                Ver o histórico
+                              </S.TableActionButton>
+                            </td>
                           </tr>
                         ))}
                       </tbody>
@@ -1004,6 +1204,226 @@ const CompanyDashboard = () => {
           </>
         ) : null}
       </S.Container>
+
+      {isReviewsDialogOpen ? (
+        <S.DialogOverlay onClick={() => setIsReviewsDialogOpen(false)}>
+          <S.Dialog
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="employee-reviews-dialog-title"
+            onClick={(event) => event.stopPropagation()}
+          >
+            <S.DialogHeader>
+              <div>
+                <S.DialogTitle id="employee-reviews-dialog-title">
+                  Avaliações da equipe
+                </S.DialogTitle>
+                <S.DialogText>
+                  Consulte as notas e comentários vinculados aos tickets que foram
+                  resolvidos pela equipe.
+                </S.DialogText>
+              </div>
+
+              <S.DialogHeaderActions>
+                <S.PanelActionButton
+                  type="button"
+                  onClick={() => setIsReviewsDialogOpen(false)}
+                >
+                  Fechar
+                </S.PanelActionButton>
+              </S.DialogHeaderActions>
+            </S.DialogHeader>
+
+            <S.DialogBody>
+              {employeeReviewGroups.length === 0 ? (
+                <S.EmptyInline>
+                  Ainda não há avaliações vinculadas aos funcionários.
+                </S.EmptyInline>
+              ) : (
+                <S.ReviewGroupList>
+                  {employeeReviewGroups.map((employee) => (
+                    <S.ReviewGroupCard key={employee.id}>
+                      <S.ReviewGroupHeader>
+                        <S.EmployeeIdentity>
+                          <S.Avatar>{getUserInitials(employee.name, "EQ")}</S.Avatar>
+                          <div>
+                            <S.EmployeeName>{employee.name}</S.EmployeeName>
+                            <S.EmployeeRole>
+                              {employee.jobTitle || "Funcionário da operação"}
+                            </S.EmployeeRole>
+                          </div>
+                        </S.EmployeeIdentity>
+
+                        <S.ReviewSummary>
+                          <strong>{formatRatingLabel(employee.averageRating)}</strong>
+                          <span>
+                            {employee.reviews.length} avaliação(ões)
+                          </span>
+                        </S.ReviewSummary>
+                      </S.ReviewGroupHeader>
+
+                      <S.ReviewCardList>
+                        {employee.reviews.slice(0, 4).map((review) => (
+                          <S.ReviewCard key={`${employee.id}-${review.ticketId}`}>
+                            <S.ReviewCardTop>
+                              <S.ReviewProtocol>
+                                {review.protocol}
+                              </S.ReviewProtocol>
+                              <S.ReviewRating>
+                                {review.rating}/5
+                              </S.ReviewRating>
+                            </S.ReviewCardTop>
+
+                            <S.ReviewSubject>{review.subject}</S.ReviewSubject>
+                            <S.ReviewComment>
+                              {review.comment ||
+                                "Avaliação registrada sem comentário detalhado."}
+                            </S.ReviewComment>
+
+                            <S.ReviewMeta>
+                              <span>{review.customerName}</span>
+                              <span>{formatDateTime(review.submittedAt)}</span>
+                            </S.ReviewMeta>
+                            <S.ReviewMeta>
+                              <span>
+                                {getResolutionSourceLabel(review.resolutionSource)}
+                              </span>
+                            </S.ReviewMeta>
+                          </S.ReviewCard>
+                        ))}
+                      </S.ReviewCardList>
+                    </S.ReviewGroupCard>
+                  ))}
+                </S.ReviewGroupList>
+              )}
+            </S.DialogBody>
+          </S.Dialog>
+        </S.DialogOverlay>
+      ) : null}
+
+      {ticketHistoryDialog.isOpen ? (
+        <S.DialogOverlay onClick={closeTicketHistoryDialog}>
+          <S.Dialog
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="ticket-history-dialog-title"
+            onClick={(event) => event.stopPropagation()}
+          >
+            <S.DialogHeader>
+              <div>
+                <S.DialogTitle id="ticket-history-dialog-title">
+                  Histórico do ticket{" "}
+                  {buildTicketProtocol(ticketHistoryDialog.ticket?.id)}
+                </S.DialogTitle>
+                <S.DialogText>
+                  Veja a troca de mensagens sem sair do dashboard.
+                </S.DialogText>
+              </div>
+
+              <S.DialogHeaderActions>
+                {ticketHistoryDialog.ticket?.id && canOpenTicketInWorkspace ? (
+                  <Button
+                    variant="secondary"
+                    redirect={`/empresa/chamados?ticketId=${ticketHistoryDialog.ticket.id}`}
+                  >
+                    Abrir na central
+                  </Button>
+                ) : null}
+                <S.PanelActionButton
+                  type="button"
+                  onClick={closeTicketHistoryDialog}
+                >
+                  Fechar
+                </S.PanelActionButton>
+              </S.DialogHeaderActions>
+            </S.DialogHeader>
+
+            <S.DialogBody>
+              <S.TicketInfoGrid>
+                <S.TicketInfoCard>
+                  <strong>Status</strong>
+                  <span>
+                    {getTicketStatusLabel(
+                      ticketHistoryDialog.detail?.status ||
+                        ticketHistoryDialog.ticket?.status
+                    )}
+                  </span>
+                </S.TicketInfoCard>
+                <S.TicketInfoCard>
+                  <strong>Assunto</strong>
+                  <span>
+                    {ticketHistoryDialog.detail?.complaintTitle?.title ||
+                      ticketHistoryDialog.ticket?.complaintTitle?.title ||
+                      "Sem assunto"}
+                  </span>
+                </S.TicketInfoCard>
+                <S.TicketInfoCard>
+                  <strong>Responsável</strong>
+                  <span>
+                    {ticketHistoryDialog.detail?.assignedEmployee?.name ||
+                      ticketHistoryDialog.ticket?.assignedEmployee?.name ||
+                      "Não definido"}
+                  </span>
+                </S.TicketInfoCard>
+                <S.TicketInfoCard>
+                  <strong>Cliente</strong>
+                  <span>
+                    {ticketHistoryDialog.detail?.customer?.name ||
+                      ticketHistoryDialog.ticket?.customer?.name ||
+                      "Não informado"}
+                  </span>
+                </S.TicketInfoCard>
+              </S.TicketInfoGrid>
+
+              {ticketHistoryDialog.loading ? (
+                <S.EmptyInline>Carregando troca de mensagens...</S.EmptyInline>
+              ) : null}
+
+              {!ticketHistoryDialog.loading && ticketHistoryDialog.error ? (
+                <S.EmptyInline>{ticketHistoryDialog.error}</S.EmptyInline>
+              ) : null}
+
+              {!ticketHistoryDialog.loading &&
+              !ticketHistoryDialog.error &&
+              ticketHistoryDialog.messages.length === 0 ? (
+                <S.EmptyInline>
+                  Ainda não há mensagens registradas neste ticket.
+                </S.EmptyInline>
+              ) : null}
+
+              {!ticketHistoryDialog.loading &&
+              !ticketHistoryDialog.error &&
+              ticketHistoryDialog.messages.length > 0 ? (
+                <S.MessageList>
+                  {ticketHistoryDialog.messages.map((message) => (
+                    <S.MessageCard
+                      key={message.id}
+                      $system={getMessageTagLabel(message) === "Sistema"}
+                    >
+                      <S.MessageTop>
+                        <S.MessageAuthor>
+                          {getMessageSenderLabel(message, {
+                            ticketCustomer: ticketHistoryDialog.detail?.customer,
+                          })}
+                        </S.MessageAuthor>
+                        <S.MessageBadge>
+                          {getMessageTagLabel(message)}
+                        </S.MessageBadge>
+                      </S.MessageTop>
+                      <S.MessageContent>
+                        {message.content || "Mensagem sem conteúdo."}
+                      </S.MessageContent>
+                      <S.MessageTime>
+                        {formatDateTime(message.createdAt)}
+                      </S.MessageTime>
+                    </S.MessageCard>
+                  ))}
+                </S.MessageList>
+              ) : null}
+            </S.DialogBody>
+          </S.Dialog>
+        </S.DialogOverlay>
+      ) : null}
     </S.Page>
   );
 };
