@@ -34,6 +34,7 @@ const LoggedHeader = () => {
     if (userType === USER_TYPES.EMPRESA) {
       return [
         { key: "home", label: "Home", path: "/empresa/home" },
+        { key: "insights", label: "Insights", path: "/empresa/insights" },
         { key: "tickets", label: "Chamados", path: "/empresa/chamados" },
         { key: "configuracoes", label: "Configurações", path: "/empresa/configuracoes" },
         { key: "admins", label: "Administradores", path: "/empresa/administradores" },

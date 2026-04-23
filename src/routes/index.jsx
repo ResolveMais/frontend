@@ -25,6 +25,7 @@ import EmployeeHome from "../areas/funcionario/pages/Home";
 import EmployeeUserData from "../areas/funcionario/pages/UserData";
 import EmployeeChat from "../areas/funcionario/pages/Atendimento";
 import CompanyHome from "../areas/empresa/pages/Home";
+import CompanyDashboard from "../areas/empresa/pages/Dashboard";
 import CompanyAdmins from "../areas/empresa/pages/Admins";
 import CompanyComplaintTitles from "../areas/empresa/pages/ComplaintTitles";
 import CompanySettings from "../areas/empresa/pages/Settings";
@@ -142,6 +143,14 @@ const AppRoutes = () => (
         element={
           <RoleGate allowedTypes={[USER_TYPES.EMPRESA]}>
             <CompanyHome />
+          </RoleGate>
+        }
+      />
+      <Route
+        path="/empresa/insights"
+        element={
+          <RoleGate allowedTypes={[USER_TYPES.EMPRESA]}>
+            <CompanyDashboard />
           </RoleGate>
         }
       />
