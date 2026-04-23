@@ -15,6 +15,7 @@ const LandingHeader = () => {
 
       <S.RightContainer>
         <S.NavLink href="/empresa">Para sua empresa</S.NavLink>
+        <S.NavLink href="/#empresas">Empresas</S.NavLink>
         <S.NavLink href="/servicos">Serviços</S.NavLink>
         <S.NavLink href="/contatos">Contatos</S.NavLink>
 
