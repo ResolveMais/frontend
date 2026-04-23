@@ -2,6 +2,7 @@
 import React from 'react';
 import LandingHeader from './Header/index.jsx';
 import HeroSection from './components/Hero/index.jsx';
+import CompanySearch from './components/CompanySearch/index.jsx';
 import BenefitsSection from './components/Benefits/index.jsx';
 import ExperienceSection from './components/Experience/index.jsx';
 import SacSection from './components/SacSection/index.jsx';
@@ -15,6 +16,7 @@ const Landing = () => {
     <S.Container>
       <LandingHeader />
       <HeroSection />
+      <CompanySearch />
       <BenefitsSection />
       <ExperienceSection />
       <SacSection />

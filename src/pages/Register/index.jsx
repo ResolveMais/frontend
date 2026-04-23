@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
@@ -17,6 +17,7 @@ import {
   USER_TYPES,
   getHomePathByUserType,
   isCompanyUser,
+  normalizeUserType,
 } from "../../utils/userType";
 
 const schema = yup.object().shape({
@@ -144,7 +145,25 @@ const schema = yup.object().shape({
 const Register = () => {
   const { userData, isLoggedIn, logout, login } = useAuth();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const [loading, setLoading] = useState(false);
+  const redirectPath = searchParams.get("redirect") || "";
+  const loginPath = redirectPath
+    ? `/login?redirect=${encodeURIComponent(redirectPath)}`
+    : "/login";
+  const resolvePostAuthPath = (userType) => {
+    const normalizedUserType = normalizeUserType(userType);
+
+    if (
+      redirectPath &&
+      (!redirectPath.startsWith("/cliente/") ||
+        normalizedUserType === USER_TYPES.CLIENTE)
+    ) {
+      return redirectPath;
+    }
+
+    return getHomePathByUserType(userType);
+  };
 
   const {
     register,
@@ -219,7 +238,7 @@ const Register = () => {
       if (response.status === 201 && response.data?.token) {
         const { user, token } = response.data;
         login({ user, token });
-        navigate(getHomePathByUserType(user?.userType), { replace: true });
+        navigate(resolvePostAuthPath(user?.userType), { replace: true });
       } else {
         alert("Erro ao fazer cadastro. Tente novamente.");
       }
@@ -237,8 +256,8 @@ const Register = () => {
       return;
     }
 
-    navigate(getHomePathByUserType(userData?.userType), { replace: true });
-  }, [userData, isLoggedIn, logout, navigate]);
+    navigate(resolvePostAuthPath(userData?.userType), { replace: true });
+  }, [userData, isLoggedIn, logout, navigate, redirectPath]);
 
   return (
     <S.Container>
@@ -400,7 +419,7 @@ const Register = () => {
             )}
 
             <S.Actions>
-              <Button variant="transparent" redirect="/login" full>
+              <Button variant="transparent" redirect={loginPath} full>
                 Login
               </Button>
               <Button variant="primary" type="submit" disabled={loading} full>
