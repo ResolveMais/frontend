@@ -1,4 +1,5 @@
 // src/pages/Landing/Header/styles.js
+import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 
 export const HeaderContainer = styled.header`
@@ -19,11 +20,12 @@ export const LogoContainer = styled.div`
   flex: 1;
 `;
 
-export const LogoText = styled.span`
+export const LogoText = styled(Link)`
   font-size: 1.5rem;
   font-weight: 700;
   color: #10b981; /* Verde do logo */
   cursor: pointer;
+  text-decoration: none;
 `;
 
 export const RightContainer = styled.div`
