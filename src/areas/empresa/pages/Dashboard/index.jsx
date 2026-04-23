@@ -82,6 +82,15 @@ const formatRatingLabel = (value) =>
 
 const formatPercentLabel = (value) => `${Math.round(value || 0)}%`;
 
+const getEmployeeAvatarUrl = (employee) => {
+  const avatarUrl = employee?.avatarUrl || employee?.avatar_url || null;
+
+  if (typeof avatarUrl !== "string") return null;
+
+  const normalizedAvatarUrl = avatarUrl.trim();
+  return normalizedAvatarUrl || null;
+};
+
 const getResolutionSourceLabel = (value) => {
   if (value === "chatbot") return "Resolvido pelo chatbot";
   if (value === "human") return "Resolvido pelo atendimento";
@@ -305,31 +314,37 @@ const buildEmployeeHighlights = (employees) => {
   return [
     topResolver
       ? {
+          id: topResolver.id,
           label: "Mais resoluções",
           title: topResolver.name,
           helper: topResolver.jobTitle || "Funcionário da operação",
           metric: `${topResolver.concludedCount} concluídos`,
           caption: `${topResolver.activeCount} ativos na carteira`,
+          avatarUrl: getEmployeeAvatarUrl(topResolver),
           initials: getUserInitials(topResolver.name, "EQ"),
         }
       : null,
     topRated
       ? {
+          id: topRated.id,
           label: "Melhor satisfação",
           title: topRated.name,
           helper: topRated.jobTitle || "Funcionário da operação",
           metric: `${formatRatingLabel(topRated.averageRating)} de média`,
           caption: `${topRated.ratingCount} avaliação(ões) registrada(s)`,
+          avatarUrl: getEmployeeAvatarUrl(topRated),
           initials: getUserInitials(topRated.name, "EQ"),
         }
       : null,
     topLoad
       ? {
+          id: topLoad.id,
           label: "Maior carteira ativa",
           title: topLoad.name,
           helper: topLoad.jobTitle || "Funcionário da operação",
           metric: `${topLoad.activeCount} tickets ativos`,
           caption: `${topLoad.pendingCount} em atendimento humano`,
+          avatarUrl: getEmployeeAvatarUrl(topLoad),
           initials: getUserInitials(topLoad.name, "EQ"),
         }
       : null,
@@ -433,6 +448,7 @@ const CompanyDashboard = () => {
   const [company, setCompany] = useState(null);
   const [tickets, setTickets] = useState([]);
   const [employees, setEmployees] = useState([]);
+  const [avatarLoadErrors, setAvatarLoadErrors] = useState({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [isReviewsDialogOpen, setIsReviewsDialogOpen] = useState(false);
@@ -530,6 +546,41 @@ const CompanyDashboard = () => {
       window.removeEventListener("keydown", handleEscapeKey);
     };
   }, [isReviewsDialogOpen, ticketHistoryDialog.isOpen]);
+
+  const handleAvatarError = (avatarKey) => {
+    setAvatarLoadErrors((previous) => {
+      if (previous[avatarKey]) return previous;
+
+      return {
+        ...previous,
+        [avatarKey]: true,
+      };
+    });
+  };
+
+  const renderEmployeeAvatar = ({
+    avatarKey,
+    avatarUrl,
+    initials,
+    name,
+  }) => {
+    const shouldShowAvatarImage =
+      Boolean(avatarUrl) && !avatarLoadErrors[avatarKey];
+
+    return (
+      <S.Avatar>
+        {shouldShowAvatarImage ? (
+          <S.AvatarImage
+            src={avatarUrl}
+            alt={name}
+            onError={() => handleAvatarError(avatarKey)}
+          />
+        ) : (
+          initials
+        )}
+      </S.Avatar>
+    );
+  };
 
   const todayKey = getDateKey(new Date());
   const totalTickets = tickets.length;
@@ -941,7 +992,12 @@ const CompanyDashboard = () => {
                 {employeeHighlights.map((highlight) => (
                   <S.HighlightCard key={`${highlight.label}-${highlight.title}`}>
                     <S.HighlightTop>
-                      <S.Avatar>{highlight.initials}</S.Avatar>
+                      {renderEmployeeAvatar({
+                        avatarKey: `employee-${highlight.id || highlight.title}`,
+                        avatarUrl: highlight.avatarUrl,
+                        initials: highlight.initials,
+                        name: highlight.title,
+                      })}
                       <div>
                         <S.HighlightLabel>{highlight.label}</S.HighlightLabel>
                         <S.HighlightTitle>{highlight.title}</S.HighlightTitle>
@@ -984,7 +1040,12 @@ const CompanyDashboard = () => {
                     {employeeMetrics.slice(0, 6).map((employee) => (
                       <S.EmployeeRow key={employee.id}>
                         <S.EmployeeIdentity>
-                          <S.Avatar>{getUserInitials(employee.name, "EQ")}</S.Avatar>
+                          {renderEmployeeAvatar({
+                            avatarKey: `employee-${employee.id || employee.name}`,
+                            avatarUrl: getEmployeeAvatarUrl(employee),
+                            initials: getUserInitials(employee.name, "EQ"),
+                            name: employee.name,
+                          })}
                           <div>
                             <S.EmployeeName>{employee.name}</S.EmployeeName>
                             <S.EmployeeRole>
@@ -1245,7 +1306,12 @@ const CompanyDashboard = () => {
                     <S.ReviewGroupCard key={employee.id}>
                       <S.ReviewGroupHeader>
                         <S.EmployeeIdentity>
-                          <S.Avatar>{getUserInitials(employee.name, "EQ")}</S.Avatar>
+                          {renderEmployeeAvatar({
+                            avatarKey: `employee-${employee.id || employee.name}`,
+                            avatarUrl: getEmployeeAvatarUrl(employee),
+                            initials: getUserInitials(employee.name, "EQ"),
+                            name: employee.name,
+                          })}
                           <div>
                             <S.EmployeeName>{employee.name}</S.EmployeeName>
                             <S.EmployeeRole>

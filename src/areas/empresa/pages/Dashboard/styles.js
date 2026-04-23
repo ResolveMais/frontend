@@ -477,11 +477,19 @@ export const Avatar = styled.span`
   align-items: center;
   justify-content: center;
   border-radius: 16px;
+  overflow: hidden;
   background: linear-gradient(135deg, #123134 0%, #0d9f5d 100%);
   color: #ffffff;
   font-weight: 800;
   letter-spacing: 0.04em;
   flex-shrink: 0;
+`;
+
+export const AvatarImage = styled.img`
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
 `;
 
 export const HighlightLabel = styled.span`
