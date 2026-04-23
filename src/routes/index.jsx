@@ -12,6 +12,7 @@ import ForgotPassword from "../pages/ForgotPassword";
 import ResetPassword from "../pages/ResetPassword";
 import TeamPage from "../pages/Team";
 import Empresa from "../pages/Empresa";
+import PublicCompanyDashboard from "../pages/PublicCompanyDashboard";
 
 import ClientHome from "../areas/cliente/pages/Home";
 import ClientOpenTicket from "../areas/cliente/pages/OpenTicket";
@@ -41,6 +42,14 @@ const AppRoutes = () => (
       <Route path="/landing" element={<Landing />} />
       <Route path="/team" element={<TeamPage />} />
       <Route path="/empresa" element={<Empresa />} />
+      <Route
+        path="/empresa/:companyId/dashboard"
+        element={<PublicCompanyDashboard />}
+      />
+      <Route
+        path="/empresas/:companyId/dashboard"
+        element={<PublicCompanyDashboard />}
+      />
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
       <Route path="/forgot-password" element={<ForgotPassword />} />
