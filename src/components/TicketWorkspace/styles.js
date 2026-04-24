@@ -219,6 +219,7 @@ export const TicketList = styled.div`
   gap: 10px;
   max-height: 72vh;
   overflow-y: auto;
+  padding: 2px
 `;
 
 export const TicketButton = styled.button`
