@@ -49,7 +49,7 @@ const Footer = () => {
       {/* Copyright */}
       <S.CopyrightContainer>
         <S.CopyrightText>
-          © 2024. Todos os direitos reservados.
+          © 2026. Todos os direitos reservados.
         </S.CopyrightText>
         <S.LegalLinks>
           <S.SmallLink href="#">Política de Privacidade</S.SmallLink>
