@@ -1,43 +1,67 @@
 import React from 'react';
 import * as S from './styles';
-import pessoaImg from './images/pessoa.svg'; // Certifique-se que a imagem está neste caminho
+import pessoaImg from './images/pessoa.svg';
+import beatrizImg from '../../../assets/images/team/beatriz.png';
+import marcosImg from '../../../assets/images/team/marcos.png';
+import vitorImg from '../../../assets/images/team/vitor.png';
 
 const TeamPage = () => {
   const teamMembers = [
     {
       name: 'Beatriz Sarti',
-      role: 'CEO',
-      description: 'Fundadora e CEO da empresa, especialista em estratégia de negócios.',
-    },
-    {
-      name: 'Gabriel Soares',
-      role: 'CTO',
-      description: 'Chief Technology Officer, responsável pela arquitetura técnica.',
-    },
-    {
-      name: 'Gustavo Peixoto',
-      role: 'Head of Design',
-      description: 'Líder do time de design, focado em experiência do usuário.',
+      role: 'Design',
+      description:
+        'Contribui com o design da plataforma, com foco em usabilidade, identidade visual e experiência do usuário.',
+      image: beatrizImg,
     },
     {
       name: 'Gustavo Oliveira',
-      role: 'Dev Front-end',
-      description: 'Desenvolvedor front-end especializado em React e interfaces.',
+      role: 'Desenvolvedor Front-end',
+      description:
+        'Trabalha na implementação das telas e componentes da aplicação, garantindo uma navegação fluida.',
+      image: pessoaImg,
     },
     {
-      name: 'Marcos Junior',
-      role: 'Dev Back-end',
-      description: 'Desenvolvedor back-end focado em arquitetura de sistemas.',
+      name: 'Vitor Borri',
+      role: 'Desenvolvedor Front-end',
+      description:
+        'Contribui com a construção das interfaces e com a evolução visual e funcional do produto.',
+      image: vitorImg,
     },
     {
       name: 'Ruan Vaz',
-      role: 'Product Manager',
-      description: 'Gerente de produto, responsável pela definição de roadmap.',
+      role: 'Documentação',
+      description:
+        'Responsável pela organização da documentação do projeto e pela clareza das informações das entregas.',
+      image: pessoaImg,
     },
     {
       name: 'Vitória Campos',
-      role: 'UX/UI Designer',
-      description: 'Especialista em experiência do usuário e interface visual.',
+      role: 'Documentação',
+      description:
+        'Atua na documentação do projeto, apoiando a padronização dos materiais e o registro das definições.',
+      image: pessoaImg,
+    },
+    {
+      name: 'Marcos Junior',
+      role: 'Desenvolvedor Back-end',
+      description:
+        'Responsável pela estrutura do servidor, regras de negócio e integrações da aplicação.',
+      image: marcosImg,
+    },
+    {
+      name: 'Gabriel Soares',
+      role: 'Desenvolvedor Back-end',
+      description:
+        'Trabalha na construção das APIs e na sustentação da base técnica do sistema.',
+      image: pessoaImg,
+    },
+    {
+      name: 'Gustavo Peixoto',
+      role: 'Relacionamento com Empresas',
+      description:
+        'Atua na frente empresarial do projeto, contribuindo com o relacionamento com empresas e com o alinhamento das demandas da plataforma.',
+      image: pessoaImg,
     },
   ];
 
@@ -46,9 +70,10 @@ const TeamPage = () => {
       <S.TeamHeader>
         <S.MainTitle>Nossa equipe</S.MainTitle>
         <S.MissionText>
-          Nossa missão é simplificar o atendimento, permitindo que negócios cresçam e clientes sejam melhor atendidos.
+          Nossa missão é simplificar o atendimento, permitindo que negócios
+          cresçam e clientes sejam melhor atendidos.
         </S.MissionText>
-        
+
         <S.CallToAction>
           <S.CTALink href="/landing">Saiba Mais →</S.CTALink>
           <S.CTALink href="/register">Cadastre-se →</S.CTALink>
@@ -56,15 +81,15 @@ const TeamPage = () => {
       </S.TeamHeader>
 
       <S.TeamGrid>
-        {teamMembers.map((member, index) => (
-          <S.TeamMember key={index}>
+        {teamMembers.map((member) => (
+          <S.TeamMember key={member.name}>
             <S.MemberImageWrapper>
-              <S.MemberImage src={pessoaImg} alt={member.name} /> 
-            </S.MemberImageWrapper> 
+              <S.MemberImage src={member.image} alt={member.name} />
+            </S.MemberImageWrapper>
             <S.MemberName>{member.name}</S.MemberName>
             <S.MemberRole>{member.role}</S.MemberRole>
             <S.MemberDescription>{member.description}</S.MemberDescription>
-          </S.TeamMember> //ajustar img dps
+          </S.TeamMember>
         ))}
       </S.TeamGrid>
     </S.TeamContainer>
