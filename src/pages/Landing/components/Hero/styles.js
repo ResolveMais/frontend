@@ -4,17 +4,19 @@ export const HeroSection = styled.section`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 10px 5%;
-  padding-bottom: 80px;
+  min-height: calc(100vh - 80px);
+  padding: 48px 5%;
+  box-sizing: border-box;
+  width: 100%;
   max-width: 1600px;
-  margin-top: 5px;
-  margin-left: 30px;
-  margin-right: 30px;
+  margin: 0 auto;
   gap: 60px;
   
   @media (max-width: 768px) {
     flex-direction: column;
     text-align: center;
+    justify-content: center;
+    min-height: calc(100vh - 80px);
     padding: 40px 5%;
     gap: 40px;
   }

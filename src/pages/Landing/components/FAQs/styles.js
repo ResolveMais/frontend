@@ -39,7 +39,7 @@ export const FAQsList = styled.div`
   max-width: 800px;
   margin: 0 auto;
   text-align: left;
-  margin-bottom: 60px;
+  margin-bottom: 0;
 `;
 
 export const FAQItem = styled.div`
@@ -89,19 +89,13 @@ export const ArrowIcon = styled.span`
 // NOVOS ESTILOS PARA A FAIXA FINAL
 export const FinalBanner = styled.section`
   background: #00C853;
-  padding: 120px 0;
-  width: 100vw;
-  margin: 60px 0 0 0;
-  margin-top: 100px;
-  margin-bottom: -100px;
+  width: 100%;
+  margin: 0;
+  padding: 120px 24px;
+  box-sizing: border-box;
   display: flex;
   justify-content: center;
   align-items: center;
-  position: relative;
-  left: 50%;
-  right: 50%;
-  margin-left: -50vw;
-  margin-right: -50vw;
 `;
 
 export const FinalStatement = styled.h3`

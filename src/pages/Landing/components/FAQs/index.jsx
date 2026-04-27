@@ -32,42 +32,44 @@ const FAQsSection = () => {
   ];
 
   return (
-    <S.FAQsSection>
-      <S.FAQsTitle>Perguntas Frequentes (FAQs)</S.FAQsTitle>
-      
-      <S.FAQsSubtitle>
-        Tem alguma dúvida? Nós já separamos as principais para você.
-      </S.FAQsSubtitle>
+    <>
+      <S.FAQsSection>
+        <S.FAQsTitle>Perguntas Frequentes (FAQs)</S.FAQsTitle>
 
-      <S.Divider />
+        <S.FAQsSubtitle>
+          Tem alguma dúvida? Nós já separamos as principais para você.
+        </S.FAQsSubtitle>
 
-      <S.FAQsList>
-        {faqs.map((faq, index) => (
-          <S.FAQItem key={index}>
-            <S.FAQQuestion 
-              onClick={() => toggleFAQ(index)}
-              $isActive={activeIndex === index}
-            >
-              {faq.question}
-              <S.ArrowIcon $isActive={activeIndex === index}>
-                {activeIndex === index ? '−' : '+'}
-              </S.ArrowIcon>
-            </S.FAQQuestion>
-            
-            <S.FAQAnswer $isActive={activeIndex === index}>
-              {faq.answer}
-            </S.FAQAnswer>
-          </S.FAQItem>
-        ))}
-      </S.FAQsList>
+        <S.Divider />
 
-      {/* NOVA FAIXA FINAL COM FUNDO VERDE */}
+        <S.FAQsList>
+          {faqs.map((faq, index) => (
+            <S.FAQItem key={index}>
+              <S.FAQQuestion
+                onClick={() => toggleFAQ(index)}
+                $isActive={activeIndex === index}
+              >
+                {faq.question}
+                <S.ArrowIcon $isActive={activeIndex === index}>
+                  {activeIndex === index ? '-' : '+'}
+                </S.ArrowIcon>
+              </S.FAQQuestion>
+
+              <S.FAQAnswer $isActive={activeIndex === index}>
+                {faq.answer}
+              </S.FAQAnswer>
+            </S.FAQItem>
+          ))}
+        </S.FAQsList>
+      </S.FAQsSection>
+
       <S.FinalBanner>
         <S.FinalStatement>
-          Clientes ganham um atendimento mais humano e ágil, enquanto empresas economizam tempo e recursos.
+          Clientes ganham um atendimento mais humano e ágil, enquanto empresas
+          economizam tempo e recursos.
         </S.FinalStatement>
       </S.FinalBanner>
-    </S.FAQsSection>
+    </>
   );
 };
 
