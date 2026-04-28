@@ -3,6 +3,7 @@ import * as S from './styles';
 import pessoaImg from './images/pessoa.svg';
 import beatrizImg from '../../../assets/images/team/beatriz.png';
 import gabrielSoaresImg from '../../../assets/images/team/gabriel soares.png';
+import gustavoOliveiraImg from '../../../assets/images/team/gustavo oliveira.png';
 import marcosImg from '../../../assets/images/team/marcos.png';
 import vitorImg from '../../../assets/images/team/vitor.png';
 
@@ -20,7 +21,7 @@ const TeamPage = () => {
       role: 'Desenvolvedor Front-end',
       description:
         'Trabalha na implementação das telas e componentes da aplicação, garantindo uma navegação fluida.',
-      image: pessoaImg,
+      image: gustavoOliveiraImg,
     },
     {
       name: 'Vitor Borri',
