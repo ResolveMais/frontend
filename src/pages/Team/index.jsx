@@ -1,11 +1,13 @@
 import React from 'react';
 import * as S from './styles';
-import pessoaImg from './images/pessoa.svg';
 import beatrizImg from '../../../assets/images/team/beatriz.png';
 import gabrielSoaresImg from '../../../assets/images/team/gabriel soares.png';
+import gustavoPeixotoImg from '../../../assets/images/team/gustavo peixoto.png';
 import gustavoOliveiraImg from '../../../assets/images/team/gustavo oliveira.png';
 import marcosImg from '../../../assets/images/team/marcos.png';
+import ruanImg from '../../../assets/images/team/ruan.png';
 import vitorImg from '../../../assets/images/team/vitor.png';
+import vitoriaImg from '../../../assets/images/team/vitoria.png';
 
 const TeamPage = () => {
   const teamMembers = [
@@ -35,14 +37,14 @@ const TeamPage = () => {
       role: 'Documentação',
       description:
         'Responsável pela organização da documentação do projeto e pela clareza das informações das entregas.',
-      image: pessoaImg,
+      image: ruanImg,
     },
     {
       name: 'Vitória Campos',
       role: 'Documentação',
       description:
         'Atua na documentação do projeto, apoiando a padronização dos materiais e o registro das definições.',
-      image: pessoaImg,
+      image: vitoriaImg,
     },
     {
       name: 'Marcos Junior',
@@ -63,7 +65,7 @@ const TeamPage = () => {
       role: 'Desenvolvedor Front-end',
       description:
         'Atua no front-end da área da empresa, com foco na implementação e evolução dos dashboards da plataforma.',
-      image: pessoaImg,
+      image: gustavoPeixotoImg,
     },
   ];
 
