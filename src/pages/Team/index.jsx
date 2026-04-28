@@ -58,9 +58,9 @@ const TeamPage = () => {
     },
     {
       name: 'Gustavo Peixoto',
-      role: 'Relacionamento com Empresas',
+      role: 'Desenvolvedor Front-end',
       description:
-        'Atua na frente empresarial do projeto, contribuindo com o relacionamento com empresas e com o alinhamento das demandas da plataforma.',
+        'Atua no front-end da área da empresa, com foco na implementação e evolução dos dashboards da plataforma.',
       image: pessoaImg,
     },
   ];
