@@ -1,9 +1,11 @@
 import React from 'react';
 import * as S from './styles';
+import eyeImage from '../../../../../assets/images/Eye.svg';
+import goalImage from '../../../../../assets/images/Goal.svg';
 
 const EyeIcon = () => (
   <img
-    src="/assets/images/Eye.svg"
+    src={eyeImage}
     alt="Icone de Olho"
     style={{width: '40px', height: '40px'}}
   />
@@ -11,7 +13,7 @@ const EyeIcon = () => (
 
 const GoalIcon = () => (
   <img
-    src="/assets/images/Goal.svg"
+    src={goalImage}
     alt="Icone de Dardo"
     style={{width: '40px', height: '40px'}}
   />

@@ -1,5 +1,6 @@
 import React from 'react';
 import * as S from './styles';
+import experienceImage from '../../../../../assets/images/experience-image.svg';
 
 const ExperienceSection = () => {
   return (
@@ -39,7 +40,7 @@ const ExperienceSection = () => {
 
         <S.ExperienceImage>
           <img 
-            src="/assets/images/experience-image.svg" 
+            src={experienceImage} 
             alt="Experiência única para clientes e empresas" 
           />
         </S.ExperienceImage>

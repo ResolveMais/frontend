@@ -1,5 +1,6 @@
 import React from 'react';
 import * as S from './styles';
+import sacImage from '../../../../../assets/images/sac-image.svg';
 
 const SacSection = () => {
   return (
@@ -7,7 +8,7 @@ const SacSection = () => {
       <S.SacContent>
         <S.SacImage>
           <img 
-            src="/assets/images/sac-image.svg" 
+            src={sacImage} 
             alt="SAC rápido, integrado e humano" 
           />
         </S.SacImage>

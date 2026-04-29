@@ -1,9 +1,14 @@
 import React from 'react';
 import * as S from './styles';
+import stepOneImage from '../../../../../assets/images/1.svg';
+import stepTwoImage from '../../../../../assets/images/2.svg';
+import stepThreeImage from '../../../../../assets/images/3.svg';
+import stepFourImage from '../../../../../assets/images/4.svg';
+import stepFiveImage from '../../../../../assets/images/5.svg';
 
 const One = () => (
   <img
-    src="/assets/images/1.svg"
+    src={stepOneImage}
     alt="Ícone de número 1"
     style={{ width: '40px', height: '40px' }}
   />
@@ -11,7 +16,7 @@ const One = () => (
 
 const Two = () => (
   <img
-    src="/assets/images/2.svg"
+    src={stepTwoImage}
     alt="Ícone de número 2"
     style={{ width: '40px', height: '40px' }}
   />
@@ -19,7 +24,7 @@ const Two = () => (
 
 const Three = () => (
   <img
-    src="/assets/images/3.svg"
+    src={stepThreeImage}
     alt="Ícone de número 3"
     style={{ width: '40px', height: '40px' }}
   />
@@ -27,7 +32,7 @@ const Three = () => (
 
 const Four = () => (
   <img
-    src="/assets/images/4.svg"
+    src={stepFourImage}
     alt="Ícone de número 4"
     style={{ width: '40px', height: '40px' }}
   />
@@ -35,7 +40,7 @@ const Four = () => (
 
 const Five = () => (
   <img
-    src="/assets/images/5.svg"
+    src={stepFiveImage}
     alt="Ícone de número 5"
     style={{ width: '40px', height: '40px' }}
   />

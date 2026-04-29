@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
+import logoImage from "../../assets/flaticon.svg";
 import {
   getHomePathByUserType,
   getUserSettingsPathByUserType,
@@ -80,7 +81,7 @@ const LoggedHeader = () => {
   return (
     <S.HeaderContainer>
       <S.LeftSection>
-        <S.Logo src="/assets/flaticon.svg" alt="Resolve + Logo" />
+        <S.Logo src={logoImage} alt="Resolve + Logo" />
       </S.LeftSection>
 
       <S.NavSection>

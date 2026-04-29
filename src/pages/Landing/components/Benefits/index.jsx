@@ -1,9 +1,10 @@
 import React from 'react';
 import * as S from './styles';
+import boxImage from '../../../../../assets/images/box.svg';
 
 const BoxIcon = () => (
   <img
-    src="/assets/images/box.svg"
+    src={boxImage}
     alt="Icone de caixa"
     style={{width: '40px', height: '40px'}}
   />

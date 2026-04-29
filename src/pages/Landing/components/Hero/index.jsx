@@ -1,6 +1,7 @@
 import React from 'react';
 import Button from '../../../../components/Button';
 import * as S from './styles';
+import landingImage from '../../../../../assets/images/landing1.svg';
 
 const HeroSection = () => {
   return (
@@ -29,7 +30,7 @@ const HeroSection = () => {
 
       <S.HeroImage>
         <img 
-          src="/assets/images/landing1.svg" 
+          src={landingImage} 
           alt="Plataforma Resolve Plus - SAC Pós-Venda moderno" 
         />
       </S.HeroImage>

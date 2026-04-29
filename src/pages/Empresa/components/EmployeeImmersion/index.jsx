@@ -1,5 +1,6 @@
 import React from 'react';
 import * as S from './styles';
+import experienceImage from '../../../../../assets/images/experience-image.svg';
 
 const EmployeeImmersion = () => {
   return (
@@ -52,7 +53,7 @@ const EmployeeImmersion = () => {
         </S.LeftSection>
 
         <S.RightSection>
-          <img src="/assets/images/experience-image.svg" alt="Funcionário no computador" />
+          <img src={experienceImage} alt="Funcionário no computador" />
         </S.RightSection>
       </S.Content>
     </S.Container>

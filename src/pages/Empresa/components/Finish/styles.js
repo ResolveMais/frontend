@@ -1,9 +1,10 @@
 import styled from 'styled-components';
+import walkImage from '../../../../../assets/images/walk.svg';
 
 export const Container = styled.section`
   width: 100%;
   height: 100vh;
-  background: url('/assets/images/walk.svg') center bottom / cover no-repeat;
+  background: url(${walkImage}) center bottom / cover no-repeat;
   display: flex;
   align-items: flex-start; 
   justify-content: center;
