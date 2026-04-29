@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
-import logoImage from "../../assets/flaticon.svg";
+import logoImage from "../../../assets/flaticon.svg";
 import {
   getHomePathByUserType,
   getUserSettingsPathByUserType,
