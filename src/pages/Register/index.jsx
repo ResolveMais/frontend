@@ -12,6 +12,8 @@ import CnpjInput from "../../components/CnpjInput";
 import * as S from "./styles";
 import { useAuth } from "../../contexts/AuthContext";
 import { api } from "../../services/api";
+import Logo from "../../../assets/images/logo.png";
+import RegisterImage from "../../../assets/images/register.png";
 import {
   PUBLIC_REGISTER_USER_TYPE_OPTIONS,
   USER_TYPES,
@@ -264,12 +266,12 @@ const Register = () => {
       <S.GlobalStyle />
 
       <S.LogoContainer href="/">
-        <S.Logo src="../../../assets/images/logo.png" alt="Resolve Mais" />
+        <S.Logo src={Logo} alt="Resolve Mais" />
       </S.LogoContainer>
 
       <S.Content>
         <S.Left>
-          <S.Image src="../../../assets/images/register.png" alt="Register" />
+          <S.Image src={RegisterImage} alt="Register" />
           <S.Text>Comece agora</S.Text>
           <S.SubText>
             Crie sua conta e acompanhe o status dos chamados.

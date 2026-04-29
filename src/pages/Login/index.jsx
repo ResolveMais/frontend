@@ -9,6 +9,8 @@ import { useAuth } from "../../contexts/AuthContext";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { USER_TYPES, getHomePathByUserType, normalizeUserType } from "../../utils/userType";
 import { authService } from "../../services/authService";
+import Logo from "../../../assets/images/logo.png";
+import LoginImage from "../../../assets/images/login.png";
 
 const schema = yup.object().shape({
     email: yup.string().email("E-mail inválido").required("E-mail é obrigatório"),
@@ -74,7 +76,7 @@ const Login = () => {
             <S.GlobalStyle />
 
             <S.LogoContainer href="/">
-                <S.Logo src="../../../assets/images/logo.png" alt="Resolve Mais" />
+                <S.Logo src={Logo} alt="Resolve Mais" />
             </S.LogoContainer>
 
             <S.Content>
@@ -100,7 +102,7 @@ const Login = () => {
                 </S.Left>
 
                 <S.Right>
-                    <S.Image src="../../../assets/images/login.png" alt="Login" />
+                    <S.Image src={LoginImage} alt="Login" />
                     <S.Text>Bem-vindo de volta</S.Text>
                     <S.SubText>Acompanhe seus chamados e resolva tudo em um só lugar.</S.SubText>
                 </S.Right>

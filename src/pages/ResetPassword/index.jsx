@@ -8,6 +8,7 @@ import Input from "../../components/Input";
 import Button from "../../components/Button";
 import { authService } from "../../services/authService";
 import * as S from "./styles";
+import Logo from "../../../assets/images/logo.png";
 
 const schema = yup.object().shape({
   newPassword: yup
@@ -101,7 +102,7 @@ const ResetPassword = () => {
       <S.GlobalStyle />
 
       <S.LogoContainer href="/">
-        <S.Logo src="../../../assets/images/logo.png" alt="Resolve Mais" />
+        <S.Logo src={Logo} alt="Resolve Mais" />
       </S.LogoContainer>
 
       <S.Card>

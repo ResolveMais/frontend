@@ -1,13 +1,14 @@
 import { useAuth } from "../../contexts/AuthContext"
 import Button from "../Button"
 import * as S from "./styles"
+import Logo from "../../../assets/images/logo.png"
 
 const Header = () => {
   const { isLoggedIn, userData, logout } = useAuth();
 
   return (
     <S.HeaderContainer>
-      <S.Logo src="../../../assets/images/logo.png" alt="Resolve Mais" />
+      <S.Logo src={Logo} alt="Resolve Mais" />
 
       {!isLoggedIn ? (
         <S.ButtonsContainer>
