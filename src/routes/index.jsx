@@ -5,33 +5,33 @@ import {
   Routes,
 } from "react-router-dom";
 
-import Landing from "../pages/Landing";
-import Login from "../pages/Login";
-import Register from "../pages/Register";
-import ForgotPassword from "../pages/ForgotPassword";
-import ResetPassword from "../pages/ResetPassword";
-import TeamPage from "../pages/Team";
-import Empresa from "../pages/Empresa";
-import PublicCompanyDashboard from "../pages/PublicCompanyDashboard";
+import Landing from "../view/pages/Landing";
+import Login from "../view/pages/Login";
+import Register from "../view/pages/Register";
+import ForgotPassword from "../view/pages/ForgotPassword";
+import ResetPassword from "../view/pages/ResetPassword";
+import TeamPage from "../view/pages/Team";
+import Empresa from "../view/pages/Empresa";
+import PublicCompanyDashboard from "../view/pages/PublicCompanyDashboard";
 
-import ClientHome from "../areas/cliente/pages/Home";
-import ClientOpenTicket from "../areas/cliente/pages/OpenTicket";
-import ClientPendingTickets from "../areas/cliente/pages/PendingTickets";
-import ClientClosedTickets from "../areas/cliente/pages/ClosedTickets";
-import ClientUserData from "../areas/cliente/pages/UserData";
-import ClientChatbot from "../areas/cliente/pages/Chatbot";
+import ClientHome from "../view/areas/cliente/pages/Home";
+import ClientOpenTicket from "../view/areas/cliente/pages/OpenTicket";
+import ClientPendingTickets from "../view/areas/cliente/pages/PendingTickets";
+import ClientClosedTickets from "../view/areas/cliente/pages/ClosedTickets";
+import ClientUserData from "../view/areas/cliente/pages/UserData";
+import ClientChatbot from "../view/areas/cliente/pages/Chatbot";
 
-import EmployeeHome from "../areas/funcionario/pages/Home";
-import EmployeeUserData from "../areas/funcionario/pages/UserData";
-import EmployeeChat from "../areas/funcionario/pages/Atendimento";
-import CompanyHome from "../areas/empresa/pages/Home";
-import CompanyDashboard from "../areas/empresa/pages/Dashboard";
-import CompanyAdmins from "../areas/empresa/pages/Admins";
-import CompanyComplaintTitles from "../areas/empresa/pages/ComplaintTitles";
-import CompanySettings from "../areas/empresa/pages/Settings";
-import CompanyTicketsPage from "../areas/empresa/pages/Tickets";
-import CompanyUserData from "../areas/empresa/pages/UserData";
-import CompanyInfo from "../areas/funcionario/pages/CompanyInfo";
+import EmployeeHome from "../view/areas/funcionario/pages/Home";
+import EmployeeUserData from "../view/areas/funcionario/pages/UserData";
+import EmployeeChat from "../view/areas/funcionario/pages/Atendimento";
+import CompanyHome from "../view/areas/empresa/pages/Home";
+import CompanyDashboard from "../view/areas/empresa/pages/Dashboard";
+import CompanyAdmins from "../view/areas/empresa/pages/Admins";
+import CompanyComplaintTitles from "../view/areas/empresa/pages/ComplaintTitles";
+import CompanySettings from "../view/areas/empresa/pages/Settings";
+import CompanyTicketsPage from "../view/areas/empresa/pages/Tickets";
+import CompanyUserData from "../view/areas/empresa/pages/UserData";
+import CompanyInfo from "../view/areas/funcionario/pages/CompanyInfo";
 
 import RoleGate from "./RoleGate";
 import { USER_TYPES } from "../utils/userType";
