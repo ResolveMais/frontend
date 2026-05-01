@@ -1,10 +1,6 @@
 # Frontend - Resolve Mais
 
-Aplicação web do projeto **Resolve Mais**, construída com `React` e `Vite`, responsável pela experiência do usuário final e pela integração com a API do backend.
-
-## Objetivo deste repositório
-
-Este repositório concentra a interface da plataforma, incluindo páginas públicas, fluxo de autenticação, área do usuário e funcionalidades de abertura e acompanhamento de tickets.
+Aplicação web do projeto **Resolve Mais**, construída com `React` e `Vite`. Este repositório contém a interface pública, autenticação, área do cliente, área da empresa e fluxo de atendimento.
 
 ## Stack
 
@@ -16,189 +12,128 @@ Este repositório concentra a interface da plataforma, incluindo páginas públi
 - `React Hook Form`
 - `Yup`
 
-## Funcionalidades disponíveis
-
-- landing page institucional
-- página “Empresa”
-- página da equipe
-- login e cadastro
-- persistência de sessão com token em `localStorage`
-- dashboard inicial do usuário
-- abertura de ticket
-- visualização de tickets em andamento
-- visualização de tickets encerrados
-- atualização de dados do usuário
-- feedback visual com contexto de notificações
-
-## Estrutura principal
-
-```text
-frontend/
-├── public/
-├── src/
-│   ├── components/   # Componentes reutilizáveis
-│   ├── contexts/     # Estado global de autenticação, tema e snack
-│   ├── layout/       # Layouts das páginas
-│   ├── pages/        # Páginas da aplicação
-│   ├── routes/       # Definição das rotas
-│   ├── services/     # Comunicação com a API
-│   └── styles/       # Estilos globais e temas
-├── .env.example
-├── package.json
-└── vite.config.js
-```
-
-## Requisitos
+## Pré-requisitos
 
 - `Node.js` 22 ou superior
 - `npm`
 - backend do projeto em execução
 
-## Configuração do ambiente
+## Passo a passo para iniciar
 
-### 1. Instalar dependências
+### 1. Entrar na pasta do frontend
+
+```powershell
+cd frontend
+```
+
+### 2. Instalar as dependências
 
 ```powershell
 npm install
 ```
 
-### 2. Configurar variáveis de ambiente
-
-Crie o arquivo `.env` a partir do exemplo:
+### 3. Criar o arquivo de ambiente
 
 ```powershell
 Copy-Item .env.example .env
 ```
 
-Conteúdo esperado:
+### 4. Conferir as variáveis do `.env`
+
+Use este conteúdo como base:
 
 ```env
 VITE_API_URL=http://localhost:3001/api
+VITE_PORT=3000
 ```
 
-Essa URL deve apontar para a API do repositório `backend`.
+- `VITE_API_URL`: URL base da API do backend
+- `VITE_PORT`: porta usada pelo servidor do Vite em desenvolvimento
 
-## Como rodar
+### 5. Garantir que o backend está ativo
 
-### Desenvolvimento
+Antes de subir o frontend, o backend deve estar rodando em `http://localhost:3001` ou na mesma URL configurada em `VITE_API_URL`.
+
+### 6. Iniciar o servidor de desenvolvimento
 
 ```powershell
 npm run dev
 ```
 
-O Vite exibirá no terminal a URL local da aplicação, normalmente `http://localhost:5173`.
+### 7. Acessar a aplicação
 
-### Build de produção
+Com o `.env.example` atual, o frontend sobe em:
 
-```powershell
-npm run build
+```text
+http://localhost:3000
 ```
 
-### Preview da build
+## Ordem correta para subir o projeto completo
 
-```powershell
-npm run preview
-```
-
-### Lint
-
-```powershell
-npm run lint
-```
+1. Inicie o banco SQL Server.
+2. Inicie o backend.
+3. Inicie o frontend.
+4. Acesse `http://localhost:3000`.
 
 ## Scripts disponíveis
 
-- `npm run dev`: inicia o servidor de desenvolvimento do Vite
+- `npm run dev`: inicia o Vite em modo desenvolvimento
 - `npm run build`: gera a build de produção
-- `npm run preview`: sobe uma prévia local da build
-- `npm run lint`: executa a análise estática com ESLint
+- `npm run preview`: abre uma prévia local da build
+- `npm run lint`: executa o ESLint
 
-## Rotas da aplicação
-
-As rotas atualmente mapeadas incluem:
-
-- `/` - landing page
-- `/landing` - landing page
-- `/empresa` - página institucional da empresa
-- `/team` - apresentação da equipe
-- `/login` - autenticação
-- `/register` - cadastro
-- `/home` - área inicial autenticada
-- `/configuracoes` - dados do usuário
-- `/OpenTicket` - abertura de ticket
-- `/PendingTickets` - tickets em andamento
-- `/ClosedTickets` - tickets encerrados
-
-## Integração com o backend
-
-O consumo da API é feito via `axios` em `src/services/api.js`, usando `VITE_API_URL` como `baseURL`.
-
-O token JWT:
-
-- é salvo em `localStorage` após login
-- é enviado no header `Authorization`
-- é validado na inicialização da aplicação por meio da rota `/auth/me`
-
-## Fluxo principal do usuário
-
-1. usuário acessa a landing page
-2. realiza cadastro ou login
-3. o token é salvo localmente
-4. a aplicação valida a sessão ao recarregar
-5. o usuário pode abrir tickets e acompanhar o histórico
-
-## Páginas e áreas principais
+## Rotas principais
 
 ### Públicas
 
-- `Landing`
-- `Empresa`
-- `Team`
-- `Login`
-- `Register`
+- `/`
+- `/landing`
+- `/team`
+- `/empresa`
+- `/empresa/:companyId/dashboard`
+- `/empresas/:companyId/dashboard`
+- `/login`
+- `/register`
+- `/forgot-password`
+- `/reset-password`
 
-### Autenticadas
+### Cliente
 
-- `Home`
-- `UserData`
-- `NewTicketForm.jsx`
-- `PendingTickets`
-- `ClosedTickets`
+- `/cliente/home`
+- `/cliente/open-ticket`
+- `/cliente/pending-tickets`
+- `/cliente/closed-tickets`
+- `/cliente/configuracoes`
+- `/cliente/chatbot`
 
-## Componentes e contextos relevantes
+### Funcionário
 
-### Componentes
+- `/funcionario/home`
+- `/funcionario/configuracoes`
+- `/funcionario/atendimentos`
+- `/funcionario/CompanyInfo`
 
-- `Header`
-- `LoggedHeader`
-- `Button`
-- `Input`
-- `PendingTickets`
-- `Snack`
+### Empresa
 
-### Contextos
+- `/empresa/home`
+- `/empresa/insights`
+- `/empresa/chamados`
+- `/empresa/configuracoes`
+- `/empresa/assuntos`
+- `/empresa/usuario`
+- `/empresa/administradores`
 
-- `AuthContext`: autenticação e sessão
-- `SnackContext`: mensagens de feedback
-- `ThemeContext`: gerenciamento de tema
+## Integração com o backend
 
-## Observações técnicas
+O frontend usa `axios` em `src/services/api.js` com `VITE_API_URL` como `baseURL`.
 
-- O frontend depende do backend para autenticação e dados dos tickets.
-- Se `VITE_API_URL` estiver incorreta, login, cadastro e tickets não funcionarão.
+Também existem fluxos em tempo real que dependem do backend:
 
-## Chatbot IA (novo)
+- chatbot com stream em `/api/chatbot/message/stream`
+- eventos de tickets em `/api/tickets/:ticketId/events/stream`
 
-### Rota nova
+## Problemas comuns
 
-- `/chatbot`: página de assistente virtual da plataforma
-
-### Funcionalidades
-
-- stream de resposta em tempo real (SSE)
-- historico de conversa carregado ao abrir a página
-- limpar conversa com delecao logica no backend (`del = true`)
-
-### Integracao
-
-A página consome os endpoints em `/api/chatbot` usando o token JWT em `Authorization`.
+- Se login, cadastro ou tickets falharem, revise `VITE_API_URL`.
+- Se o navegador bloquear chamadas, valide o `CORS_ALLOWED_ORIGINS` do backend.
+- Se a porta `3000` já estiver em uso, altere `VITE_PORT` no `.env`.
